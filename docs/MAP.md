@@ -31,7 +31,7 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Working on | Code | Read first |
 | --- | --- | --- |
 | Room, catchers, arrival, side rail | `apps/forms/src/screens/Room.tsx`, `packages/tokens/src/room.ts`; the rail is `Shell` in `App.tsx` (four parts + AI centre; events, responses, invoices, users, brand folded under "Earlier features", routes unchanged) | ADR 0022, `docs/plan/DOCUMENTS.md` §2, `docs/plan/SIMPLIFY.md` |
-| Scan (pages, photos, filters, digital copy, invoice, PDF text/redact, Word→PDF) | `screens/Scan.tsx`, `screens/scan-*`, `screens/invoice-scan`, `api-forms/src/pdf/`, `routes/pdf*.ts`, `packages/shared/src/{import,payable}` | `docs/plan/IMPROVEMENTS.md`, `NEXT.md`, `archive/plan/SCANS.md` |
+| Scan (three steps: Bring in, Fix, Keep; pages, photos, filters, digital copy, invoice, PDF text/redact, Word→PDF) | `screens/Scan.tsx` (state and hand-offs), `screens/scan/StepBar.tsx`, `screens/scan-*`, `screens/invoice-scan`, `api-forms/src/pdf/`, `routes/pdf*.ts`, `packages/shared/src/{import,payable}` | `docs/plan/IMPROVEMENTS.md`, `NEXT.md`, `archive/plan/SCANS.md` |
 | Forms (builder, fill, draft PDF) | `screens/Forms.tsx`, `FillIn.tsx`, `screens/builder/`, `packages/shared/src/{builder,interpret,import}` | ADRs 0017–0021, `docs/plan/PREDICTIVE-BUILDER.md`, `CAVEATS.md` |
 | Sign | `screens/Signing*`, `screens/signing/`, `apps/sign`, `apps/api-sign`, `packages/signing` | `docs/CONTRACT.md` §5, ADR 0009 |
 | Send (single, batch, campaigns, reply helper) | `screens/Send*`, `screens/send/`, `api-forms/src/{send,mail}`, `routes/send.ts`, `campaign.ts` | `docs/HANDOVER.md`, ADR 0026 |
@@ -113,6 +113,9 @@ in-app Get stays off and a pack installs from a folder); the graphics card on ma
 pack; SmolVLM2-500M is marked not-working-yet; Qwen3-VL-4B, SmolVLM2-2.2B/256M never run. Unverified
 everywhere: macOS, 8-12 GB laptops, CPUs without AVX2, graphics drivers other than this machine's NVIDIA and
 Intel pair, native-speaker quality. Plans/ADRs are history unless linked above.
-Next: the structure review `docs/plan/SIMPLIFY.md` (ten ranked proposals: one 'Set up AI' page, Scan as three
-steps, a rail that follows the room, feature folders, split CSS, a fast e2e tier, archived plans); order is at
-its end. No agents or PRs are open as of this update.
+Scan is three steps (SIMPLIFY 2, `claude/scan-three-steps`): a step bar (`scan/StepBar.tsx`, reusing `.tabs`),
+the page list in every step, one filled button per step, Word / invoice / form link under Bring in's *More
+tools* and the digital copy under Fix's; the three panels are `hidden`, not unmounted, so a conversion or an
+open invoice reader survives a step change. e2e use `scanStep()` / `openMoreTools()` in `e2e/support.ts`.
+Next: the rest of the structure review `docs/plan/SIMPLIFY.md` (feature folders, split CSS, one word per step);
+order is at its end. No agents or PRs are open as of this update.

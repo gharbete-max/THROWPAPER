@@ -1761,6 +1761,12 @@ export const nbNO: Record<MessageKey, string> = {
   'invoiceScan.note.reference': 'Referanse: {reference}',
   'invoiceScan.note.due': 'Betal innen: {date}',
   'invoiceScan.note.vat': 'Mva ifølge fakturaen: {amount}',
+  'scan.step.bring': 'Legg til',
+  'scan.step.fix': 'Rett',
+  'scan.step.keep': 'Lagre',
+  'scan.steps': 'Trinn',
+  'scan.more': 'Flere verktøy',
+  'scan.doneFixing': 'Ferdig med rettinger',
   'scan.heading': 'Ordne sider',
   'scan.intro':
     'Sett sammen PDF-filer og bilder, fjern sider, drei dem og legg dem i rekkefølge. Ingenting lagres: den nye PDF-en lages slik at du kan laste den ned.',

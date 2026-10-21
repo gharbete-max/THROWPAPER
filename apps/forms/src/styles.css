@@ -7056,22 +7056,6 @@ body:has(> #root .shell--narrow) {
   overflow-wrap: anywhere;
 }
 
-.scan__pages {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tp-spacing-unit);
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.scan__page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: calc(var(--tp-spacing-unit) / 2);
-}
-
 .scan__page img {
   width: 96px;
   height: 128px;
@@ -7160,6 +7144,21 @@ body:has(> #root .shell--narrow) {
   flex-wrap: wrap;
   align-items: center;
   gap: var(--tp-spacing-unit);
+}
+
+/* The three steps share the row; a step that is not the current one is kept, not drawn. */
+.scan [hidden] {
+  display: none;
+}
+
+.scan .card--disclosure > .stack {
+  align-items: start;
+}
+
+.scan__steps .tab {
+  flex: 1 1 0;
+  justify-content: center;
+  padding-inline: calc(var(--tp-spacing-unit) * 0.5);
 }
 
 .scan__pages {

@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { expect, test, type Page } from '@playwright/test';
-import { db, signInAs } from './support.js';
+import { db, openMoreTools, signInAs } from './support.js';
 import { see } from './pdf-read.js';
 import { copyHtml, copyPages, PAGE_PX, type CopyPage } from '../fixtures/copy/pages.js';
 
@@ -59,6 +59,9 @@ async function makeCopy(page: Page, fixture: CopyPage) {
     mimeType: 'image/png',
     buffer: await picture(page, fixture),
   });
+  // The page lands in Fix by itself; its More tools are the ones wanted, not Bring in's.
+  await expect(page.locator('.scan__page')).toHaveCount(1);
+  await openMoreTools(page, fixture.locale);
   await page.getByRole('button', { name: OPEN[fixture.locale] }).click();
   await expect(page.getByTestId('digital-copy')).toBeVisible();
   // The language to read in starts as the interface's own.

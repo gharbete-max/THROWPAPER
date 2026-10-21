@@ -1774,6 +1774,12 @@ export const isIS: Record<MessageKey, string> = {
   'invoiceScan.note.reference': 'Tilvísun: {reference}',
   'invoiceScan.note.due': 'Greiða fyrir: {date}',
   'invoiceScan.note.vat': 'VSK samkvæmt reikningi: {amount}',
+  'scan.step.bring': 'Bæta við',
+  'scan.step.fix': 'Laga',
+  'scan.step.keep': 'Vista',
+  'scan.steps': 'Skref',
+  'scan.more': 'Fleiri verkfæri',
+  'scan.doneFixing': 'Búið að laga',
   'scan.heading': 'Raða síðum',
   'scan.intro':
     'Settu PDF-skjöl og ljósmyndir saman, fjarlægðu síður, snúðu þeim og raðaðu þeim. Ekkert er vistað: nýja PDF-skjalið er búið til svo þú getir sótt það.',

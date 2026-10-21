@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module';
 import { expect, test, type Page } from '@playwright/test';
-import { db, signInAs } from './support.js';
+import { db, scanStep, signInAs } from './support.js';
 import { linesPdf, tinyPdf } from './pdf.js';
 import { fakeBridge } from './fake-model.js';
 import { docxBytes, paragraph } from '../apps/forms/src/screens/builder/paper/docx.fixture.js';
@@ -124,6 +124,7 @@ test('a PDF with its own fields offers Fill it in, and a file can be opened as a
 
   await dropOn(page, '.room__floor', [{ name: 'own.pdf', type: 'application/pdf', buffer: own }]);
   await expect(page.getByTestId('opened-notice')).toContainText('has fields to fill in');
+  await scanStep(page, 'keep');
   await page.getByTestId('handoff-fill').click();
   await expect(page).toHaveURL(/\/forms\/pdf$/);
   await expect(page.getByLabel('surname')).toBeVisible();
@@ -146,6 +147,7 @@ test('scan, then Summarise: the PDF travels in memory to the summary pane and is
   const lines = linesPdf(['The fee is 120 kronor.', 'Payment is due 2026-04-18.']);
   await dropOn(page, '.scan', [{ name: 'fee.pdf', type: 'application/pdf', buffer: lines }]);
   await expect(page.locator('.scan__page')).toHaveCount(1);
+  await scanStep(page, 'keep');
   await page.getByTestId('handoff-summarise').click();
 
   await expect(page).toHaveURL(/\/summary$/);
@@ -208,6 +210,7 @@ test('keeping a PDF suggests a name and shows Small < Medium < Original before d
   await dropOn(page, '.scan', [{ name: 'IMG_0001.jpg', type: 'image/jpeg', buffer: photo }]);
   await expect(page.locator('.scan__page')).toHaveCount(1);
 
+  await scanStep(page, 'keep');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
   const panel = page.getByTestId('keep-panel');
   await expect(panel).toBeVisible();

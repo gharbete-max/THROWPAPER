@@ -1765,6 +1765,12 @@ export const jaJP: Record<MessageKey, string> = {
   'invoiceScan.note.reference': '参照番号：{reference}',
   'invoiceScan.note.due': '支払期限：{date}',
   'invoiceScan.note.vat': '請求書記載の消費税：{amount}',
+  'scan.step.bring': '追加',
+  'scan.step.fix': '修正',
+  'scan.step.keep': '保存',
+  'scan.steps': 'ステップ',
+  'scan.more': 'その他のツール',
+  'scan.doneFixing': '修正を完了',
   'scan.heading': 'ページを整理',
   'scan.intro':
     'PDFや写真をまとめたり、ページを削除・回転・並べ替えたりできます。何も保存されません。新しいPDFはダウンロード用に作成されます。',

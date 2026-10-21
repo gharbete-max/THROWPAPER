@@ -120,6 +120,29 @@ export async function deleteSubmission(
   await sql`delete from submissions where reference = ${reference}`;
 }
 
+const STEP_WORDS = {
+  'en-GB': { bring: 'Bring in', fix: 'Fix', keep: 'Keep', more: 'More tools', bar: 'Steps' },
+  'sv-SE': { bring: 'Lägg in', fix: 'Fixa', keep: 'Spara', more: 'Fler verktyg', bar: 'Steg' },
+} as const;
+
+/** Scan's three steps: press a step's tab. Adding files moves on to Fix by itself; this goes anywhere. */
+export async function scanStep(
+  page: Page,
+  step: 'bring' | 'fix' | 'keep',
+  locale: keyof typeof STEP_WORDS = 'en-GB',
+) {
+  const words = STEP_WORDS[locale];
+  await page
+    .getByRole('navigation', { name: words.bar })
+    .getByRole('button', { name: new RegExp(`${words[step]}$`) })
+    .click();
+}
+
+/** Opens the visible "More tools" disclosure of the step shown (Bring in's or Fix's). */
+export async function openMoreTools(page: Page, locale: keyof typeof STEP_WORDS = 'en-GB') {
+  await page.locator('summary:visible', { hasText: STEP_WORDS[locale].more }).click();
+}
+
 /** A fresh address per run, so duplicate control does not reject the second execution. */
 export function uniqueEmail(prefix = 'e2e'): string {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}@example.com`;

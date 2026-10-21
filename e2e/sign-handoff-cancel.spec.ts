@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import postgres from 'postgres';
 import { expect, test, type Page } from '@playwright/test';
-import { db, signInAs } from './support.js';
+import { db, scanStep, signInAs } from './support.js';
 import { E2E_SIGN_SERVICE_TOKEN, signDatabaseUrl } from './ports.js';
 import { tinyPdf } from './pdf.js';
 
@@ -44,6 +44,7 @@ async function sendFromScan(page: Page, signer: string, email: string) {
     buffer: tinyPdf('Handed over'),
   });
   await expect(page.getByText('1 pages')).toBeVisible();
+  await scanStep(page, 'keep');
   await page.getByRole('button', { name: 'Sign this PDF' }).click();
 
   // Signing opens with the PDF already chosen, and the form already open.

@@ -1,7 +1,7 @@
 import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
-import { db, plantLoginToken } from './support.js';
+import { db, plantLoginToken, scanStep } from './support.js';
 import { linesPdf } from './pdf.js';
 
 /**
@@ -110,6 +110,7 @@ test('edit: text is added and covered, a line is redacted, and the download has 
   await expect(page.getByText('2 pages')).toBeVisible();
 
   const download = page.waitForEvent('download');
+  await scanStep(page, 'keep');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
   await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
   const { all, pages } = await everything(await (await download).path());

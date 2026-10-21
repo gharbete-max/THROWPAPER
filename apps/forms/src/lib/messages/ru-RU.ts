@@ -1804,6 +1804,12 @@ export const ruRU: Record<MessageKey, string> = {
   'invoiceScan.note.reference': 'Ссылка: {reference}',
   'invoiceScan.note.due': 'Оплатить до: {date}',
   'invoiceScan.note.vat': 'НДС по счёту: {amount}',
+  'scan.step.bring': 'Добавить',
+  'scan.step.fix': 'Правка',
+  'scan.step.keep': 'Сохранить',
+  'scan.steps': 'Шаги',
+  'scan.more': 'Другие инструменты',
+  'scan.doneFixing': 'Правка завершена',
   'scan.heading': 'Порядок страниц',
   'scan.intro':
     'Объединяйте PDF и фотографии, удаляйте страницы, поворачивайте их и расставляйте по порядку. Ничего не сохраняется: новый PDF создаётся, чтобы вы его скачали.',

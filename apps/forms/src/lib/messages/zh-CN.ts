@@ -1666,6 +1666,12 @@ export const zhCN: Record<MessageKey, string> = {
   'invoiceScan.note.reference': '参考号：{reference}',
   'invoiceScan.note.due': '付款截止：{date}',
   'invoiceScan.note.vat': '发票所载增值税：{amount}',
+  'scan.step.bring': '添加',
+  'scan.step.fix': '调整',
+  'scan.step.keep': '保存',
+  'scan.steps': '步骤',
+  'scan.more': '更多工具',
+  'scan.doneFixing': '调整完成',
   'scan.heading': '整理页面',
   'scan.intro':
     '合并PDF和照片、删除页面、旋转页面并调整顺序。不会保存任何内容：新的PDF仅供您下载。',

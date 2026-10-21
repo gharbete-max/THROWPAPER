@@ -1764,6 +1764,12 @@ export const daDK: Record<MessageKey, string> = {
   'invoiceScan.note.reference': 'Reference: {reference}',
   'invoiceScan.note.due': 'Betal senest: {date}',
   'invoiceScan.note.vat': 'Moms ifølge fakturaen: {amount}',
+  'scan.step.bring': 'Tilføj',
+  'scan.step.fix': 'Ret',
+  'scan.step.keep': 'Gem',
+  'scan.steps': 'Trin',
+  'scan.more': 'Flere værktøjer',
+  'scan.doneFixing': 'Færdig med rettelser',
   'scan.heading': 'Ordn sider',
   'scan.intro':
     'Sæt PDF-filer og fotos sammen, fjern sider, drej dem og sæt dem i rækkefølge. Intet gemmes: den nye PDF laves, så du kan hente den.',

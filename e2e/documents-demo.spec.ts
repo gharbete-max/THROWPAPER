@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import postgres from 'postgres';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { expect, test, type Page } from '@playwright/test';
-import { db, signInAs } from './support.js';
+import { db, openMoreTools, scanStep, signInAs } from './support.js';
 import { E2E_SIGN_SERVICE_TOKEN, signDatabaseUrl } from './ports.js';
 import { fakeBridge } from './fake-model.js';
 import { svStandard } from '../fixtures/invoices/invoices.js';
@@ -105,6 +105,7 @@ test('scan, arrange, sign, fill, send and summarise, by clicking alone', async (
   await page.locator('.scan__page').nth(1).getByRole('button', { name: 'Move earlier' }).click();
 
   // Sign: the PDF arrives chosen; the signer signs; the signed copy is queued after a question.
+  await scanStep(page, 'keep');
   await page.getByRole('button', { name: 'Sign this PDF' }).click();
   await expect(page).toHaveURL(/\/signing$/);
   await expect(page.getByTestId('signing-handoff')).toHaveText('PDF ready: loppa.pdf');
@@ -188,6 +189,7 @@ test('the demo fixtures do what the demo says they do', async ({ page }) => {
   await expect(page.locator('.scan__page')).toHaveCount(3);
   await page.locator('.scan__page').nth(0).getByRole('button', { name: 'Move later' }).click();
   await page.locator('.scan__page').nth(1).getByRole('button', { name: 'Move later' }).click();
+  await scanStep(page, 'keep');
   const saving = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
   await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
@@ -208,6 +210,7 @@ test('the demo fixtures do what the demo says they do', async ({ page }) => {
 
   // The invoice picture is read by the invoice scan, as the invoice it is drawn from.
   await page.goto('/scan');
+  await openMoreTools(page);
   await page.getByTestId('scan-invoice-open').click();
   await page.getByLabel('Language of the invoice').selectOption('sv-SE');
   await page.getByTestId('invoice-scan-file').setInputFiles(file('invoice-sample.png'));

@@ -21,7 +21,9 @@ import { EmptyState } from '../components/EmptyState.js';
 import { Icon } from '../components/Icon.js';
 import { openPdf, type PaperPdf } from './builder/paper/extract.js';
 import { preparePhoto } from './scan-photo.js';
-import { fromWord, WordToPdf } from './WordToPdf.js';
+import { DroppedNotice, fromWord, WordToPdf } from './WordToPdf.js';
+import type { Dropped } from './builder/paper/docx-blocks.js';
+import { StepBar, type Step } from './scan/StepBar.js';
 import { InvoiceScanEntry } from './invoice-scan/Entry.js';
 import {
   movePage,
@@ -73,6 +75,10 @@ export function Scan() {
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
   const [keeping, setKeeping] = useState(false);
   const [aiReading, setAiReading] = useState(false);
+  const [step, setStep] = useState<Step>('bring');
+  const [bringMore, setBringMore] = useState(false);
+  const [copyAt, setCopyAt] = useState(0);
+  const [wordDropped, setWordDropped] = useState<Dropped[] | null>(null);
   const handled = useRef(false);
   // How many files the list holds, kept synchronously: two adds in flight (a drop of mixed files) must not share an index.
   const count = useRef(0);
@@ -135,6 +141,7 @@ export function Scan() {
         pagesOfFile(first + index, 'pdf' in source ? source.pdf.pageCount : 1),
       ),
     ]);
+    setStep('fix');
     return { sent, opened: opened, kinds: wantedKinds };
   }
 
@@ -170,12 +177,19 @@ export function Scan() {
         only && kind === 'pdf'
           ? [
               { key: 'fill', run: () => navigate(...fillWith(only)) },
-              { key: 'invoice', run: () => setInvoiceFile(only) },
+              { key: 'invoice', run: () => readAsInvoice(only) },
             ]
           : only && kind === 'photo'
-            ? [{ key: 'invoice', run: () => setInvoiceFile(only) }]
+            ? [{ key: 'invoice', run: () => readAsInvoice(only) }]
             : [],
     });
+  }
+
+  /** The invoice reader lives under Bring in's more tools: go there and open it on this file. */
+  function readAsInvoice(file: File) {
+    setInvoiceFile(file);
+    setStep('bring');
+    setBringMore(true);
   }
 
   useEffect(() => {
@@ -277,6 +291,7 @@ export function Scan() {
   }
 
   // Summarise needs this computer's model; Fill needs the one PDF the person added, untouched.
+  const shown: Step = pages.length === 0 ? 'bring' : step;
   const onlyPdf = sources.length === 1 ? sources[0] : undefined;
   const fillable =
     onlyPdf &&
@@ -293,81 +308,139 @@ export function Scan() {
         <p className="muted small">{t('scan.intro')}</p>
       </header>
 
-      <div className="scan__bar">
-        <input
-          ref={picker}
-          type="file"
-          accept="application/pdf,.pdf,.docx,image/jpeg,image/png,image/webp,image/heic,image/heif"
-          multiple
-          hidden
-          data-testid="scan-files"
-          onChange={(event) => {
-            void receive([...(event.target.files ?? [])]);
-            event.target.value = '';
-          }}
-        />
-        {/* One filled button per screen: adding is the primary action until there is a document. */}
+      <StepBar step={shown} hasPages={pages.length > 0} onStep={setStep} />
+
+      <div hidden={shown !== 'bring'} className="stack stack--tight">
+        <div className="scan__bar">
+          <input
+            ref={picker}
+            type="file"
+            accept="application/pdf,.pdf,.docx,image/jpeg,image/png,image/webp,image/heic,image/heif"
+            multiple
+            hidden
+            data-testid="scan-files"
+            onChange={(event) => {
+              void receive([...(event.target.files ?? [])]);
+              event.target.value = '';
+            }}
+          />
+          {/* One filled button per step: adding is the primary action until there is a document. */}
+          <button
+            type="button"
+            className={pages.length === 0 ? 'button' : 'button button--quiet'}
+            onClick={() => picker.current?.click()}
+          >
+            <Icon name="upload" /> {t('scan.add')}
+          </button>
+          <button type="button" className="button button--quiet" onClick={() => setCamera(true)}>
+            <Icon name="image" /> {t('scan.camera')}
+          </button>
+          {pages.length > 0 ? (
+            <button type="button" className="button" onClick={() => setStep('fix')}>
+              {t('public.next')}
+            </button>
+          ) : null}
+        </div>
+        <details
+          className="card card--disclosure"
+          open={bringMore}
+          onToggle={(event) => setBringMore(event.currentTarget.open)}
+        >
+          <summary>{t('scan.more')}</summary>
+          <div className="stack">
+            <WordToPdf
+              incoming={words}
+              onTaken={() => setWords([])}
+              onPdf={(pdf) => void add([pdf])}
+              onDropped={setWordDropped}
+            />
+            <InvoiceScanEntry file={invoiceFile} />
+            <Link className="button button--quiet" to="/forms?new">
+              <Icon name="forms" /> {t('scan.toForm')}
+            </Link>
+          </div>
+        </details>
+      </div>
+
+      <div hidden={shown !== 'fix'} className="stack stack--tight">
+        <div className="scan__bar">
+          <button type="button" className="button" onClick={() => setStep('keep')}>
+            {t('scan.doneFixing')}
+          </button>
+          <button type="button" className="button button--quiet" onClick={() => setStep('bring')}>
+            {t('public.back')}
+          </button>
+          {aiBridge() ? (
+            <button
+              type="button"
+              className="button button--quiet"
+              disabled={busy || aiReading}
+              data-testid="handoff-read-ai"
+              onClick={() => setAiReading(true)}
+            >
+              <Icon name="preview" /> {t('read.open')}
+            </button>
+          ) : null}
+        </div>
+        <details className="card card--disclosure">
+          <summary>{t('scan.more')}</summary>
+          <div className="stack">
+            <select
+              aria-label={t('signPlace.pageLabel')}
+              value={Math.min(copyAt, Math.max(pages.length - 1, 0))}
+              onChange={(event) => setCopyAt(Number(event.target.value))}
+            >
+              {pages.map((page, position) => (
+                <option key={page.id} value={position}>
+                  {t('scan.page', { n: position + 1 })}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              className="button button--quiet"
+              disabled={busy || pages.length === 0}
+              onClick={() => {
+                const page = pages[Math.min(copyAt, pages.length - 1)];
+                if (page) void copyOf(page).catch(() => say('scan.error.unreadable'));
+              }}
+            >
+              <Icon name="file" /> {t('copy.open')}
+            </button>
+          </div>
+        </details>
+      </div>
+
+      <div hidden={shown !== 'keep'} className="scan__bar">
+        <button type="button" className="button" disabled={busy} onClick={() => setKeeping(true)}>
+          <Icon name="download" /> {busy ? t('scan.working') : t('scan.download')}
+        </button>
         <button
           type="button"
-          className={pages.length === 0 ? 'button' : 'button button--quiet'}
-          onClick={() => picker.current?.click()}
+          className="button button--quiet"
+          disabled={busy}
+          onClick={() => void make(false, 'sign')}
         >
-          <Icon name="upload" /> {t('scan.add')}
+          <Icon name="signature" /> {t('scan.sign')}
         </button>
-        <button type="button" className="button button--quiet" onClick={() => setCamera(true)}>
-          <Icon name="image" /> {t('scan.camera')}
+        <button
+          type="button"
+          className="button button--quiet"
+          disabled={busy}
+          onClick={() => void make(false, 'send')}
+        >
+          <Icon name="email" /> {t('scan.send')}
         </button>
-        {pages.length > 0 ? (
-          <>
-            <span className="muted small" aria-live="polite">
-              {t('scan.count', { count: pages.length })}
-            </span>
-            <button
-              type="button"
-              className="button"
-              disabled={busy}
-              onClick={() => setKeeping(true)}
-            >
-              <Icon name="download" /> {busy ? t('scan.working') : t('scan.download')}
-            </button>
-            <button
-              type="button"
-              className="button button--quiet"
-              disabled={busy}
-              onClick={() => void make(false, 'sign')}
-            >
-              <Icon name="signature" /> {t('scan.sign')}
-            </button>
-            <button
-              type="button"
-              className="button button--quiet"
-              disabled={busy}
-              onClick={() => void make(false, 'send')}
-            >
-              <Icon name="email" /> {t('scan.send')}
-            </button>
-            <Handoffs
-              busy={busy}
-              onSummarise={modelBridge() ? () => void make(false, 'summarise') : null}
-              onFill={fillable ? () => navigate(...fillWith(fillable)) : null}
-            />
-            {aiBridge() ? (
-              <button
-                type="button"
-                className="button button--quiet"
-                disabled={busy || aiReading}
-                data-testid="handoff-read-ai"
-                onClick={() => setAiReading(true)}
-              >
-                <Icon name="preview" /> {t('read.open')}
-              </button>
-            ) : null}
-          </>
-        ) : null}
-        <Link className="button button--quiet" to="/forms?new">
-          {t('scan.toForm')}
-        </Link>
+        <Handoffs
+          busy={busy}
+          onSummarise={modelBridge() ? () => void make(false, 'summarise') : null}
+          onFill={fillable ? () => navigate(...fillWith(fillable)) : null}
+        />
+        <button type="button" className="button button--quiet" onClick={() => setStep('fix')}>
+          {t('public.back')}
+        </button>
       </div>
+      <DroppedNotice dropped={wordDropped} />
 
       {camera ? (
         <CameraScan
@@ -404,9 +477,12 @@ export function Scan() {
           />
         </Suspense>
       ) : null}
-      <WordToPdf incoming={words} onTaken={() => setWords([])} onPdf={(pdf) => void add([pdf])} />
-      <InvoiceScanEntry file={invoiceFile} />
 
+      {pages.length > 0 ? (
+        <span className="muted small" aria-live="polite">
+          {t('scan.count', { count: pages.length })}
+        </span>
+      ) : null}
       {pages.length === 0 ? (
         <EmptyState icon="upload" media="scan" title={t('scan.empty')} hint={t('scan.emptyHint')} />
       ) : (
@@ -415,7 +491,7 @@ export function Scan() {
             <li key={page.id} className="scan__page">
               <Thumb source={sources[page.file]!} index={page.page} turn={page.turn} />
               <span className="small">{t('scan.page', { n: position + 1 })}</span>
-              <span className="scan__actions">
+              <span className="scan__actions" hidden={shown !== 'fix'}>
                 <PageButton
                   label={t('scan.earlier')}
                   icon="arrow-left"
@@ -445,12 +521,6 @@ export function Scan() {
                   icon="edit"
                   disabled={busy}
                   onClick={() => void make(false, (blob) => setEditing({ blob, page: position }))}
-                />
-                <PageButton
-                  label={t('copy.open')}
-                  icon="file"
-                  disabled={busy}
-                  onClick={() => void copyOf(page).catch(() => say('scan.error.unreadable'))}
                 />
                 <PageButton
                   label={t('scan.remove')}

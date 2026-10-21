@@ -2,7 +2,7 @@ import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
 import { deflateSync } from 'node:zlib';
 import { expect, test, type Page } from '@playwright/test';
-import { db, plantLoginToken } from './support.js';
+import { db, plantLoginToken, scanStep } from './support.js';
 import { tinyPdf } from './pdf.js';
 
 /**
@@ -84,6 +84,7 @@ async function open(page: Page) {
 }
 
 async function download(page: Page) {
+  await scanStep(page, 'keep');
   const saving = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
   await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
@@ -175,6 +176,7 @@ test('pages taken with the camera join the same list', async ({ page }) => {
     .setInputFiles({ name: 'first.png', mimeType: 'image/png', buffer: png(80, 120, [9, 9, 9]) });
   await expect(page.getByText(/^1 pages?$/)).toBeVisible();
 
+  await scanStep(page, 'bring');
   await page.getByRole('button', { name: 'Take photos' }).click();
   const scanner = page.getByTestId('camera-scan');
   await expect(scanner.getByRole('button', { name: 'Take page' })).toBeEnabled();

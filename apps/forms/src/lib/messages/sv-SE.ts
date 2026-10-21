@@ -1769,6 +1769,12 @@ export const svSE: Record<MessageKey, string> = {
   'invoiceScan.note.reference': 'Referens: {reference}',
   'invoiceScan.note.due': 'Betala senast: {date}',
   'invoiceScan.note.vat': 'Moms enligt fakturan: {amount}',
+  'scan.step.bring': 'Lägg in',
+  'scan.step.fix': 'Fixa',
+  'scan.step.keep': 'Spara',
+  'scan.steps': 'Steg',
+  'scan.more': 'Fler verktyg',
+  'scan.doneFixing': 'Klar med ändringarna',
   'scan.heading': 'Ordna sidor',
   'scan.intro':
     'Slå ihop PDF-filer och foton, ta bort sidor, vänd dem och lägg dem i ordning. Inget sparas: den nya PDF:en görs för att du ska ladda ner den.',

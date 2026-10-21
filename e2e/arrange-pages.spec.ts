@@ -45,6 +45,9 @@ test('arrange: pages from three PDFs are reordered, turned and removed into one 
     })),
   );
   await expect(page.getByText('3 pages')).toBeVisible();
+  // Adding files moves on to Fix by itself; the page list is there in every step.
+  const steps = page.getByRole('navigation', { name: 'Steps' });
+  await expect(steps.getByRole('button', { name: /Fix$/ })).toHaveAttribute('aria-current', 'step');
   const cards = page.locator('.scan__page');
   await expect(cards).toHaveCount(3);
   // Each page is drawn: the first canvas has something other than white paper on it (the page's
@@ -72,6 +75,12 @@ test('arrange: pages from three PDFs are reordered, turned and removed into one 
   await cards.nth(2).getByRole('button', { name: 'Remove page' }).click();
   await expect(page.getByText('2 pages')).toBeVisible();
 
+  await page.getByRole('button', { name: 'Done fixing' }).click();
+  await expect(steps.getByRole('button', { name: /Keep$/ })).toHaveAttribute(
+    'aria-current',
+    'step',
+  );
+  await expect(cards).toHaveCount(2);
   const download = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
   await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();

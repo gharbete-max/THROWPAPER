@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { db, signInAs } from './support.js';
+import { db, scanStep, signInAs } from './support.js';
 import { tinyPdf } from './pdf.js';
 
 /**
@@ -41,6 +41,7 @@ test('a PDF arranged in Scan is sent: confirmation first, nothing queued before 
   await expect(page.getByRole('list', { name: 'Arrange pages' }).getByRole('listitem')).toHaveCount(
     1,
   );
+  await scanStep(page, 'keep');
   await page.getByRole('button', { name: 'Send this PDF' }).click();
 
   // Arrived with the file in route state, not in the address.

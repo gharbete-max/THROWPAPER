@@ -41,11 +41,23 @@ First start asks for your organisation's name and yours, or offers demo data. No
 
 ## Scan
 
-**Add PDFs or photos**, **Take photos**, or drop files in. Up to 40 files, 25 MB each, 500 pages in
-all. PDF, JPEG, PNG and WebP are accepted; a HEIC photo may not open. Nothing is kept: **Make the PDF**
-produces a file to download.
+Scan is three steps, shown as a bar across the top: **1. Bring in**, **2. Fix**, **3. Keep**. The pages
+stay on screen in every step, and any step you have reached is one press away, so you can always go
+back. Adding files moves you to _Fix_ by itself; _Done fixing_ moves you to _Keep_. Each step has one
+filled button; the rest are quieter.
 
-- **Arrange**: _Move earlier_, _Move later_, _Turn_, _Remove page_.
+**1. Bring in.** **Add PDFs or photos**, **Take photos**, or drop files anywhere on the screen. Up to 40
+files, 25 MB each, 500 pages in all. PDF, JPEG, PNG and WebP are accepted; a HEIC photo may not open.
+Nothing is kept: **Make the PDF** produces a file to download. _More tools_ holds the rarer ways in:
+_Add a Word file_, _Read a supplier invoice_ and _Make a form from a document instead_.
+
+**2. Fix.** The page cards get their buttons here. _More tools_ holds _Make a digital copy_, for the page
+you choose. **Read with AI** is here too, where this edition has it.
+
+**3. Keep.** **Make the PDF**, _Sign this PDF_, _Send this PDF_, and where they apply _Fill it in_ and
+_Summarise this PDF_.
+
+- **Arrange** (Fix): _Move earlier_, _Move later_, _Turn_, _Remove page_.
 - **Phone**: _Use a phone_ shows a QR code. Scan it with the phone's camera, on the same Wi-Fi, and
   take a photo of each page; they arrive on the computer. Press _Use the pages_ to bring them in.
   - While a phone scan is open, Loppa listens on your local network (not on every adapter) so the
@@ -57,7 +69,7 @@ produces a file to download.
 - **Filters** (per page): _Original_, _Enhanced colour_, _Grey_, _Black and white_, _Clean document_,
   with a strength and _Straighten the page_. A suggestion is only a suggestion until you press
   _Apply_; _Back to the original photo_ undoes it.
-- **Make a digital copy**: reads a photographed page on this device and shows the words, marking those
+- **Make a digital copy** (Fix, _More tools_): reads a photographed page on this device and shows the words, marking those
   it was unsure of. Check them, then keep the copy as _PDF with lines and text_, _Searchable PDF_
   (the photo stays the page, the words are hidden under it so the PDF can be searched), _SVG picture_,
   _Plain text_ or _A form_. Choose the language of the page; a wrong one gives poor reading.

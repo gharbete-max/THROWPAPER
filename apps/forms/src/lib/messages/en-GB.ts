@@ -1776,6 +1776,12 @@ export const enGB = {
   'invoiceScan.note.reference': 'Reference: {reference}',
   'invoiceScan.note.due': 'Pay by: {date}',
   'invoiceScan.note.vat': 'VAT as printed: {amount}',
+  'scan.step.bring': 'Bring in',
+  'scan.step.fix': 'Fix',
+  'scan.step.keep': 'Keep',
+  'scan.steps': 'Steps',
+  'scan.more': 'More tools',
+  'scan.doneFixing': 'Done fixing',
   'scan.heading': 'Arrange pages',
   'scan.intro':
     'Put PDFs and photos together, take pages out, turn them and put them in order. Nothing is kept: the new PDF is made for you to download.',
