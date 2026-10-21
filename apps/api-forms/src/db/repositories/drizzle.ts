@@ -387,6 +387,7 @@ export function createDrizzleRepositories(db: Db): Repositories {
         const [row] = await db
           .insert(forms)
           .values({
+            ...(input.id ? { id: input.id } : {}),
             organisationId: input.organisationId,
             eventId: input.eventId,
             slug: input.slug,

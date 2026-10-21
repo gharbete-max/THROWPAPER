@@ -16,6 +16,12 @@ export const FormSlug = z
   .regex(/^[a-z0-9][a-z0-9-]*$/, 'Use lower case, digits and hyphens');
 
 export const CreateForm = z.object({
+  /**
+   * The id the form should have, chosen by the caller. The guided builder opens at an address
+   * before there is a form and makes it on the first answer, so the address must be known first.
+   * Omitted, the server chooses. Taken, 409 `id-taken`.
+   */
+  id: Uuid.optional(),
   title: LocalisedText,
   slug: FormSlug,
   /** Optional: a form can stand alone, or collect registrations for one event. */

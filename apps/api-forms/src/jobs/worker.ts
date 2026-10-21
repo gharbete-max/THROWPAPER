@@ -53,6 +53,18 @@ export interface Worker {
   stop(): void;
 }
 
+/**
+ * A handler hands work to another program and cannot tell whether it went: the program took too
+ * long to answer, and may still do it. Retrying would send the same thing twice, so the job is
+ * failed at once, without a retry, with a message that says to look in that program. The person
+ * decides whether to send it again.
+ */
+export class UnknownOutcome extends Error {
+  constructor(program: string, detail: string) {
+    super(`unknown outcome — check ${program}: ${detail}`);
+  }
+}
+
 /** Stands in for a job when the failure happened before one was claimed. */
 const unclaimedJob = { id: '(none)', kind: '(claim)' } as JobRecord;
 
@@ -84,7 +96,7 @@ export function createWorker(options: WorkerOptions): Worker {
     } catch (error) {
       options.onError?.(error, job);
       const message = error instanceof Error ? error.message : String(error);
-      const exhausted = job.attempts >= job.maxAttempts;
+      const exhausted = job.attempts >= job.maxAttempts || error instanceof UnknownOutcome;
       const retryAt = exhausted
         ? null
         : new Date(now().getTime() + backoffBaseMs * 2 ** (job.attempts - 1));

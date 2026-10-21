@@ -114,6 +114,10 @@ export const deDE: Record<MessageKey, string> = {
     '„{title}“ in den Papierkorb verschieben? Es nimmt keine Antworten mehr an und lässt sich später wiederherstellen.',
   'forms.confirmDelete':
     'plural:one „{title}“ und die {count} Antwort endgültig löschen? Das lässt sich nicht rückgängig machen. | other „{title}“ und alle {count} Antworten endgültig löschen? Das lässt sich nicht rückgängig machen.',
+  'forms.abandoned':
+    'plural:one {count} leerer Entwurf wurde vor mehr als einem Tag begonnen und nie beantwortet | other {count} leere Entwürfe wurden vor mehr als einem Tag begonnen und nie beantwortet',
+  'forms.confirmAbandoned':
+    'plural:one Den leeren Entwurf in den Papierkorb legen? Es stand nichts darin; aus dem Papierkorb lässt er sich wiederherstellen. | other Diese {count} leeren Entwürfe in den Papierkorb legen? Es stand nichts darin; aus dem Papierkorb lassen sie sich wiederherstellen.',
 
   'share.title': 'Freigeben',
   'share.with':
@@ -1482,11 +1486,6 @@ export const deDE: Record<MessageKey, string> = {
   'ai.models.state.damaged': 'Beschädigt',
   'ai.models.state.busy': 'In Benutzung',
   'ai.models.state.evaluation-only': 'Nur zur Evaluierung',
-  'ai.models.unavailable': 'Noch nicht verfügbar',
-  'ai.models.unavailableWhy':
-    'Loppa kann dieses Modell noch nicht ausführen. Dateien, die Sie hier ablegen, werden aufbewahrt und geprüft, aber nichts verwendet sie.',
-  'ai.models.unverifiedLicence':
-    'Forschungslizenz, nicht für den Einsatz in einem Produkt geprüft. Sie gilt nur zur Evaluierung und wird nie zum Download angeboten.',
   'ai.models.size': 'Größe: {size} GB',
   'ai.models.licence': 'Lizenz: {licence}',
   'ai.models.file': '{name}: {where}',
@@ -1497,8 +1496,6 @@ export const deDE: Record<MessageKey, string> = {
   'ai.models.source.remembered': 'von der Festplatte geöffnet',
   'ai.models.source.user-data': 'im Modellordner von Loppa',
   'ai.models.source.ai-pack': 'im KI-Paket neben Loppa gefunden',
-  'ai.models.needs':
-    'Benötigt einen Computer mit mindestens 12 GB Arbeitsspeicher, davon etwa 10 GB frei, solange es läuft. Auf einem kleineren Computer startet es nicht.',
   'ai.models.hash.verified': 'geprüft',
   'ai.models.hash.unchecked': 'noch nicht geprüft (sie wird vor der ersten Benutzung geprüft)',
   'ai.models.hash.unpinned': 'keine Prüfsumme zum Vergleichen',
@@ -1719,7 +1716,6 @@ export const deDE: Record<MessageKey, string> = {
   'read.checked.no': 'nicht angekreuzt',
   'read.figure': 'Abbildung',
   'read.summarise': 'Zusammenfassen',
-  'read.proofread': 'Korrekturlesen',
   'read.noModel':
     'Das Modell ist auf diesem Computer nicht installiert, daher können Seiten nicht mit KI gelesen werden.',
   'read.noModelLink': 'Modellliste öffnen',
@@ -2223,8 +2219,6 @@ export const deDE: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': 'Foto',
   'docs.summarise': 'Diese PDF zusammenfassen',
-  'docs.reading': 'Text wird gelesen…',
-  'docs.noText': 'Aus dieser PDF konnte kein Text gelesen werden.',
   'docs.keep.heading': 'Diese PDF behalten',
   'docs.keep.name': 'Dateiname',
   'docs.keep.size': 'Größe',

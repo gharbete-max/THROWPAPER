@@ -27,7 +27,7 @@ export function AiSetup() {
         <>
           <ModelsPanel />
           <p>
-            <Link to="/summary" state={state}>
+            <Link className="link--target" to="/summary" state={state}>
               {t('room.centre')}
             </Link>
           </p>

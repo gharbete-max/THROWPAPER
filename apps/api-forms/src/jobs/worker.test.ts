@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createMemoryRepositories } from '../db/repositories/index.js';
 import { testOrganisation } from '../test-support.js';
-import { createWorker, type JobHandler } from './worker.js';
+import { createWorker, UnknownOutcome, type JobHandler } from './worker.js';
 
 /**
  * One clock for the worker and the repository both. They used to take different ones — the worker
@@ -220,5 +220,29 @@ describe('a job the last worker never finished', () => {
     const dead = await repos.jobs.findById(testOrganisation.id, job.id);
     expect(dead?.status).toBe('failed');
     expect(dead?.error).toContain('worker');
+  });
+});
+
+describe('a job whose outcome is not known', () => {
+  it('is not retried: a resend could duplicate what the other program sends anyway', async () => {
+    let runs = 0;
+    const { repos, worker } = setup({
+      'test.job': async () => {
+        runs += 1;
+        throw new UnknownOutcome('Outlook', 'did not answer in time');
+      },
+    });
+    const job = await enqueue(repos, { maxAttempts: 5 });
+
+    await worker.runOnce();
+    const after = await repos.jobs.findById(testOrganisation.id, job.id);
+    expect(after?.status).toBe('failed');
+    expect(after?.attempts).toBeLessThan(after?.maxAttempts ?? 0);
+    expect(after?.error).toMatch(/^unknown outcome — check Outlook/);
+    expect(after?.error).toContain('did not answer in time');
+
+    // Nothing is due, however long it waits.
+    expect(await worker.drain()).toBe(0);
+    expect(runs).toBe(1);
   });
 });

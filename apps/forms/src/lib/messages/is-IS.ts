@@ -112,6 +112,10 @@ export const isIS: Record<MessageKey, string> = {
     'Setja “{title}” í ruslafötuna? Það hættir að taka við svörum og þú getur endurheimt það síðar.',
   'forms.confirmDelete':
     'plural:one Eyða “{title}” og {count} svari þess varanlega? Þetta er ekki hægt að afturkalla. | other Eyða “{title}” og öllum {count} svörum varanlega? Þetta er ekki hægt að afturkalla.',
+  'forms.abandoned':
+    'plural:one {count} tómt uppkast var byrjað fyrir meira en degi og var aldrei svarað | other {count} tóm uppköst voru byrjuð fyrir meira en degi og var aldrei svarað',
+  'forms.confirmAbandoned':
+    'plural:one Setja tóma uppkastið í ruslafötuna? Ekkert var skrifað í það og hægt er að endurheimta það þaðan. | other Setja þessi {count} tómu uppköst í ruslafötuna? Ekkert var skrifað í þau og hægt er að endurheimta þau þaðan.',
 
   'share.title': 'Deila',
   'share.with': 'plural:one Deilt með {count} aðila | other Deilt með {count} aðilum',
@@ -1437,11 +1441,6 @@ export const isIS: Record<MessageKey, string> = {
   'ai.models.state.damaged': 'Skemmt',
   'ai.models.state.busy': 'Í notkun',
   'ai.models.state.evaluation-only': 'Aðeins til mats',
-  'ai.models.unavailable': 'Ekki tiltækt enn',
-  'ai.models.unavailableWhy':
-    'Loppa getur ekki keyrt þetta líkan enn. Skrár sem þú setur hér eru geymdar og athugaðar, en ekkert notar þær.',
-  'ai.models.unverifiedLicence':
-    'Rannsóknarleyfi, ekki athugað fyrir notkun í vöru. Það er aðeins til mats og er aldrei boðið til niðurhals.',
   'ai.models.size': 'Stærð: {size} GB',
   'ai.models.licence': 'Leyfi: {licence}',
   'ai.models.file': '{name}: {where}',
@@ -1452,8 +1451,6 @@ export const isIS: Record<MessageKey, string> = {
   'ai.models.source.remembered': 'opnað af diski',
   'ai.models.source.user-data': 'í líkanamöppu Loppa',
   'ai.models.source.ai-pack': 'fannst í gervigreindarpakkanum við hlið Loppa',
-  'ai.models.needs':
-    'Krefst tölvu með að minnsta kosti 12 GB af minni og um 10 GB lausum á meðan það keyrir. Á minni tölvu fer það ekki í gang.',
   'ai.models.hash.verified': 'athugað',
   'ai.models.hash.unchecked': 'ekki athugað enn (það er athugað áður en það er fyrst notað)',
   'ai.models.hash.unpinned': 'engin sannprófunarsumma til að bera saman við',
@@ -1666,7 +1663,6 @@ export const isIS: Record<MessageKey, string> = {
   'read.checked.no': 'ómerkt',
   'read.figure': 'Mynd',
   'read.summarise': 'Taka saman',
-  'read.proofread': 'Prófarkalesa',
   'read.noModel':
     'Líkanið er ekki uppsett í þessari tölvu, svo ekki er hægt að lesa síður með gervigreind.',
   'read.noModelLink': 'Opna líkanalistann',
@@ -2153,8 +2149,6 @@ export const isIS: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': 'Ljósmynd',
   'docs.summarise': 'Draga þetta PDF saman',
-  'docs.reading': 'Les textann…',
-  'docs.noText': 'Ekki tókst að lesa texta úr þessu PDF.',
   'docs.keep.heading': 'Geyma þetta PDF',
   'docs.keep.name': 'Skráarheiti',
   'docs.keep.size': 'Stærð',

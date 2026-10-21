@@ -112,6 +112,10 @@ export const nbNO: Record<MessageKey, string> = {
     'Flytte “{title}” til papirkurven? Det slutter å ta imot svar, og du kan gjenopprette det senere.',
   'forms.confirmDelete':
     'plural:one Slette “{title}” og dets {count} svar permanent? Dette kan ikke angres. | other Slette “{title}” og alle {count} svar permanent? Dette kan ikke angres.',
+  'forms.abandoned':
+    'plural:one {count} tomt utkast ble påbegynt for over et døgn siden og fikk aldri noe svar | other {count} tomme utkast ble påbegynt for over et døgn siden og fikk aldri noe svar',
+  'forms.confirmAbandoned':
+    'plural:one Flytte det tomme utkastet til papirkurven? Det sto ingenting i det, og du kan gjenopprette det derfra. | other Flytte de {count} tomme utkastene til papirkurven? Det sto ingenting i dem, og du kan gjenopprette dem derfra.',
 
   'share.title': 'Del',
   'share.with': 'plural:one Delt med {count} person | other Delt med {count} personer',
@@ -1424,11 +1428,6 @@ export const nbNO: Record<MessageKey, string> = {
   'ai.models.state.damaged': 'Skadet',
   'ai.models.state.busy': 'I bruk',
   'ai.models.state.evaluation-only': 'Bare for evaluering',
-  'ai.models.unavailable': 'Ikke tilgjengelig ennå',
-  'ai.models.unavailableWhy':
-    'Loppa kan ikke kjøre denne modellen ennå. Filer du legger her, lagres og kontrolleres, men ingenting bruker dem.',
-  'ai.models.unverifiedLicence':
-    'Forskningslisens, ikke kontrollert for bruk i et produkt. Den er bare for evaluering og tilbys aldri for nedlasting.',
   'ai.models.size': 'Størrelse: {size} GB',
   'ai.models.licence': 'Lisens: {licence}',
   'ai.models.file': '{name}: {where}',
@@ -1439,8 +1438,6 @@ export const nbNO: Record<MessageKey, string> = {
   'ai.models.source.remembered': 'åpnet fra disken',
   'ai.models.source.user-data': 'i Loppas modellmappe',
   'ai.models.source.ai-pack': 'funnet i AI-pakken ved siden av Loppa',
-  'ai.models.needs':
-    'Krever en datamaskin med minst 12 GB minne og omtrent 10 GB ledig mens den kjører. På en mindre datamaskin starter den ikke.',
   'ai.models.hash.verified': 'kontrollert',
   'ai.models.hash.unchecked': 'ikke kontrollert ennå (den kontrolleres før første bruk)',
   'ai.models.hash.unpinned': 'ingen kontrollsum å sammenligne med',
@@ -1654,7 +1651,6 @@ export const nbNO: Record<MessageKey, string> = {
   'read.checked.no': 'ikke avkrysset',
   'read.figure': 'Figur',
   'read.summarise': 'Oppsummer',
-  'read.proofread': 'Korrekturles',
   'read.noModel':
     'Modellen er ikke installert på denne datamaskinen, så sider kan ikke leses med AI.',
   'read.noModelLink': 'Åpne modelllisten',
@@ -2137,8 +2133,6 @@ export const nbNO: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': 'Foto',
   'docs.summarise': 'Oppsummer denne PDF-en',
-  'docs.reading': 'Leser teksten…',
-  'docs.noText': 'Ingen tekst kunne leses fra denne PDF-en.',
   'docs.keep.heading': 'Lagre denne PDF-en',
   'docs.keep.name': 'Filnavn',
   'docs.keep.size': 'Størrelse',

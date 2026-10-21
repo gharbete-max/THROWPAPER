@@ -49,6 +49,12 @@ export class Saver {
       readonly title: Record<string, string>;
     },
     private readonly onStatus: (status: SaveStatus) => void = () => {},
+    /**
+     * Makes the form, for a conversation that began before there was one. Runs once, before the
+     * first step is saved: a start that is never answered never becomes a draft. A failure is a
+     * failed save like any other, and `retry` tries it again.
+     */
+    private ensure: (() => Promise<void>) | null = null,
   ) {
     this.version = start.version;
     this.savedDraft = start.draft;
@@ -64,6 +70,11 @@ export class Saver {
       this.running = null;
     });
     return this.running;
+  }
+
+  /** The form is still to be made: nothing has been answered, so nothing exists. */
+  get unmade(): boolean {
+    return this.ensure !== null;
   }
 
   /** Try the step that failed again. */
@@ -88,6 +99,10 @@ export class Saver {
       this.waiting = null;
       this.set('saving');
       try {
+        if (this.ensure) {
+          await this.ensure();
+          this.ensure = null;
+        }
         const draft = conversation.state.draft.definition;
         if (!jsonEqual(draft, this.savedDraft)) {
           await this.api.saveDraft(this.formId, draft);

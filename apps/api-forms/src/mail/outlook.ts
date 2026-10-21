@@ -2,6 +2,7 @@ import { execFile } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
+import { UnknownOutcome } from '../jobs/worker.js';
 import type { MailProvider, OutboundMail } from './provider.js';
 
 /**
@@ -24,6 +25,8 @@ import type { MailProvider, OutboundMail } from './provider.js';
 export type MailProgram = 'outlook' | 'apple-mail';
 
 export interface ScriptResult {
+  /** The script was stopped for taking too long: what it had started may still finish. */
+  timedOut?: boolean;
   code: number;
   stdout: string;
   stderr: string;
@@ -118,23 +121,33 @@ export const MAC_APPLE_MAIL_SCRIPT = [
   'end run',
 ].join('\n');
 
-export const defaultRun: ScriptRunner = (command, args, env) =>
-  new Promise((resolve) => {
-    execFile(
-      command,
-      [...args],
-      { env: { ...process.env, ...env }, windowsHide: true, timeout: 120_000 },
-      (error, stdout, stderr) => {
-        const code =
-          error && typeof (error as NodeJS.ErrnoException & { code?: unknown }).code === 'number'
-            ? (error as unknown as { code: number }).code
-            : error
-              ? 1
-              : 0;
-        resolve({ code, stdout: String(stdout), stderr: String(stderr) || (error?.message ?? '') });
-      },
-    );
-  });
+export const runScript =
+  (timeout: number): ScriptRunner =>
+  (command, args, env) =>
+    new Promise((resolve) => {
+      execFile(
+        command,
+        [...args],
+        { env: { ...process.env, ...env }, windowsHide: true, timeout },
+        (error, stdout, stderr) => {
+          const timedOut = error?.killed === true && error.signal === 'SIGTERM';
+          const code =
+            error && typeof (error as NodeJS.ErrnoException & { code?: unknown }).code === 'number'
+              ? (error as unknown as { code: number }).code
+              : error
+                ? 1
+                : 0;
+          resolve({
+            ...(timedOut ? { timedOut } : {}),
+            code,
+            stdout: String(stdout),
+            stderr: String(stderr) || (error?.message ?? ''),
+          });
+        },
+      );
+    });
+
+export const defaultRun = runScript(120_000);
 
 /**
  * PowerShell by its absolute path, never by name.
@@ -230,6 +243,14 @@ export function createMailProgramProvider(options: MailProgramOptions): MailProv
           result = await run('osascript', ['-e', script, dir], {});
         }
 
+        if (result.timedOut) {
+          // Outlook can take the message and send it after the script was stopped; a retry would
+          // send it twice. Said as it is, for the person to check the Sent folder.
+          throw new UnknownOutcome(
+            describeProgram(program, platform),
+            'it did not answer in time, and may still have sent the message',
+          );
+        }
         if (result.code === NOT_AVAILABLE || /\(3\)\s*$/.test(result.stderr.trim())) {
           throw new Error(
             platform === 'win32'

@@ -62,3 +62,41 @@ survives, the verdict does not); another file's CMS grafted into this one; a for
 `api-sign`: 113 to 131 tests. `sealing/tamper.test.ts` (9), `routes/signer-states.test.ts` (5, on Postgres),
 `envelopes/fetch-document.test.ts` (2), and one each in `identity/identity.test.ts` and
 `local/start.test.ts`.
+
+## Part B: carry-over fixes (branch `claude/carryover-fixes`)
+
+**Touches `packages/`** (not `docs/CONTRACT.md`): `packages/shared/src/forms/api.ts` (`CreateForm` takes an optional `id`) and `packages/tokens` (`media.ts`, `media-stats.json`, `media-contrast.test.ts`, one export line in `index.ts`). `pnpm contract:check` passes.
+
+| # | From | What | Where | Test |
+| --- | --- | --- | --- | --- |
+| B-1 | desktop-ai #16 (medium) | `open()` called twice at once opened **two** LAN listeners; the first was never closed and had no idle check. Now one start at a time (`opening`), and `close()` waits for an open in flight. | `api-forms/src/desktop/phone-relay.ts` | `phone-relay.test.ts`: three concurrent opens give one origin and one listener (`TCPServerWrap` count), closing during an open leaves none, reopen after close |
+| B-2 | desktop-ai #17 (low) | The mail program's script timing out (120 s) is no longer "did not send": Outlook may still send it, and the worker would retry and duplicate it. `runScript` reports `timedOut`; the provider throws `UnknownOutcome`; the worker fails that job **at once, with no retry**, message `unknown outcome — check classic Outlook: it did not answer in time, and may still have sent the message`. Same for Outlook for Mac and Apple Mail. | `mail/outlook.ts`, `jobs/worker.ts` | `outlook.test.ts` (fake runner on both platforms; the real runner against a 300 ms timeout), `worker.test.ts` (one run, status `failed`, attempts left, nothing due) |
+| B-3 | forms-ui M3 | "Start from questions" no longer makes a form. It opens `/forms/<new uuid>/guided` (router state `fresh`), the conversation starts blank, and the **first answer** makes the form under that id (`POST /v1/forms` takes an optional `id`; taken gives 409 `id-taken`). Leaving first leaves nothing. "Open the editor" before an answer makes it then. The paper door still makes its form at once (the editor needs one). Older leftovers: a line above My forms offers to move **my** empty drafts (draft, never published, no answers, not shared, no event, `form-…` address, definition equal to the empty one) **older than 24 h** to the bin, after a confirmation; the bin is reversible. Twelve catalogues. | `Forms.tsx`, `GuidedBuilder.tsx`, `saver.ts`, `lib/abandoned-drafts.ts`, `routes/forms.ts`, repositories | `saver.test.ts` (made once, before the first save; a failed creation is retried), `abandoned-drafts.test.ts`, `create-with-id.test.ts`, e2e `abandoned-starts.spec.ts` (nothing in the database after leaving; the first answer makes the form; the offer, cancel, confirm) |
+| B-4 | forms-ui M6 | `mark-loop-256.webp` (1,119,628 B) was fetched by every web `Loading`. `Loading` now draws `docs/brand/css/loppa-spinner.svg` (1,467 B, `apps/forms/public/loppa-spinner.svg`, stops itself under reduced motion). The loop stays for the intro, which mounts it only when it plays (first visit, motion allowed); the phone-scan relay also passes the new file. The brand `animation/` webp files were not used: they are LFS pointers in this checkout (loppa-128 is 450 KB, loppa-256 1.09 MB), still far too heavy for a 40 px spinner. | `Loading.tsx`, `phone-relay.ts` | `loading.test.ts` |
+| B-5 | forms-ui, outside scope | Scrim and chip contrast over the shipped photographs, in both themes (below). | `packages/tokens` | `media-contrast.test.ts` (53) |
+| B-6 | forms-ui L6 | The two links that stand alone (Set up AI to Summary, Summary to Set up AI) are `.link--target`: 24 px minimum, 20 px before at 360 px. One rule at the end of the lazy `styles/app.css`. | `AiSetup.tsx`, `Summary.tsx`, `styles/app.css` | e2e `link-targets.spec.ts` (measured at 360 px) |
+
+### B-4 measured
+
+Signed in, `/forms` opened on a throttled connection (1.5 Mbit, 300 ms), intro already seen, every byte the page received (Chromium, `Network.emulateNetworkConditions`; a scratch spec, not committed):
+
+| | images fetched | total |
+| --- | --- | --- |
+| before | `mark-angled-256.png` 23,936 + `mark-loop-256.webp` 1,119,628 | **1,996,650 B** |
+| after | `mark-angled-256.png` 23,936 + `loppa-spinner.svg` 1,467 (twice: two spinners) | **880,045 B** |
+
+Saved 1,116,605 B (56 %) on the first signed-in screen, and the same on every cold screen that waits. The signed-out web entry (the site hero) still plays `mark-loop-256.webp` through its `<picture>` (`hero-motion.test.ts` governs it): that is the next 1.1 MB, and a product call.
+
+### B-5: what was chosen
+
+No photograph has text written over it today (MEDIA.md: "nothing is written over a picture"), so there was no scrim or chip to measure. The guard is therefore forward-looking and fixes the numbers the first one must use:
+
+- `packages/tokens/src/media.ts`: the scrim is black, 0.6 at its strongest end (full from two thirds of the picture's height down), text `#ffffff`; the chip is the theme's background at 0.88 with the theme's text; the dark theme dims a picture by 0.82 (the test also reads `styles.css` for that number).
+- **No decoder, no dependency.** Decoding WebP in a test needs one, so `python scripts/media-process.py --stats` (Pillow and numpy, already the tool for these files; neither is a repository dependency) reads the *shipped* WebP files and commits `packages/tokens/src/media-stats.json`: for each of the twelve, its SHA-256 and the brightest and darkest pixel, whole and in the bottom third. The test fails if a picture's hash differs from its statistics, so they cannot go stale.
+- The test composites the scrim, or the chip, over those pixels in sRGB as a browser does, in the light theme and in `toDark(defaultTokens)`, and asks for 4.5:1 with `contrast.ts`. It also proves the guard bites (a 0.3 scrim and a 0.3 chip fail) and that 0.6 holds for pure white, so for any picture. All twelve pass in both themes. Every picture has a pure white and a pure black pixel somewhere, so the worst case is the same for all; the least scrim that works for white text is about 0.54.
+
+### Bundle (B-6 and the rest)
+
+Total 1249.2 to 1251.2 KB of 1250 with the new words (two messages in twelve catalogues), the rule and the spinner: over. Cut first, as asked: seven catalogue keys that nothing references (`ai.models.unavailable`, `…unavailableWhy`, `…unverifiedLicence`, `…needs`, `read.proofread`, `docs.reading`, `docs.noText`), removed from all twelve files. Final: **entry 6.7 of 12, stylesheet 11.8 of 14.5, total 1248.9 of 1250 KB** (the rule went in the lazy file, so the entry stylesheet did not move).
+
+Gates on the merged branch: format, typecheck, lint (2 existing warnings), test 7778, build, bundle:budget, contract:check, licence:check, builder:validate; full `pnpm test:e2e` 178 of 178 (13.0 min, under the lock).

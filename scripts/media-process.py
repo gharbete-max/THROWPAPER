@@ -93,5 +93,46 @@ def main(src, out):
     print(json.dumps(record, indent=1), file=open(os.path.join(out, "record.json"), "w"))
 
 
+def _luminance(rgb):
+    """WCAG relative luminance of an (n, 3) array of 0-255 values, as packages/tokens/src/contrast.ts."""
+    s = rgb / 255.0
+    lin = np.where(s <= 0.03928, s / 12.92, ((s + 0.055) / 1.055) ** 2.4)
+    return lin @ np.array([0.2126, 0.7152, 0.0722])
+
+
+def stats(media="apps/forms/public/media", out="packages/tokens/src/media-stats.json"):
+    """
+    The brightest and the darkest pixel of each committed photograph, whole and in its bottom third,
+    for packages/tokens/src/media-contrast.test.ts: the worst case text on a scrim or a chip meets.
+    Read from the shipped WebP files (not the originals), keyed by their hash, so a changed picture
+    makes the test fail until this is run again. No decision reads this: it only measures.
+
+        python scripts/media-process.py --stats
+    """
+    record = {}
+    for name in sorted(os.listdir(media)):
+        if not name.endswith(".webp"):
+            continue
+        raw = open(os.path.join(media, name), "rb").read()
+        im = np.asarray(Image.open(io.BytesIO(raw)).convert("RGB"), float)
+        height = im.shape[0]
+        bands = {"whole": im, "bottom": im[int(height * 2 / 3):]}
+        entry = dict(sha256=hashlib.sha256(raw).hexdigest(), width=im.shape[1], height=height, bands={})
+        for band, pixels in bands.items():
+            flat = pixels.reshape(-1, 3)
+            lum = _luminance(flat)
+            entry["bands"][band] = dict(
+                brightest=[int(c) for c in flat[int(np.argmax(lum))]],
+                darkest=[int(c) for c in flat[int(np.argmin(lum))]],
+            )
+        record[name] = entry
+    with open(out, "w", newline="\n") as f:
+        f.write(json.dumps(record, indent=2, sort_keys=True) + "\n")
+    print("wrote", out, len(record), "photographs")
+
+
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "apps/forms/public/media")
+    if sys.argv[1:2] == ["--stats"]:
+        stats()
+    else:
+        main(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "apps/forms/public/media")

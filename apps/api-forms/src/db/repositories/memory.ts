@@ -372,7 +372,7 @@ export function createMemoryRepositories(
           status: input.status ?? 'draft',
           ownerUserId: input.ownerUserId ?? null,
           deletedAt: null,
-          id: randomUUID(),
+          id: input.id ?? randomUUID(),
           publishedVersionId: null,
           publishedVersion: null,
           createdAt: now,

@@ -110,6 +110,10 @@ export const daDK: Record<MessageKey, string> = {
     'Flyt “{title}” til papirkurven? Den holder op med at tage imod svar, og du kan gendanne den senere.',
   'forms.confirmDelete':
     'plural:one Slet “{title}” og dens {count} svar permanent? Det kan ikke fortrydes. | other Slet “{title}” og alle {count} svar permanent? Det kan ikke fortrydes.',
+  'forms.abandoned':
+    'plural:one {count} tom kladde blev påbegyndt for over et døgn siden og fik aldrig noget svar | other {count} tomme kladder blev påbegyndt for over et døgn siden og fik aldrig noget svar',
+  'forms.confirmAbandoned':
+    'plural:one Flyt den tomme kladde til papirkurven? Der var intet skrevet i den, og du kan gendanne den derfra. | other Flyt de {count} tomme kladder til papirkurven? Der var intet skrevet i dem, og du kan gendanne dem derfra.',
 
   'share.title': 'Del',
   'share.with': 'plural:one Delt med {count} person | other Delt med {count} personer',
@@ -1428,11 +1432,6 @@ export const daDK: Record<MessageKey, string> = {
   'ai.models.state.damaged': 'Beskadiget',
   'ai.models.state.busy': 'I brug',
   'ai.models.state.evaluation-only': 'Kun til evaluering',
-  'ai.models.unavailable': 'Ikke tilgængelig endnu',
-  'ai.models.unavailableWhy':
-    'Loppa kan ikke køre denne model endnu. Filer, du lægger her, gemmes og kontrolleres, men intet bruger dem.',
-  'ai.models.unverifiedLicence':
-    'Forskningslicens, ikke kontrolleret til brug i et produkt. Den er kun til evaluering og tilbydes aldrig til download.',
   'ai.models.size': 'Størrelse: {size} GB',
   'ai.models.licence': 'Licens: {licence}',
   'ai.models.file': '{name}: {where}',
@@ -1443,8 +1442,6 @@ export const daDK: Record<MessageKey, string> = {
   'ai.models.source.remembered': 'åbnet fra disken',
   'ai.models.source.user-data': 'i Loppas modelmappe',
   'ai.models.source.ai-pack': 'fundet i AI-pakken ved siden af Loppa',
-  'ai.models.needs':
-    'Kræver en computer med mindst 12 GB hukommelse og omkring 10 GB ledig, mens den kører. På en mindre computer starter den ikke.',
   'ai.models.hash.verified': 'kontrolleret',
   'ai.models.hash.unchecked': 'ikke kontrolleret endnu (den kontrolleres før første brug)',
   'ai.models.hash.unpinned': 'ingen kontrolsum at sammenligne med',
@@ -1658,7 +1655,6 @@ export const daDK: Record<MessageKey, string> = {
   'read.checked.no': 'ikke afkrydset',
   'read.figure': 'Figur',
   'read.summarise': 'Opsummér',
-  'read.proofread': 'Korrekturlæs',
   'read.noModel': 'Modellen er ikke installeret på denne computer, så sider kan ikke læses med AI.',
   'read.noModelLink': 'Åbn modellisten',
   'read.noRuntime': 'Programmet, der kører modellen, mangler. Åbn modellisten for at hente det.',
@@ -2139,8 +2135,6 @@ export const daDK: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': 'Foto',
   'docs.summarise': 'Opsummer denne PDF',
-  'docs.reading': 'Læser teksten…',
-  'docs.noText': 'Der kunne ikke læses tekst fra denne PDF.',
   'docs.keep.heading': 'Gem denne PDF',
   'docs.keep.name': 'Filnavn',
   'docs.keep.size': 'Størrelse',

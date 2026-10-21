@@ -114,6 +114,9 @@ export const zhCN: Record<MessageKey, string> = {
   'forms.confirmTrash': '要把“{title}”移到回收站吗？它将停止接收回复，之后可以恢复。',
   'forms.confirmDelete':
     'plural:other 要永久删除“{title}”及其全部 {count} 条回复吗？此操作无法撤销。',
+  'forms.abandoned': 'plural:other 有 {count} 份空草稿在一天多前开始后一直没有填写',
+  'forms.confirmAbandoned':
+    'plural:other 要把这 {count} 份空草稿移到回收站吗？里面没有任何内容，可以从回收站恢复。',
 
   'share.title': '共享',
   'share.with': 'plural:other 已与 {count} 人共享',
@@ -1361,10 +1364,6 @@ export const zhCN: Record<MessageKey, string> = {
   'ai.models.state.damaged': '已损坏',
   'ai.models.state.busy': '使用中',
   'ai.models.state.evaluation-only': '仅用于评估',
-  'ai.models.unavailable': '暂不可用',
-  'ai.models.unavailableWhy':
-    'Loppa 目前还不能运行此模型。您放在这里的文件会被保留并校验，但暂时没有任何功能使用它们。',
-  'ai.models.unverifiedLicence': '研究许可，未确认可用于产品。仅用于评估，永远不会提供下载。',
   'ai.models.size': '大小：{size} GB',
   'ai.models.licence': '许可：{licence}',
   'ai.models.file': '{name}：{where}',
@@ -1375,8 +1374,6 @@ export const zhCN: Record<MessageKey, string> = {
   'ai.models.source.remembered': '从磁盘打开',
   'ai.models.source.user-data': '在 Loppa 的模型文件夹中',
   'ai.models.source.ai-pack': '在 Loppa 旁边的 AI 包中找到',
-  'ai.models.needs':
-    '需要至少 12 GB 内存的电脑，运行时约需 10 GB 可用内存。内存更小的电脑无法启动。',
   'ai.models.hash.verified': '已校验',
   'ai.models.hash.unchecked': '尚未校验（首次使用前会校验）',
   'ai.models.hash.unpinned': '没有可比对的校验和',
@@ -1566,7 +1563,6 @@ export const zhCN: Record<MessageKey, string> = {
   'read.checked.no': '未勾选',
   'read.figure': '图',
   'read.summarise': '摘要',
-  'read.proofread': '校对',
   'read.noModel': '本机未安装该模型，因此无法用 AI 识读页面。',
   'read.noModelLink': '打开模型列表',
   'read.noRuntime': '缺少运行模型的程序。请打开模型列表获取。',
@@ -2015,8 +2011,6 @@ export const zhCN: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': '照片',
   'docs.summarise': '总结此PDF',
-  'docs.reading': '正在读取文字…',
-  'docs.noText': '无法从此PDF读取文字。',
   'docs.keep.heading': '保存此PDF',
   'docs.keep.name': '文件名',
   'docs.keep.size': '大小',

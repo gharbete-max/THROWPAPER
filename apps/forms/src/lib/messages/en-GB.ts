@@ -116,6 +116,10 @@ export const enGB = {
     'Move “{title}” to the bin? It stops accepting responses, and you can restore it later.',
   'forms.confirmDelete':
     'plural:one Permanently delete “{title}” and its {count} response? This cannot be undone. | other Permanently delete “{title}” and all {count} responses? This cannot be undone.',
+  'forms.abandoned':
+    'plural:one {count} empty draft was started more than a day ago and never answered | other {count} empty drafts were started more than a day ago and never answered',
+  'forms.confirmAbandoned':
+    'plural:one Move this empty draft to the bin? Nothing was written in it, and you can restore it from the bin. | other Move these {count} empty drafts to the bin? Nothing was written in them, and you can restore them from the bin.',
 
   'share.title': 'Share',
   'share.with': 'plural:one Shared with {count} person | other Shared with {count} people',
@@ -1445,11 +1449,6 @@ export const enGB = {
   'ai.models.state.damaged': 'Damaged',
   'ai.models.state.busy': 'In use',
   'ai.models.state.evaluation-only': 'For evaluation only',
-  'ai.models.unavailable': 'Not available yet',
-  'ai.models.unavailableWhy':
-    'Loppa cannot run this model yet. Files you put here are kept and checked, but nothing uses them.',
-  'ai.models.unverifiedLicence':
-    'Research licence, not checked for use in a product. It is for evaluation only and is never offered for download.',
   'ai.models.size': 'Size: {size} GB',
   'ai.models.licence': 'Licence: {licence}',
   'ai.models.file': '{name}: {where}',
@@ -1460,8 +1459,6 @@ export const enGB = {
   'ai.models.source.remembered': 'opened from disk',
   'ai.models.source.user-data': 'in Loppa’s model folder',
   'ai.models.source.ai-pack': 'found in the AI pack beside Loppa',
-  'ai.models.needs':
-    'Needs a computer with at least 12 GB of memory, and about 10 GB free while it runs. On a smaller computer it will not start.',
   'ai.models.hash.verified': 'checked',
   'ai.models.hash.unchecked': 'not checked yet (it is checked before first use)',
   'ai.models.hash.unpinned': 'no checksum to check it against',
@@ -1671,7 +1668,6 @@ export const enGB = {
   'read.checked.no': 'not checked',
   'read.figure': 'Figure',
   'read.summarise': 'Summarise',
-  'read.proofread': 'Proofread',
   'read.noModel': 'The model is not installed on this computer, so pages cannot be read with AI.',
   'read.noModelLink': 'Open the model list',
   'read.noRuntime': 'The program that runs the model is missing. Open the model list to fetch it.',
@@ -2147,8 +2143,6 @@ export const enGB = {
   'docs.k.word': 'Word',
   'docs.k.photo': 'Photo',
   'docs.summarise': 'Summarise this PDF',
-  'docs.reading': 'Reading the text…',
-  'docs.noText': 'No text could be read from this PDF.',
   'docs.keep.heading': 'Keep this PDF',
   'docs.keep.name': 'File name',
   'docs.keep.size': 'Size',

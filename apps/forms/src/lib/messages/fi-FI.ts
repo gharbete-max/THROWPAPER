@@ -112,6 +112,10 @@ export const fiFI: Record<MessageKey, string> = {
     'Siirretäänkö “{title}” roskakoriin? Se lakkaa ottamasta vastaan vastauksia, ja voit palauttaa sen myöhemmin.',
   'forms.confirmDelete':
     'plural:one Poistetaanko “{title}” ja sen {count} vastaus pysyvästi? Tätä ei voi perua. | other Poistetaanko “{title}” ja kaikki {count} vastausta pysyvästi? Tätä ei voi perua.',
+  'forms.abandoned':
+    'plural:one {count} tyhjä luonnos aloitettiin yli vuorokausi sitten, eikä siihen vastattu | other {count} tyhjää luonnosta aloitettiin yli vuorokausi sitten, eikä niihin vastattu',
+  'forms.confirmAbandoned':
+    'plural:one Siirretäänkö tyhjä luonnos roskakoriin? Siihen ei ollut kirjoitettu mitään, ja sen voi palauttaa sieltä. | other Siirretäänkö nämä {count} tyhjää luonnosta roskakoriin? Niihin ei ollut kirjoitettu mitään, ja ne voi palauttaa sieltä.',
 
   'share.title': 'Jaa',
   'share.with': 'plural:one Jaettu {count} henkilön kanssa | other Jaettu {count} henkilön kanssa',
@@ -1441,11 +1445,6 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.models.state.damaged': 'Vahingoittunut',
   'ai.models.state.busy': 'Käytössä',
   'ai.models.state.evaluation-only': 'Vain arviointiin',
-  'ai.models.unavailable': 'Ei vielä saatavilla',
-  'ai.models.unavailableWhy':
-    'Loppa ei voi vielä ajaa tätä mallia. Tänne laitetut tiedostot säilytetään ja tarkistetaan, mutta mikään ei käytä niitä.',
-  'ai.models.unverifiedLicence':
-    'Tutkimuslisenssi, jota ei ole tarkistettu käyttöön tuotteessa. Se on vain arviointiin, eikä sitä koskaan tarjota ladattavaksi.',
   'ai.models.size': 'Koko: {size} Gt',
   'ai.models.licence': 'Lisenssi: {licence}',
   'ai.models.file': '{name}: {where}',
@@ -1456,8 +1455,6 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.models.source.remembered': 'avattu levyltä',
   'ai.models.source.user-data': 'Loppan mallikansiossa',
   'ai.models.source.ai-pack': 'löytyi Loppan vieressä olevasta tekoälypaketista',
-  'ai.models.needs':
-    'Vaatii tietokoneen, jossa on vähintään 12 Gt muistia ja noin 10 Gt vapaana käytön aikana. Pienemmällä tietokoneella se ei käynnisty.',
   'ai.models.hash.verified': 'tarkistettu',
   'ai.models.hash.unchecked': 'ei vielä tarkistettu (se tarkistetaan ennen ensimmäistä käyttöä)',
   'ai.models.hash.unpinned': 'ei tarkistussummaa, johon verrata',
@@ -1667,7 +1664,6 @@ export const fiFI: Record<MessageKey, string> = {
   'read.checked.no': 'ei valittu',
   'read.figure': 'Kuva',
   'read.summarise': 'Tee yhteenveto',
-  'read.proofread': 'Oikolue',
   'read.noModel':
     'Mallia ei ole asennettu tälle tietokoneelle, joten sivuja ei voi lukea tekoälyllä.',
   'read.noModelLink': 'Avaa mallilista',
@@ -2158,8 +2154,6 @@ export const fiFI: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': 'Valokuva',
   'docs.summarise': 'Tiivistä tämä PDF',
-  'docs.reading': 'Luetaan tekstiä…',
-  'docs.noText': 'Tästä PDF:stä ei voitu lukea tekstiä.',
   'docs.keep.heading': 'Säilytä tämä PDF',
   'docs.keep.name': 'Tiedostonimi',
   'docs.keep.size': 'Koko',

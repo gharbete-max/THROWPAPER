@@ -177,3 +177,57 @@ describe('the saver', () => {
     expect(s.calls).toEqual(['draft 1', 'draft 1', 'session v0 log 1']);
   });
 });
+
+describe('a form that does not exist yet', () => {
+  const lazy = (s: ReturnType<typeof server>, make: () => Promise<void>) => {
+    const statuses: SaveStatus[] = [];
+    const saver = new Saver(
+      s.api,
+      G,
+      'form-1',
+      { version: 0, draft: emptyDefinition, title: {} },
+      (status) => statuses.push(status),
+      make,
+    );
+    return { saver, statuses };
+  };
+
+  it('makes it on the first step, once, and before anything is saved to it', async () => {
+    const s = server();
+    const made: string[] = [];
+    const { saver } = lazy(s, async () => {
+      made.push(`made after ${s.calls.length} calls`);
+    });
+    expect(made).toEqual([]);
+
+    const done = saver.save(next(first, 'signup'));
+    await s.flush();
+    await done;
+    expect(made).toEqual(['made after 0 calls']);
+    expect(s.calls).toEqual(['draft 1', 'session v0 log 1']);
+
+    void saver.save(next(next(first, 'signup'), 'unsure'));
+    await s.flush();
+    expect(made).toHaveLength(1);
+  });
+
+  it('says it failed when the form cannot be made, saves nothing, and tries again on retry', async () => {
+    const s = server();
+    let attempts = 0;
+    const { saver, statuses } = lazy(s, async () => {
+      attempts += 1;
+      if (attempts === 1) throw new Error('offline');
+    });
+    await saver.save(next(first, 'signup'));
+    expect(saver.status).toBe('failed');
+    expect(s.calls).toEqual([]);
+
+    const again = saver.retry();
+    await s.flush();
+    await again;
+    expect(attempts).toBe(2);
+    expect(saver.status).toBe('saved');
+    expect(s.calls).toEqual(['draft 1', 'session v0 log 1']);
+    expect(statuses).toContain('failed');
+  });
+});

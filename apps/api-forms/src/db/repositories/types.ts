@@ -217,6 +217,8 @@ export type FormCreate = Omit<
   | 'deletedAt'
 > & {
   status?: FormRecord['status'];
+  /** Chosen by the caller (the guided builder's address exists before the form); else generated. */
+  id?: string;
   /** Omitted means the organisation's. A form cannot be created already in the bin, so there is
    * no way to say `deletedAt` here. */
   ownerUserId?: string | null;

@@ -102,7 +102,7 @@ function Centre({
           : ready
             ? t('summary.state.ready')
             : t('summary.problem.not-installed')}{' '}
-        <Link to="/ai-setup" state={location.state}>
+        <Link className="link--target" to="/ai-setup" state={location.state}>
           {t('ai.setup.title')}
         </Link>
       </p>
