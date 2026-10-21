@@ -12,6 +12,7 @@ export const enGB = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Powered by Loppa',
   'app.signOut': 'Sign out',
+  'app.skipToContent': 'Skip to content',
   'app.language': 'Language',
   'app.loading': 'Loading…',
   'app.loadFailed': 'This could not be loaded. Check the connection and try again.',

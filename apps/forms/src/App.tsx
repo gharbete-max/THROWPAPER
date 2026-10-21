@@ -1,4 +1,12 @@
-import { Suspense, lazy, useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import {
+  Suspense,
+  lazy,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 import { roomCssVariables } from '@tp/tokens';
 import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
@@ -94,6 +102,7 @@ const UserWorkspace = lazy(() =>
 );
 import { Loading } from './components/Loading.js';
 import { foldOnPress } from './lib/fold.js';
+import { radioArrows } from './lib/radio-keys.js';
 import './styles/app.css';
 
 /**
@@ -116,6 +125,7 @@ export function App() {
    * animation off a published form — see `lib/fold.ts`.
    */
   useEffect(foldOnPress, []);
+  useEffect(radioArrows, []);
 
   return (
     <BrowserRouter>
@@ -285,6 +295,18 @@ function Shell() {
   const location = useLocation();
   const edition = useEdition();
   const waiting = useWaitingCount(edition === 'desktop' && user !== null, location.pathname);
+  const mainRef = useRef<HTMLElement>(null);
+  const firstPath = useRef(location.pathname);
+  // A new screen takes focus, so a keyboard or screen-reader user starts at its top instead of on
+  // the rail link they pressed. Not on first load, and not when the screen put focus somewhere itself.
+  useEffect(() => {
+    if (firstPath.current === location.pathname) return;
+    firstPath.current = location.pathname;
+    const at = document.activeElement;
+    if (mainRef.current && (!at || at === document.body || !mainRef.current.contains(at))) {
+      mainRef.current.focus({ preventScroll: true });
+    }
+  }, [location.pathname]);
 
   if (loading) {
     return (
@@ -348,6 +370,16 @@ function Shell() {
     <div className={door ? 'app app--door system' : 'app system'}>
       {/* Inside the shell, so it exists only where there is somewhere to navigate to — the
           sign-in page has one screen and a palette on it would be a joke at the user's expense. */}
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(event) => {
+          event.preventDefault();
+          mainRef.current?.focus();
+        }}
+      >
+        {t('app.skipToContent')}
+      </a>
       <CommandPalette />
       {door ? null : (
         <>
@@ -477,7 +509,7 @@ function Shell() {
         </>
       )}
 
-      <main className="main">
+      <main className="main" id="main" tabIndex={-1} ref={mainRef}>
         <div className={`shell${wide ? ' shell--wide' : roomy ? ' shell--roomy' : ''}`}>
           {/* One boundary for the whole table: these screens are alternatives, never siblings, so
             seven separate ones would only mean seven copies of the same fallback. */}

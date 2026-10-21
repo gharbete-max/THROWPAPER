@@ -9,7 +9,7 @@ import { EmptyState } from '../../components/EmptyState.js';
 import { LoadFailed } from '../../components/LoadFailed.js';
 import { Loading } from '../../components/Loading.js';
 import { Icon } from '../../components/Icon.js';
-import { OUTGOING_CHANGED } from '../../lib/edition.js';
+import { OUTGOING_CHANGED, useEdition } from '../../lib/edition.js';
 
 /**
  * To send — the desktop's mail, waiting for its person (`api-forms/src/mail/queue.ts`).
@@ -32,8 +32,15 @@ export function Outgoing() {
   const [data, setData] = useState<OutgoingList | null>(null);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const edition = useEdition();
 
   useEffect(() => {
+    // Only the desktop has a To send list. Asking a server for one is a 404 and a red console line.
+    if (edition === null) return;
+    if (edition === 'server') {
+      setData({ program: null, messages: [] });
+      return;
+    }
     let cancelled = false;
     setFailed(false);
     client.listOutgoing().then(
@@ -47,7 +54,7 @@ export function Outgoing() {
     return () => {
       cancelled = true;
     };
-  }, [attempt]);
+  }, [attempt, edition]);
 
   if (failed) return <LoadFailed onRetry={() => setAttempt((value) => value + 1)} />;
   if (!data) return <Loading />;

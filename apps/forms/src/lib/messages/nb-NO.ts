@@ -6,6 +6,7 @@ export const nbNO: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Drevet av Loppa',
   'app.signOut': 'Logg ut',
+  'app.skipToContent': 'Gå til innholdet',
   'app.language': 'Språk',
   'app.loading': 'Laster…',
   'app.loadFailed': 'Dette kunne ikke lastes. Sjekk tilkoblingen og prøv igjen.',

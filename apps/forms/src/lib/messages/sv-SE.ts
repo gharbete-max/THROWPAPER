@@ -6,6 +6,7 @@ export const svSE: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Drivs av Loppa',
   'app.signOut': 'Logga ut',
+  'app.skipToContent': 'Hoppa till innehållet',
   'app.language': 'Språk',
   'app.loading': 'Laddar…',
   'app.loadFailed': 'Det gick inte att läsa in. Kontrollera anslutningen och försök igen.',

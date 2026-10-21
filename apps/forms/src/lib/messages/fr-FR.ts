@@ -6,6 +6,7 @@ export const frFR: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Propulsé par Loppa',
   'app.signOut': 'Se déconnecter',
+  'app.skipToContent': 'Aller au contenu',
   'app.language': 'Langue',
   'app.loading': 'Chargement…',
   'app.loadFailed': 'Le chargement a échoué. Vérifiez la connexion et réessayez.',

@@ -459,7 +459,8 @@
  * state of rest and reads as one. */
 
 .badge--published {
-  color: var(--tp-colour-success);
+  /* Toward the ink: the plain green read 4.1:1 on the tinted fill over the page gradient (review 2026-10). */
+  color: color-mix(in srgb, var(--tp-colour-success) 75%, var(--tp-colour-text));
   border-color: color-mix(in srgb, var(--tp-colour-success) 40%, transparent);
   background: color-mix(in srgb, var(--tp-colour-success) 10%, transparent);
 }
@@ -686,7 +687,8 @@
 }
 
 .badge--paid {
-  color: var(--tp-colour-success);
+  /* Toward the ink: the plain green read 4.1:1 on the tinted fill over the page gradient (review 2026-10). */
+  color: color-mix(in srgb, var(--tp-colour-success) 75%, var(--tp-colour-text));
   border-color: color-mix(in srgb, var(--tp-colour-success) 40%, transparent);
   background: color-mix(in srgb, var(--tp-colour-success) 10%, transparent);
 }
@@ -774,7 +776,8 @@
 
 .badge--completed,
 .badge--signed {
-  color: var(--tp-colour-success);
+  /* Toward the ink: the plain green read 4.1:1 on the tinted fill over the page gradient (review 2026-10). */
+  color: color-mix(in srgb, var(--tp-colour-success) 75%, var(--tp-colour-text));
   border-color: color-mix(in srgb, var(--tp-colour-success) 40%, transparent);
   background: color-mix(in srgb, var(--tp-colour-success) 10%, transparent);
 }
