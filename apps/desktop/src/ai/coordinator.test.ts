@@ -669,6 +669,27 @@ describe('getting a model', () => {
     ]);
   });
 
+  it('says there is no room, before a byte is joined, when the disk cannot hold the pack', async () => {
+    const chosen = { path: null as string | null };
+    const ctx = setup({
+      chooseFile: () => Promise.resolve(chosen.path),
+      freeDisk: () => Promise.resolve(1000),
+    });
+    const pack = join(dir, 'pack');
+    await mkdir(pack, { recursive: true });
+    const [weights, projector] = ctx.vision.manifest.files;
+    await writeFile(join(pack, weights!.name), ctx.vision.contents[0]!);
+    await writeFile(join(pack, projector!.name), ctx.vision.contents[1]!);
+    await writeFile(join(pack, 'PACK.json'), '{}');
+    chosen.path = join(pack, 'PACK.json');
+    await ctx.coordinator.openFromDisk('vision-b');
+    expect(await ctx.until((e) => e.kind === 'install-failed')).toMatchObject({
+      problem: 'no-disk-space',
+    });
+    expect(await readdir(join(dir, 'models')).catch(() => [])).toEqual([]);
+    expect(ctx.coordinator.state().activity).toBe('idle');
+  });
+
   it('says damaged for a pack part that is not the manifest, and installs nothing', async () => {
     const ctx = setup({ chooseFile: () => Promise.resolve(join(dir, 'pack', 'PACK.json')) });
     const pack = join(dir, 'pack');

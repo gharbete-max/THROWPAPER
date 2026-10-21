@@ -217,3 +217,52 @@ describe('installing from a folder', () => {
     expect(await sha256File(paths[0]!)).toBe(manifest.files[0]!.sha256);
   });
 });
+
+describe("a pack cut in pieces, against the app's own manifest, which lists each file whole", () => {
+  /** What the app holds since the model is fetched from Hugging Face: one part, named like the file. */
+  const wholeLayout = (manifest: Awaited<ReturnType<typeof fakeModel>>['manifest']) =>
+    manifest.files.map((f) => ({
+      ...f,
+      parts: [{ bytes: f.bytes, name: f.name, sha256: f.sha256 }],
+    }));
+
+  it('finds the numbered pieces by their names, joins them, and checks the whole file', async () => {
+    const { manifest, weights } = await fakeModel();
+    const paths = await installFromFolder(wholeLayout(manifest), pack, dest);
+    expect(Buffer.compare(await readFile(paths[0]!), weights)).toBe(0);
+    expect((await readdir(dest)).sort()).toEqual(['fake-mmproj.gguf', 'fake-weights.gguf']);
+  });
+
+  it.each(['part3', 'part2', 'part1'])(
+    'a piece never copied (%s) is a missing piece, not a model',
+    async (gone) => {
+      const { manifest } = await fakeModel();
+      await rm(join(pack, `fake-weights.gguf.${gone}`));
+      await expect(installFromFolder(wholeLayout(manifest), pack, dest)).rejects.toMatchObject({
+        failure: 'missing',
+      });
+      expect(await ls(dest)).not.toContain('fake-weights.gguf');
+    },
+  );
+
+  it('a piece with a flipped byte fails the whole-file hash and leaves nothing', async () => {
+    const { manifest } = await fakeModel();
+    const part = join(pack, 'fake-weights.gguf.part2');
+    const bytes = await readFile(part);
+    bytes[7] = bytes[7]! ^ 0xff;
+    await writeFile(part, bytes);
+    await expect(installFromFolder(wholeLayout(manifest), pack, dest)).rejects.toMatchObject({
+      failure: 'hash',
+    });
+    expect(await ls(dest)).toEqual([]);
+  });
+
+  it('a stale extra piece from another cut fails the same way', async () => {
+    const { manifest } = await fakeModel();
+    await writeFile(join(pack, 'fake-weights.gguf.part4'), 'a leftover from another cut');
+    await expect(installFromFolder(wholeLayout(manifest), pack, dest)).rejects.toMatchObject({
+      failure: 'hash',
+    });
+    expect(await ls(dest)).toEqual([]);
+  });
+});

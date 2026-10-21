@@ -120,7 +120,9 @@ export function createRuntimeChecker(options: {
     let verdict = checked.get(found.dir);
     if (!verdict) {
       verdict = await verifyRuntimeFolder(found.dir, found.asset);
-      checked.set(found.dir, verdict);
+      // A damaged folder is looked at again next time: the person may have put a good one there
+      // (an AI pack opened, a file copied back) and should not have to restart to be believed.
+      if (verdict !== 'damaged') checked.set(found.dir, verdict);
     }
     return { found, verdict };
   }

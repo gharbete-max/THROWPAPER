@@ -52,6 +52,7 @@ import { registerAiIpc } from '../ai/ai-ipc.js';
 import { AI_CHANNELS, MODEL_CHANNELS } from '../ai/channels.js';
 import { registerModelIpc } from '../ai/model-ipc.js';
 import { createShellAi } from '../ai/shell.js';
+import { closeAll, createLock } from './lifecycle.js';
 import { createElectronPdfRenderer } from './pdf.js';
 import { applySettingsForm, toPanelSettings } from './settings-form.js';
 import {
@@ -96,10 +97,21 @@ const { coordinator: ai, model } = createShellAi({
   resources,
   // A checkout's own model folders are looked in by development builds only (docs/plan/AI-SYSTEM.md D7).
   repoRoot: app.isPackaged ? null : join(here, '..', '..', '..'),
-  emit: (event) => mainWindow?.webContents.send(AI_CHANNELS.event, event),
-  emitLegacy: (event) => mainWindow?.webContents.send(MODEL_CHANNELS.event, event),
+  emit: (event) => sendToMain(AI_CHANNELS.event, event),
+  emitLegacy: (event) => sendToMain(MODEL_CHANNELS.event, event),
   env: process.env,
 });
+
+/** A window that is closing or gone has nobody to tell: `send` on a destroyed one throws. */
+function sendToMain(channel: string, payload: unknown): void {
+  const window = mainWindow;
+  if (window && !window.isDestroyed() && !window.webContents.isDestroyed()) {
+    window.webContents.send(channel, payload);
+  }
+}
+
+/** Stopping and starting the servers happens one operation at a time (`lifecycle.ts`). */
+const exclusive = createLock();
 
 let server: DesktopServer | null = null;
 /**
@@ -142,8 +154,11 @@ async function startServer(): Promise<DesktopServer> {
   });
 }
 
-async function restartServer(): Promise<void> {
-  await server?.close();
+/** Inside an `exclusive` operation: the others wait. */
+async function restartNow(): Promise<void> {
+  const old = server;
+  server = null; // while it restarts nothing is answered, and a failed start leaves no closed server behind
+  await old?.close();
   const settings = await readSettings(workspacePaths(dataDir).settings);
   if (settings.signing.mode !== 'local') {
     await sign?.close();
@@ -197,12 +212,15 @@ function guardEveryWindow(): void {
       if (opening.action === 'external') openOutside(url);
       return { action: 'deny' };
     });
-    contents.on('will-navigate', (event, url) => {
+    // A redirect is a navigation too, and `will-navigate` does not see one the server sends.
+    const judge = (event: { preventDefault(): void }, url: string) => {
       const verdict = classifyNavigation(contents.getURL(), url, ourOrigins());
       if (verdict === 'allow') return;
       event.preventDefault();
       if (verdict === 'external') openOutside(url);
-    });
+    };
+    contents.on('will-navigate', (event, url) => judge(event, url));
+    contents.on('will-redirect', (event, url) => judge(event, url));
   });
 }
 
@@ -281,35 +299,45 @@ async function backUp(passphrase?: string): Promise<Result> {
     defaultPath: join(app.getPath('documents'), `Loppa-backup-${stamp}`),
   });
   if (canceled || !filePath) return { ok: false, error: '' };
-  try {
-    // Stopped first: PGlite's files are only consistent at rest, and a copy taken mid-write is
-    // a backup that restores to a corrupt database.
-    await server?.close();
-    server = null;
-    await sign?.close();
-    sign = null;
-    await mkdir(filePath, { recursive: true });
-    await cp(dataDir, filePath, { recursive: true, filter: backupFilter() });
-    if (passphrase) {
-      await writeFile(
-        join(filePath, KEYS_FILE),
-        sealKeys(await readKeyFiles(dataDir), passphrase),
-        {
-          mode: 0o600,
-        },
+  // The servers are stopped for the copy and started again, all inside one exclusive operation: a
+  // settings save or another backup that restarted them in the middle would copy a database in use.
+  const outcome = await exclusive(async (): Promise<Result> => {
+    try {
+      // Stopped first: PGlite's files are only consistent at rest, and a copy taken mid-write is
+      // a backup that restores to a corrupt database.
+      const old = server;
+      server = null;
+      await old?.close();
+      await sign?.close();
+      sign = null;
+      await mkdir(filePath, { recursive: true });
+      await cp(dataDir, filePath, { recursive: true, filter: backupFilter() });
+      if (passphrase) {
+        await writeFile(
+          join(filePath, KEYS_FILE),
+          sealKeys(await readKeyFiles(dataDir), passphrase),
+          {
+            mode: 0o600,
+          },
+        );
+      }
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: fill(t.backupFailed, { message: (error as Error).message }) };
+    } finally {
+      await restartNow().catch((error: unknown) =>
+        dialog.showErrorBox(t.startFailed, (error as Error).stack ?? String(error)),
       );
     }
+  });
+  if (outcome.ok) {
     await dialog.showMessageBox({
       message: fill(passphrase ? t.backupKeysDone : t.backupDone, { path: filePath }),
     });
-    return { ok: true };
-  } catch (error) {
-    const message = fill(t.backupFailed, { message: (error as Error).message });
-    dialog.showErrorBox(t.menuBackup, message);
-    return { ok: false, error: message };
-  } finally {
-    await restartServer();
+  } else {
+    dialog.showErrorBox(t.menuBackup, outcome.error);
   }
+  return outcome;
 }
 
 /**
@@ -343,19 +371,25 @@ async function restoreKeys(passphrase: string): Promise<Result> {
     cancelId: 0,
   });
   if (response !== 1) return { ok: false, error: '' };
-  try {
-    await server?.close();
-    server = null;
-    await sign?.close();
-    sign = null;
-    await writeKeyFiles(dataDir, files);
-    await dialog.showMessageBox({ message: t.keysRestoreDone });
-    return { ok: true };
-  } catch (error) {
-    return { ok: false, error: (error as Error).message };
-  } finally {
-    await restartServer();
-  }
+  const outcome = await exclusive(async (): Promise<Result> => {
+    try {
+      const old = server;
+      server = null;
+      await old?.close();
+      await sign?.close();
+      sign = null;
+      await writeKeyFiles(dataDir, files);
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: (error as Error).message };
+    } finally {
+      await restartNow().catch((error: unknown) =>
+        dialog.showErrorBox(t.startFailed, (error as Error).stack ?? String(error)),
+      );
+    }
+  });
+  if (outcome.ok) await dialog.showMessageBox({ message: t.keysRestoreDone });
+  return outcome;
 }
 
 function buildMenu(): void {
@@ -448,10 +482,13 @@ function registerIpc(): void {
     if (!fromPanel(event)) return refused;
     try {
       const parsed = WorkspaceOwner.parse({ ...(owner as object), locale: lang });
-      if (!server || !(await server.bootstrap(parsed)))
-        return { ok: false, error: 'already-set-up' };
-      // Now there is an organisation, Forms can be given its Sign token.
-      await restartServer();
+      const done = await exclusive(async () => {
+        if (!server || !(await server.bootstrap(parsed))) return false;
+        // Now there is an organisation, Forms can be given its Sign token.
+        await restartNow();
+        return true;
+      });
+      if (!done) return { ok: false, error: 'already-set-up' };
       await replacePanelWithMain();
       return { ok: true };
     } catch (error) {
@@ -462,8 +499,12 @@ function registerIpc(): void {
   ipcMain.handle(CHANNELS.loadDemo, async (event): Promise<Result> => {
     if (!fromPanel(event)) return refused;
     try {
-      if (!server || !(await server.loadDemo())) return { ok: false, error: 'already-set-up' };
-      await restartServer();
+      const done = await exclusive(async () => {
+        if (!server || !(await server.loadDemo())) return false;
+        await restartNow();
+        return true;
+      });
+      if (!done) return { ok: false, error: 'already-set-up' };
       await replacePanelWithMain();
       return { ok: true };
     } catch (error) {
@@ -474,12 +515,15 @@ function registerIpc(): void {
   ipcMain.handle(CHANNELS.saveSettings, async (event, form: SettingsForm): Promise<Result> => {
     if (!fromPanel(event)) return refused;
     try {
-      const paths = workspacePaths(dataDir);
-      const applied = applySettingsForm(await readSettings(paths.settings), form, protect);
-      if (!applied.ok) return applied;
-      await writeSettings(paths.settings, applied.settings);
-      await restartServer();
-      return { ok: true };
+      // Read, change, write and restart as one operation: two saves must not both start from the old file.
+      return await exclusive(async (): Promise<Result> => {
+        const paths = workspacePaths(dataDir);
+        const applied = applySettingsForm(await readSettings(paths.settings), form, protect);
+        if (!applied.ok) return applied;
+        await writeSettings(paths.settings, applied.settings);
+        await restartNow();
+        return { ok: true };
+      });
     } catch (error) {
       return fail(error);
     }
@@ -548,9 +592,10 @@ if (!app.requestSingleInstanceLock()) {
     if (closing) return;
     closing = true;
     event.preventDefault();
-    void Promise.allSettled([server?.close(), sign?.close(), model.close()]).finally(() =>
-      app.quit(),
-    );
+    // After an operation that has the servers stopped (a backup) has finished, and not for ever.
+    const closeServers = () =>
+      exclusive(() => closeAll([() => server?.close(), () => sign?.close()], 30_000));
+    void closeAll([closeServers, () => model.close()], 45_000).finally(() => app.quit());
   });
 
   void app.whenReady().then(async () => {

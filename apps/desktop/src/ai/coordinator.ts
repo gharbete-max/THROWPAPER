@@ -170,9 +170,24 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
 
   const eventListeners = new Set<(event: AiEvent) => void>();
   const transitionListeners = new Set<(transition: Transition) => void>();
-  const emit = (event: AiEvent) => eventListeners.forEach((listener) => listener(event));
+  // A listener that throws (a window closed under the shell's send) must not break the task that
+  // was announcing, nor stop the queue: the throw would escape `pump` as an unhandled rejection.
+  const emit = (event: AiEvent) =>
+    eventListeners.forEach((listener) => {
+      try {
+        listener(event);
+      } catch {
+        /* the listener's own failure */
+      }
+    });
   const note = (transition: Transition) =>
-    transitionListeners.forEach((listener) => listener(transition));
+    transitionListeners.forEach((listener) => {
+      try {
+        listener(transition);
+      } catch {
+        /* the listener's own failure */
+      }
+    });
 
   let activity: Activity = 'idle';
   let resident: Resident | null = null;
@@ -184,7 +199,8 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
 
   /** Path to the key (path|size|mtime) it had when it was hashed this session and found right. */
   const verified = new Map<string, string>();
-  const damaged = new Set<string>();
+  /** Path to the key it had when it was found wrong: a file put there since is unchecked, not damaged. */
+  const damaged = new Map<string, string>();
 
   const modelById = (id: string) => registry.find((m) => m.id === id);
 
@@ -248,7 +264,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
         const hash: AiFileStatus['hash'] =
           verified.get(found.path) === key
             ? 'verified'
-            : damaged.has(found.path)
+            : damaged.get(found.path) === key
               ? 'damaged'
               : file.sha256 === undefined
                 ? 'unpinned'
@@ -318,13 +334,26 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
 
   // --- the one engine slot ---------------------------------------------------------------
 
+  /**
+   * Every disposal in flight. `resident` is cleared before the engine has gone (the idle timer
+   * fires with nobody waiting), so a task that arrives meanwhile must wait for the process to end
+   * before it loads another: two models in memory at once, or a spurious `too-little-memory` read
+   * while the old one still holds its gigabytes.
+   */
+  let releasing: Promise<unknown> = Promise.resolve();
+
   async function release(reason: Extract<Transition, { type: 'released' }>['reason']) {
     clearTimeout(idleTimer);
     const gone = resident;
     resident = null;
-    if (!gone) return;
+    if (!gone) {
+      await releasing;
+      return;
+    }
     note({ type: 'released', model: gone.model.id, reason });
-    await gone.engine.dispose().catch(() => undefined);
+    const disposal = gone.engine.dispose().catch(() => undefined);
+    releasing = Promise.all([releasing, disposal]);
+    await disposal;
   }
 
   function armIdle(): void {
@@ -359,7 +388,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
           emit({ id: job.id, kind: 'step', step: 'loading', done: before + bytes, total }),
       });
       if (verdict !== 'ok') {
-        damaged.add(path);
+        damaged.set(path, key);
         throw new AiError('damaged');
       }
       verified.set(path, key);
@@ -371,6 +400,8 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
 
   async function makeResident(job: Job, files: EngineFiles): Promise<Engine> {
     if (resident && resident.model.id !== job.model.id) await release('swap');
+    await releasing;
+    if (job.abort.signal.aborted) throw new AiError('cancelled');
     if (resident) return resident.engine;
     if (!deps.fake && deps.freeMemory() < job.model.requiredMemoryBytes) {
       throw new AiError('too-little-memory');
@@ -473,6 +504,9 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     return best;
   }
 
+  /** The task now running, until it has let go of its engine: what `close` waits for. */
+  let settling: Promise<void> = Promise.resolve();
+
   async function pump(): Promise<void> {
     if (running) return;
     const job = takeNext();
@@ -484,8 +518,10 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     running = job;
     activity = 'loading';
     try {
-      await execute(job);
+      settling = execute(job);
+      await settling;
     } finally {
+      claimed.delete(job.id);
       running = null;
       activity = 'idle';
       armIdle();
@@ -548,18 +584,34 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
       freeBytes: deps.freeMemory(),
     });
 
+  /**
+   * An id belongs to one task from the moment it is asked for until that task has ended. Claimed
+   * before the first await: two windows asking together with one id must not both be accepted.
+   */
+  const claimed = new Set<string>();
+  let closed = false;
+
   async function run(
     id: string,
     task: AiTask,
     options: { priority?: number } = {},
   ): Promise<AiStart> {
+    if (closed) return { ok: false, problem: 'cancelled' };
+    if (claimed.has(id)) return { ok: false, problem: 'failed' };
+    claimed.add(id);
+    const started = await admit(id, task, options).catch((): AiStart => ({
+      ok: false,
+      problem: 'failed',
+    }));
+    if (!started.ok) claimed.delete(id);
+    return started;
+  }
+
+  async function admit(id: string, task: AiTask, options: { priority?: number }): Promise<AiStart> {
     if (activity === 'downloading' || (activity === 'verifying' && !running)) {
       return { ok: false, problem: 'busy' };
     }
     if (id === '' || id.startsWith('install')) return { ok: false, problem: 'failed' };
-    if (running?.id === id || queue.some((job) => job.id === id)) {
-      return { ok: false, problem: 'failed' };
-    }
     const model = await modelFor(task);
     if (!model) return { ok: false, problem: 'not-available' };
     if (!deps.fake) {
@@ -568,6 +620,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
         return { ok: false, problem: 'not-installed' };
       // The memory the model needs is only needed while it is loaded; a different model being
       // loaded now will be gone by the time this one's turn comes.
+      await releasing; // memory a model is still giving back is not free yet
       if (!resident && !running && deps.freeMemory() < model.requiredMemoryBytes) {
         return { ok: false, problem: 'too-little-memory' };
       }
@@ -598,6 +651,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     const waiting = queue.find((job) => job.id === id);
     if (waiting) {
       queue = queue.filter((job) => job !== waiting);
+      claimed.delete(waiting.id);
       waiting.abort.abort();
       emit({ id, kind: 'error', problem: 'cancelled' });
       return;
@@ -795,6 +849,17 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
             (f): f is typeof f & { sha256: string } => f.sha256 !== undefined,
           );
           const modelTotal = hashed.reduce((sum, f) => sum + f.bytes, 0);
+          // Room first, as for a download: a join that fills the disk is not a failure to report
+          // after six gigabytes, and a full system disk is worse than a refused install.
+          let left = modelTotal;
+          for (const f of hashed) {
+            const have = await stat(join(deps.dir, f.name)).catch(() => null);
+            if (have?.isFile() && have.size === f.bytes) left -= f.bytes;
+          }
+          const room = await freeDisk(deps.dir);
+          if (left > 0 && room !== null && room < left + DISK_MARGIN_BYTES) {
+            return fail('no-disk-space');
+          }
           const paths = await installFromFolder(hashed, dirname(chosen), deps.dir, {
             signal,
             onProgress: (file, files, p) =>
@@ -901,11 +966,25 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
   }
 
   async function close(): Promise<void> {
+    closed = true;
     installAbort?.abort();
     const waiting = queue;
     queue = [];
-    for (const job of waiting) emit({ id: job.id, kind: 'error', problem: 'cancelled' });
+    for (const job of waiting) {
+      claimed.delete(job.id);
+      emit({ id: job.id, kind: 'error', problem: 'cancelled' });
+    }
     running?.abort.abort();
+    // The running task ends its engine (a model still loading is ended by its abort): when this
+    // returns no process of ours may be left. Not for ever: a quit must not hang on a stuck engine.
+    let stop: ReturnType<typeof setTimeout> | undefined;
+    await Promise.race([
+      settling,
+      new Promise<void>((resolve) => {
+        stop = setTimeout(resolve, 10_000);
+      }),
+    ]);
+    clearTimeout(stop);
     await release('close');
   }
 

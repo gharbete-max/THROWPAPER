@@ -71,6 +71,31 @@ export function measure(
   });
 }
 
+/**
+ * Renames, and tries again for a moment when Windows says the file is in use. A virus scanner
+ * opens a file the instant a download finishes writing it; a rename in that window fails with
+ * EPERM or EBUSY and succeeds a second later. A few gigabytes fetched must not be lost to that.
+ */
+export async function renameRetry(
+  from: string,
+  to: string,
+  options: { attempts?: number; delayMs?: number; rename?: typeof rename } = {},
+): Promise<void> {
+  const attempts = options.attempts ?? 12;
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      await (options.rename ?? rename)(from, to);
+      return;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (attempt >= attempts || !(code === 'EPERM' || code === 'EBUSY' || code === 'EACCES')) {
+        throw error;
+      }
+      await new Promise((resolve) => setTimeout(resolve, options.delayMs ?? 250));
+    }
+  }
+}
+
 /** A sink that wants everything and keeps nothing. */
 const drain = () => new Transform({ transform: (_chunk, _encoding, done) => done() });
 
@@ -279,7 +304,7 @@ async function fetchPart(
       await rm(partial, { force: true });
       throw new WeightsError('hash', `${part.name} is not the file in the manifest`);
     }
-    await rename(partial, target);
+    await renameRetry(partial, target);
     return;
   }
 }
@@ -327,6 +352,6 @@ async function joinParts(
     await rm(joining, { force: true });
     throw new WeightsError('hash', 'the joined file is not the file in the manifest');
   }
-  await rename(joining, join(dir, file.name));
+  await renameRetry(joining, join(dir, file.name));
   for (const part of file.parts) await rm(join(dir, part.name), { force: true });
 }
