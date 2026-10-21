@@ -250,6 +250,32 @@ describe('what is never read or worked out', () => {
   });
 });
 
+describe('a payment reference printed as one item (a PDF text layer)', () => {
+  const word = (text: string, x0: number, y0 = 0.3) => ({
+    page: 0,
+    text,
+    x0,
+    y0,
+    x1: x0 + 0.05,
+    y1: y0 + 0.02,
+    confidence: 100,
+  });
+
+  it('reads an unspaced RF reference instead of throwing', () => {
+    const reading = readInvoice([word('Referens', 0.1), word('RF18539007547034', 0.25)]);
+    expect(reading.reference.candidates[0]?.value).toEqual({
+      kind: 'rf',
+      value: 'RF18 5390 0754 7034',
+    });
+    expect(reading.reference.candidates[0]?.check).toBe('passed');
+  });
+
+  it('keeps a reference of a first word that no rule accepts as a failed reading, not a crash', () => {
+    const reading = readInvoice([word('OCR', 0.1), word('RF18-5390-0754-7034', 0.25)]);
+    expect(reading.reference.candidates[0]?.check).not.toBe('passed');
+  });
+});
+
 describe('optical reading that was unsure', () => {
   it('flags a value with a word below the confidence line', () => {
     const words = layoutWords(daStandard).map((w) =>

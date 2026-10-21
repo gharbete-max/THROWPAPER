@@ -48,7 +48,8 @@ export function decimalOf(minor: string): string {
 
 /** A cell a spreadsheet will not run as a formula (OWASP CSV injection): quoted, defanged. */
 function cell(text: string): string {
-  const safe = /^[=+\-@\t\r]/.test(text) ? `'${text}` : text;
+  // A plain decimal (`-123.45`, a credit note) is a number, not a formula: leave it one.
+  const safe = /^[=+\-@\t\r]/.test(text) && !/^-\d+\.\d{2}$/.test(text) ? `'${text}` : text;
   return /[",\n\r]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
 }
 

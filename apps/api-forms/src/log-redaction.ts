@@ -47,8 +47,11 @@ const IDENTIFIER_LIKE = /^[a-z0-9-]+$/;
  *
  * `?token=abc` is short enough to slip past the length rule, and a short token is not a safe one —
  * it is just a shorter secret.
+ *
+ * `t` is the unsubscribe link (an organisation, the address in base64url, a signature) and `email`
+ * is an address typed into a query: personal data, which a log has no business keeping.
  */
-const SECRET_PARAMS = /\b(token|resume|signature|sig|key|secret|password|code)=[^&\s]+/gi;
+const SECRET_PARAMS = /\b(token|t|resume|signature|sig|key|secret|password|code|email)=[^&\s]+/gi;
 
 export function redactSecretsInUrl(url: string): string {
   return url

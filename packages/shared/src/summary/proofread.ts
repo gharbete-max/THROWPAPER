@@ -1,5 +1,5 @@
 import { mustQuote } from '../import/quoted/quoted.js';
-import { digitCheck } from './check.js';
+import { digitCheck, normalDigits } from './check.js';
 import { SUMMARY_LOCALES, type SummaryLocale } from './languages.js';
 import { REPLY_TONES, type ReplyTone } from './reply.js';
 
@@ -143,7 +143,7 @@ export function addedNumberDoubts(text: string, source: string): Omit<Issue, 'id
   const added = new Set(digitCheck(source, text).added);
   const doubts: Omit<Issue, 'id'>[] = [];
   for (const match of text.matchAll(/\d+/g)) {
-    const normal = String(Number.parseInt(match[0].normalize('NFKC'), 10));
+    const normal = normalDigits(match[0].normalize('NFKC'));
     if (!added.has(normal)) continue;
     added.delete(normal);
     doubts.push({

@@ -320,6 +320,36 @@ describe('correcting a mistake', () => {
     expect(again.statusCode).toBe(409);
     expect(again.json().error.code).toBe('already-reversed');
   });
+
+  it('lets exactly one of two simultaneous reversals through', async () => {
+    const { posted } = await cashSale();
+    const id = posted.json().id;
+    const reverse = (reason: string) =>
+      harness.app.inject({
+        method: 'POST',
+        url: `/v1/ledger/entries/${id}/reverse`,
+        headers: bearer(adminToken),
+        payload: { reason },
+      });
+
+    const [a, b] = await Promise.all([reverse('Wrong'), reverse('Wrong, again')]);
+
+    expect([a.statusCode, b.statusCode].sort()).toEqual([201, 409]);
+    expect(
+      harness.state.journalEntries.filter((entry) => entry.reversesEntryId === id),
+    ).toHaveLength(1);
+    // The book still nets to nothing for it: one correction, not two.
+    const accounts = (
+      await harness.app.inject({
+        method: 'GET',
+        url: '/v1/ledger/accounts',
+        headers: bearer(adminToken),
+      })
+    ).json().accounts;
+    expect(accounts.find((account: { code: string }) => account.code === '1910').balanceMinor).toBe(
+      '0',
+    );
+  });
 });
 
 /**

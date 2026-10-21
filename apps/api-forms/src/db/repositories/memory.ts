@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
 import { compareAliases } from '@tp/shared/interpret';
+import { AlreadyReversed } from './errors.js';
 import type {
   AuditEntryInput,
   CheckInRecord,
@@ -272,7 +273,9 @@ export function createMemoryRepositories(
         state.refreshTokens.find((t) => t.tokenHash === tokenHash) ?? null,
       revokeRefreshToken: async (id, at) => {
         const token = state.refreshTokens.find((t) => t.id === id);
-        if (token && !token.revokedAt) token.revokedAt = at;
+        if (!token || token.revokedAt) return false;
+        token.revokedAt = at;
+        return true;
       },
       revokeFamily: async (familyId, at) => {
         for (const token of state.refreshTokens) {
@@ -1282,6 +1285,11 @@ export function createMemoryRepositories(
       },
 
       post: async (input) => {
+        // Checked and stamped without an await between them, so two reversals cannot both pass.
+        if (input.reversesEntryId) {
+          const original = state.journalEntries.find((e) => e.id === input.reversesEntryId);
+          if (original?.reversedByEntryId) throw new AlreadyReversed();
+        }
         const entry: JournalEntryRecord = {
           id: randomUUID(),
           organisationId: input.organisationId,
