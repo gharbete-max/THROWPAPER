@@ -115,9 +115,10 @@ Merge `origin/main` in (never rebase or force-push a PR branch that Auto-fix wat
   clean), desktop/AI (50-task soak, installer smoke) and Sign (8 fixes), all in `docs/reviews/`; e2e 178/178,
   unit 7 778; security review in `docs/SECURITY-REVIEW-2026-10.md`.
 
-**Not done / owner's go**: uploading the ~6.9 GB AI pack (`publish-ai-pack.ts <folder> --yes`; until then the in-app
-Get stays off and a pack installs from a folder); one word per step across the catalogues and a hardware-based
-default model (SIMPLIFY 8 and 9); the graphics card on macOS (Metal); SmolVLM2 tiers marked not-working-yet.
+**Published**: the AI pack is a public release, `ai-pack-qwen2.5-vl-7b-instruct-q4_k_m` (5 files, 6.89 GB, hashes
+verified from GitHub's side); the app's Get button downloads tiers from Hugging Face, the pack opens from a folder.
+**Not done**: one word per step across the catalogues and a hardware-based default model (SIMPLIFY 8 and 9); the
+graphics card on macOS (Metal); SmolVLM2 tiers marked not-working-yet.
 **Unverified**: macOS, 8-12 GB laptops, CPUs without AVX2, other graphics drivers, screen readers, native-speaker
 quality (strings for a native read are listed in docs/reviews/2026-10-forms-ui.md).
 Web bundle total is at its cap (1 249 of 1 250 KB): a new feature must cut elsewhere or raise the cap with a reason.
