@@ -98,3 +98,5 @@ No photograph has text written over it today (MEDIA.md: "nothing is written over
 ### Bundle (B-6 and the rest)
 
 Total 1249.2 to 1251.2 KB of 1250 with the new words (two messages in twelve catalogues), the rule and the spinner: over. Cut first, as asked: seven catalogue keys that nothing references (`ai.models.unavailable`, `…unavailableWhy`, `…unverifiedLicence`, `…needs`, `read.proofread`, `docs.reading`, `docs.noText`), removed from all twelve files. Final: **entry 6.7 of 12, stylesheet 11.8 of 14.5, total 1248.9 of 1250 KB** (the rule went in the lazy file, so the entry stylesheet did not move).
+
+Gates on the merged branch: format, typecheck, lint (2 existing warnings), test 7778, build, bundle:budget, contract:check, licence:check, builder:validate; full `pnpm test:e2e` 178 of 178 (13.0 min, under the lock).
