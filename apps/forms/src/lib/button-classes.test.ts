@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { allCss } from './all-css.js';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,7 +23,7 @@ function tiersAskedFor(source: string): string[] {
 }
 
 describe('button tiers', () => {
-  const stylesheet = readFileSync(join(SOURCE, 'styles.css'), 'utf8');
+  const stylesheet = allCss();
   const defined = new Set(tiersAskedFor(stylesheet));
 
   it('defines every tier the screens ask for', () => {
@@ -63,7 +64,7 @@ describe('button tiers', () => {
  */
 describe('the filled tier', () => {
   it('never reaches a bare button', () => {
-    const css = readFileSync(new URL('../styles.css', import.meta.url), 'utf8');
+    const css = allCss();
     const filled = css.match(/^\.button:not\(\.button--quiet\)[^{]*\{/gm) ?? [];
     expect(filled.length).toBeGreaterThan(0);
     for (const selector of filled) expect(selector).toContain(':not(.button--bare)');

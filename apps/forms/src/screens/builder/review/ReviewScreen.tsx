@@ -51,6 +51,7 @@ import {
   type Review,
 } from './review.js';
 import { SourcePane } from './SourcePane.js';
+import '../../../styles/builder.css';
 
 /**
  * "Start from paper" — the review screen, at `/forms/:id/import` (`IMPORT-PIPELINE.md` §8,

@@ -1,5 +1,5 @@
-import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { allCss } from './lib/all-css.js';
 
 /**
  * Font sizes come from the ramp, not from whatever looked right that afternoon.
@@ -13,7 +13,7 @@ import { describe, expect, it } from 'vitest';
  * left every one of those 33 declarations behind, which is the ratio control silently doing half
  * its job.
  */
-const CSS = readFileSync(new URL('./styles.css', import.meta.url), 'utf8');
+const CSS = allCss();
 
 /**
  * Anything that is not a token, a `clamp()`, the iOS `max()` guard, or `inherit` — which is not

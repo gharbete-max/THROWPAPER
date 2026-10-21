@@ -15,6 +15,7 @@ import { Loading } from '../../../components/Loading.js';
 import { ApiError, client } from '../../../lib/api.js';
 import { useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
+import '../../../styles/builder.css';
 
 /**
  * Learned phrases — the organisation's learned aliases (`INTENT-LADDER.md`, "Aliases", S6): every

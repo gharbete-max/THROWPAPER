@@ -1,11 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { allCss } from '../lib/all-css.js';
 import { CHOICE_ACCENTS, CHOICE_COLUMNS, CHOICE_SHAPES, CHOICE_SIZES } from '@tp/shared/forms';
 import { choiceClasses } from './FieldInput.js';
 
-const SOURCE = new URL('../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-const stylesheet = readFileSync(join(SOURCE, 'styles.css'), 'utf8');
+const stylesheet = allCss();
 
 /** Each rule as `[selector, body]`, comments removed. Flat enough for this stylesheet. */
 function rules(css: string): Array<[string, string]> {

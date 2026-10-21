@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { allCss } from './all-css.js';
 import { shouldPlayIntro } from './motion.js';
 
 /**
@@ -10,7 +11,7 @@ import { shouldPlayIntro } from './motion.js';
  * in by members of the public who never chose to be here. An animation added without the switch
  * is an accessibility regression that nothing else would catch.
  */
-const STYLES = readFileSync(new URL('../styles.css', import.meta.url), 'utf8');
+const STYLES = allCss();
 
 describe('the reduced-motion switch', () => {
   it('turns off every animation and transition, not a hand-listed few', () => {

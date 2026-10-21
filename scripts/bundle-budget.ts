@@ -68,8 +68,8 @@ const DIST = join(import.meta.dirname, '..', 'apps', 'forms', 'dist');
  * Documents catcher with its words in twelve catalogues, and the rest of the plan (PDF text and
  * redaction, the summary centre, Send, invoice scan) is the same kind of cost. The total is
  * therefore raised to 1 080 KB. It is still a doubling-detector over every lazy chunk, not what a
- * visitor downloads: the entry (12 KB) and stylesheet (20 KB) caps, which are what a visitor
- * pays, are unchanged.
+ * visitor downloads: the entry (12 KB) and stylesheet caps, which are what a visitor
+ * pays.
  *
  * The summary centre (+32 KB), invoice scan (+26 KB), PDF text and redaction (+10 KB) and Send
  * landed together and the total reached about 1 072 KB of 1 080 with Send still to come. It is
@@ -88,8 +88,13 @@ const DIST = join(import.meta.dirname, '..', 'apps', 'forms', 'dist');
 const BUDGET_KB = {
   /** The one script `index.html` loads. Every visitor, every time, before anything renders. */
   entry: 12,
-  /** The one stylesheet it loads. Render-blocking, so it is paid for at the same moment. */
-  stylesheet: 20,
+  /**
+   * The one stylesheet it loads. Render-blocking, so it is paid for at the same moment.
+   * Tightened from 20 when `styles.css` was split (docs/plan/SIMPLIFY.md, proposal 5): the entry
+   * measures 11.8, and 14.5 is about 23% above it. The two lazy stylesheets (`styles/app.css`,
+   * `styles/builder.css`) are not capped here; they are counted in the total below.
+   */
+  stylesheet: 14.5,
   /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
   total: 1250,
 } as const;

@@ -9,6 +9,7 @@ import { ThemePicker } from '../components/ThemePicker.js';
 import { dominantColour } from '../lib/dominant-colour.js';
 import { Loading } from '../components/Loading.js';
 import { Slider } from '../components/Slider.js';
+import '../styles/builder.css';
 
 /**
  * The Brand Kit editor.
