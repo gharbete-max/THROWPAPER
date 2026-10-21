@@ -26,6 +26,7 @@ import { FormSettingsPanel } from './FormSettingsPanel.js';
 import { useHistory } from './use-history.js';
 import { Icon } from '../../components/Icon.js';
 import { Loading } from '../../components/Loading.js';
+import '../../styles/builder.css';
 
 type SaveState = 'saved' | 'saving' | 'unsaved';
 

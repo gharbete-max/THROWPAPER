@@ -1,0 +1,2144 @@
+/*
+ * app.css: rules for the screens that use them, split out of styles.css (docs/plan/SIMPLIFY.md, proposal 5).
+ * Imported by the screen's own module, so it loads with the screen's chunk and not with the page.
+ * Order within this file is the order the rules had in styles.css; a rule that depended on coming
+ * before a later shared rule of equal weight stayed in styles.css.
+ */
+.field--inline {
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Darkening cannot be computed from a token, so depth comes from the border instead: hover swaps
+ * the frame rather than mixing a new colour the customer never chose.
+ *
+ * The two `:not()`s are not decoration. `.button:not(.button--quiet):not(.button--danger)` further
+ * down paints the filled tier from `--tp-button-*`, and at equal specificity the later rule wins —
+ * so this swap never reached the page and no filled button in the product had a hover state at
+ * all. Only the shadow moved. Matching that selector's exclusions makes this (0,5,0), which is
+ * also the truthful scope: quiet and danger have their own hovers below. */
+
+.button:not(.button--quiet):not(.button--danger):not(.button--bare):hover:not(:disabled) {
+  background: var(--tp-colour-text);
+  border-color: var(--tp-colour-text);
+}
+
+.button--bare:hover:not(:disabled) {
+  background: var(--tp-colour-surface);
+}
+
+/* Submissions table. Not the grid from SPEC-shared.md — that is A4. */
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.door__top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.door__countIn {
+  font-size: var(--tp-text-3xl);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.door__form {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+.door__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+}
+
+.door .door__recent h2 {
+  margin: 0 0 var(--tp-spacing-unit);
+  font-size: var(--tp-text-ui);
+}
+
+.checkin__video {
+  width: 100%;
+  max-height: 40vh;
+  border-radius: var(--tp-radius);
+  /* The one hard-coded colour in the file, and deliberate: this is the letterbox behind a camera
+   * feed, not a surface. Black is what a viewfinder is, in every brand — using the palette here
+   * would tint the picture rather than frame it. */
+  background: #000;
+}
+
+.checkin__video--off {
+  display: none;
+}
+
+.door .checkin__input {
+  /* Display size: read at arm's length, typed in gloves. */
+  font-size: var(--tp-text-2xl);
+  min-block-size: calc(var(--tp-control-height) * 1.5);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.verdict--idle {
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-muted);
+}
+
+.verdict--good {
+  background: var(--tp-colour-success);
+}
+
+.verdict--warn {
+  background: var(--tp-colour-warning);
+}
+
+.verdict--bad {
+  background: var(--tp-colour-danger);
+}
+
+.verdict__headline {
+  font-size: var(--tp-text-2xl);
+  line-height: 1.1;
+}
+
+/*
+ * The idle prompt is an instruction, not a verdict. At verdict size it wrapped to three lines on a
+ * phone and made the panel taller than any verdict — the one jump the fixed height exists to
+ * remove. Sized with the name line, so it reads as the quiet state.
+ */
+
+.verdict--idle .verdict__headline {
+  font-size: var(--tp-text-lg);
+}
+
+.verdict__name {
+  font-size: var(--tp-text-lg);
+}
+
+/* Size alone marks the meta line: at 0.85 opacity it measured 3.9:1 on success, under AA. */
+
+.verdict__meta {
+  font-size: var(--tp-text-ui);
+}
+
+.stats {
+  gap: calc(var(--tp-spacing-unit) * 3);
+}
+
+.stat__value {
+  font-size: var(--tp-text-2xl);
+  font-weight: var(--tp-type-weight-bold);
+  line-height: 1;
+  color: var(--tp-colour-primary);
+}
+
+.stat__label {
+  font-size: var(--tp-text-ui);
+  color: var(--tp-colour-muted);
+}
+
+@media (pointer: coarse) {
+  .grid__sort {
+    min-height: max(44px, var(--tp-control-height));
+  }
+}
+
+@media (max-width: 600px) {
+  .door .checkin__input {
+    font-size: var(--tp-text-xl);
+  }
+
+  /*
+   * Two rows: the way out and the count first, the title and its event beneath on a line of
+   * their own. Three columns at 375 wrapped "Leave the door" onto two lines and clipped it.
+   */
+
+  .door__top {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+  }
+
+  .door__title {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  .verdict__headline {
+    font-size: var(--tp-text-3xl);
+  }
+}
+
+@media (max-height: 480px) and (orientation: landscape) {
+  .checkin__video {
+    max-height: 55vh;
+  }
+
+  .verdict__headline {
+    font-size: var(--tp-text-xl);
+  }
+}
+
+/* An image placed in a form by its author. Capped rather than scaled: the uploaded file can be
+ * any size, and the form's layout should not depend on what somebody happened to upload. */
+
+.form-image {
+  max-inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--tp-radius);
+  display: block;
+}
+
+/* Back and Save on the left, forward on the right. On a narrow screen the forward action goes
+ * full width and last, so the thumb lands on it. */
+
+.form-actions {
+  gap: var(--tp-spacing-unit);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}
+
+/* --- Field widths ---------------------------------------------------------
+ *
+ * Twelve columns, so half and third both divide evenly and can sit in the same row. Every width
+ * collapses to full below 600px: two columns on a phone is two cramped columns, not a layout.
+ */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+  align-items: start;
+}
+
+.form-grid__cell {
+  grid-column: span 12;
+  min-inline-size: 0;
+}
+
+@media (min-width: 601px) {
+  .form-grid__cell--half {
+    grid-column: span 6;
+  }
+
+  .form-grid__cell--third {
+    grid-column: span 4;
+  }
+}
+
+/* --- Overviews -------------------------------------------------------------
+ *
+ * The list screens exist to answer one question each — how many people have registered, how many
+ * have answered — and for a long time they answered a different one. These are the pieces that
+ * carry the number.
+ */
+
+/**
+ * How full something is.
+ *
+ * The track is `border`, not `surface`: these sit on cards, and a card *is* a surface, so a
+ * surface-coloured track was invisible — the bar read as a stray dash rather than as 40 of 250.
+ */
+
+.meter {
+  block-size: 6px;
+  inline-size: 100%;
+  border-radius: var(--tp-radius);
+  background: var(--tp-colour-border);
+  overflow: hidden;
+}
+
+.meter__fill {
+  block-size: 100%;
+  background: var(--tp-colour-primary);
+  /* Zero registrations must still read as a bar at nought, not a missing element. */
+  min-inline-size: 0;
+}
+
+/* Full is worth noticing before reading the numbers. */
+
+.meter--full .meter__fill {
+  background: var(--tp-colour-warning);
+}
+
+.backlink {
+  color: var(--tp-colour-muted);
+  text-decoration: none;
+}
+
+.backlink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* The public address and its copy button share a line and never separate. */
+
+.form-link-row {
+  gap: var(--tp-spacing-unit);
+}
+
+/* A timestamp is not a headline number, so it does not get headline size. */
+
+.stat__value--small {
+  font-size: var(--tp-text-base);
+  font-weight: var(--tp-type-weight-regular);
+}
+
+.signed__stroke {
+  /* Roughly the path length. Over-long is safe: the dash simply starts further off-screen. */
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: draw-signature 900ms 120ms var(--tp-ease-unfurl) forwards;
+}
+
+.signed__tick {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: draw-signature 320ms 900ms ease-out forwards;
+}
+
+/* --- Arriving on scroll ---------------------------------------------------
+ *
+ * The hidden state is only ever applied by JavaScript that has already decided the effect can
+ * run, so content is never left invisible by a script that failed to load.
+ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 340ms var(--tp-ease-unfurl),
+    transform 340ms var(--tp-ease-unfurl);
+}
+
+.reveal--in {
+  opacity: 1;
+  transform: none;
+}
+
+/*
+ * A choice that has just been made gives a small nudge, so a card grid confirms the click.
+ *
+ * The nudge lives in the keyframe — 1.03 and back. The curve used to overshoot as well
+ * (`cubic-bezier(0.2, 0.8, 0.3, 1.4)`), which meant two overshoots stacked on one 260ms
+ * animation and gave it the elastic wobble that dates an interface fastest. One overshoot,
+ * decelerating: the shared easing token.
+ */
+
+.choice__option:has(input:checked) {
+  animation: chosen 260ms var(--tp-ease);
+}
+
+/* A field appearing because a condition became true, rather than blinking into existence. */
+
+.form-grid__cell {
+  animation: field-in 220ms ease-out;
+}
+
+/* Owner, permission and share count on one line, wrapping rather than truncating: a name is the
+ * part somebody is reading, and half a name is worse than a second line. */
+
+.form-meta {
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  align-items: center;
+}
+
+.card--binned:hover,
+.card--binned:focus-within {
+  opacity: 1;
+}
+
+.share-list__item {
+  padding: var(--tp-spacing-unit) 0;
+  border-bottom: var(--tp-border-width) solid var(--tp-colour-border);
+  gap: var(--tp-spacing-unit);
+  flex-wrap: wrap;
+}
+
+.inbox__row + .inbox__row {
+  border-top: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.inbox__link {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  min-height: 44px;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 120ms ease;
+}
+
+.inbox__link:hover,
+.inbox__link:focus-visible {
+  background: color-mix(in srgb, var(--tp-colour-primary) 6%, transparent);
+}
+
+.inbox__who {
+  font-weight: var(--tp-type-weight-bold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A row, so the title can give way and the reference cannot. */
+
+.inbox__form {
+  display: flex;
+  min-inline-size: 0;
+  white-space: nowrap;
+}
+
+.inbox__title {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Never truncated: it is the field that matches a human to a card. */
+
+.inbox__reference {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.inbox__when {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.4);
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .inbox__link {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .inbox__who {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .inbox__status {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .inbox__form {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .inbox__when {
+    grid-column: 2;
+    grid-row: 2;
+    justify-content: flex-end;
+  }
+}
+
+/* Wide content pans inside itself, and stops there. Without `contain`, reaching the end of a
+ * table throws the scroll to the page and the whole screen lurches sideways. */
+
+.table-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  /* Momentum on older iOS; harmless everywhere else. */
+  -webkit-overflow-scrolling: touch;
+}
+
+.share-list {
+  overscroll-behavior-x: contain;
+}
+
+/* The one exception to "no shadows": a filled primary lifts by a hair so that the single most
+ * important control on a screen is findable without reading it. Tied to the primary colour rather
+ * than to black, so it stays honest against a dark palette. */
+
+.button:not(.button--quiet):not(.button--danger):not(.button--bare) {
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--tp-colour-primary) 22%, transparent);
+}
+
+.button:not(.button--quiet):not(.button--danger):not(.button--bare):hover:not(:disabled) {
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--tp-colour-primary) 28%, transparent);
+}
+
+/* The mark sits in a soft disc rather than floating, so it reads as deliberate at any size. */
+
+.empty__mark {
+  display: grid;
+  place-items: center;
+  inline-size: 48px;
+  block-size: 48px;
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-muted);
+  font-size: 22px;
+}
+
+.empty__hint {
+  margin: 0;
+  max-inline-size: 34rem;
+}
+
+.card__actions .button .icon {
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+/* Live and taking answers — the only status worth a colour of its own. Everything else is a
+ * state of rest and reads as one. */
+
+.badge--published {
+  color: var(--tp-colour-success);
+  border-color: color-mix(in srgb, var(--tp-colour-success) 40%, transparent);
+  background: color-mix(in srgb, var(--tp-colour-success) 10%, transparent);
+}
+
+.badge--draft,
+.badge--closed,
+.badge--archived {
+  color: var(--tp-colour-muted);
+  border-color: var(--tp-colour-border);
+  background: none;
+}
+
+/* --- The response grid's controls -----------------------------------------
+ *
+ * The search box was the full width of the table — 1168px on a laptop. A field that wide reads as
+ * a text area, and nobody types a paragraph into a filter. Capped to a measure that matches what
+ * people actually put in one: a name, an email, a reference.
+ */
+
+.field--search {
+  max-inline-size: 24rem;
+}
+
+/**
+ * A closed disclosure is a control, not a panel.
+ *
+ * "Columns" was a 93px card containing one word, because the card padding applies whether the
+ * disclosure is open or shut — so a collapsed control looked like an empty box somebody forgot to
+ * fill. Shut, it is the size of its summary; open, it is a panel again.
+ */
+
+.card--disclosure:not([open]) {
+  padding: 0;
+  border-color: transparent;
+  background: none;
+  inline-size: fit-content;
+}
+
+.card--disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A triangle that turns, so "there is more behind this" is visible before it is clicked. */
+
+.card--disclosure > summary::after {
+  content: '';
+  inline-size: 0;
+  block-size: 0;
+  border-inline: 4px solid transparent;
+  border-block-start: 5px solid currentColor;
+  opacity: 0.6;
+  transition: transform var(--tp-motion-fast) var(--tp-ease);
+}
+
+.card--disclosure[open] > summary::after {
+  transform: rotate(180deg);
+}
+
+.inbox__link {
+  transition-duration: var(--tp-motion-fast);
+  transition-timing-function: var(--tp-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .signed--still .signed__stroke,
+  .signed--still .signed__tick {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* --- The button surface ----------------------------------------------------
+ *
+ * buttonStyle has been a token since phase 1. Four of the five shipped presets set it to
+ * something other than solid, and none of it reached the page — "minimal" asked for an outline
+ * button and got the same filled one as everything else.
+ *
+ * Scoped to the filled tier only. Quiet and danger are their own tiers and are not what
+ * buttonStyle is describing.
+ */
+
+.button:not(.button--quiet):not(.button--danger):not(.button--bare) {
+  background: var(--tp-button-background);
+  color: var(--tp-button-text);
+  border-color: var(--tp-button-border);
+}
+
+/* --- Controls, finished ----------------------------------------------------
+ *
+ * The buttons and sliders were correct and unfelt: right colours, right sizes, nothing under the
+ * finger. These are the three details that make a control feel like an object, and none of them
+ * change what anything does.
+ */
+
+/*
+ * A filled button gets the same specular hairline as the glass.
+ *
+ * One highlight along the top edge, from the same token, so a primary button and the pane it sits
+ * on are lit from the same direction. This is the whole trick of the material: it is not the blur,
+ * it is agreeing about where the light is.
+ */
+
+.button:not(.button--quiet):not(.button--danger):not(.button--bare) {
+  box-shadow:
+    inset 0 1px 0 var(--tp-glass-hairline),
+    0 1px 2px color-mix(in srgb, var(--tp-colour-primary) 22%, transparent);
+}
+
+.button:not(.button--quiet):not(.button--danger):not(.button--bare):hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 var(--tp-glass-hairline),
+    0 2px 6px color-mix(in srgb, var(--tp-colour-primary) 28%, transparent);
+}
+
+.conversation__card:focus-visible {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+/* A whole answer, labelled by what it does; far enough from its neighbour to be a decision. */
+
+.conversation__card {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  min-block-size: 56px;
+  padding: calc(var(--tp-spacing-unit) * 1.25) calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: border-color var(--tp-motion-fast) var(--tp-ease);
+}
+
+.system .conversation__card:hover:not(:disabled) {
+  border-color: var(--tp-colour-primary);
+}
+
+.conversation__card[aria-pressed='true'] {
+  border-color: var(--tp-colour-primary);
+  box-shadow: inset 0 0 0 1px var(--tp-colour-primary);
+}
+
+.conversation__card:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.conversation__card .icon {
+  flex: none;
+  color: var(--tp-colour-accent-ink);
+}
+
+.conversation__card-text strong {
+  font-size: var(--tp-text-lg);
+}
+
+.conversation__detail {
+  color: var(--tp-colour-muted);
+  font-size: var(--tp-text-ui);
+}
+
+@media (min-width: 720px) {
+  .conversation__card-text strong {
+    font-size: var(--tp-text-xl);
+  }
+
+  .conversation__detail {
+    font-size: var(--tp-text-base);
+  }
+}
+
+.doors__title {
+  margin: 0;
+  font-size: var(--tp-text-xl);
+}
+
+.doors__cards {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+}
+
+.doors__door {
+  align-items: flex-start;
+  padding: calc(var(--tp-spacing-unit) * 2.5);
+}
+
+.doors__myself {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (min-width: 720px) {
+  .doors__cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ==========================================================================
+ * Invoices: a book somebody scans down.
+ * ========================================================================== */
+
+/*
+ * The number and the money share a treatment, because they are the two columns an eye runs down.
+ * Tabular figures so the digits stack; without them a column of amounts is a ragged edge and the
+ * only check anybody performs on an invoice list — does this add up — stops being possible.
+ */
+
+.invoices__number,
+.grid__amount {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Money aligns on its last digit. Nothing else in this table does.
+ *
+ * Written as `.grid th`/`.grid td` rather than `.grid__amount` alone because the base rule is
+ * `.grid th, .grid td { text-align: left }` — element plus class outranks a lone class, so the
+ * short selector lost and a column of kronor stayed ragged.
+ */
+
+.grid th.grid__amount,
+.grid td.grid__amount {
+  text-align: right;
+}
+
+.invoices__outstanding {
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+/*
+ * The date and its badge, kept on one line — without turning the cell into a flex container.
+ *
+ * `display: flex` on a `td` takes the cell out of the table's own layout: it stops sharing the
+ * column's width and draws its border independently of the row, which put a rule above and below
+ * this one date and no others.
+ */
+
+.invoices__due {
+  white-space: nowrap;
+}
+
+.invoices__due .badge {
+  margin-inline-start: calc(var(--tp-spacing-unit) * 0.75);
+}
+
+.invoices__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+/*
+ * Late, and the only row state worth a colour.
+ *
+ * `sent` and `issued` are the ordinary life of an invoice and read as rest, like a draft form.
+ * Paid is the good ending and gets the success colour the rest of the app already uses for one.
+ */
+
+.badge--overdue {
+  color: var(--tp-colour-danger);
+  border-color: color-mix(in srgb, var(--tp-colour-danger) 40%, transparent);
+  background: color-mix(in srgb, var(--tp-colour-danger) 10%, transparent);
+}
+
+.badge--paid {
+  color: var(--tp-colour-success);
+  border-color: color-mix(in srgb, var(--tp-colour-success) 40%, transparent);
+  background: color-mix(in srgb, var(--tp-colour-success) 10%, transparent);
+}
+
+.badge--draft,
+.badge--issued,
+.badge--sent,
+.badge--cancelled {
+  color: var(--tp-colour-muted);
+  border-color: var(--tp-colour-border);
+  background: none;
+}
+
+.paper__image {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+/* --- Straightening a photograph (`paper/CropPhoto.tsx`) -------------------
+ * Four handles the author drags onto the page's corners; the outline between them is SVG
+ * stretched over the picture so it needs no maths of its own. */
+
+.crop__surface {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+  border-radius: var(--tp-radius);
+  overflow: hidden;
+  background: var(--tp-colour-surface);
+}
+
+.crop__outline {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+}
+
+.crop__outline polygon {
+  fill: color-mix(in srgb, var(--tp-colour-primary) 14%, transparent);
+  stroke: var(--tp-colour-primary);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.crop__outline--bad polygon {
+  fill: color-mix(in srgb, var(--tp-colour-danger) 14%, transparent);
+  stroke: var(--tp-colour-danger);
+}
+
+/* A handle is a target for a thumb, not a pixel: 28px, centred on the corner it stands for. */
+
+.crop__handle {
+  position: absolute;
+  inline-size: 28px;
+  block-size: 28px;
+  margin: -14px 0 0 -14px;
+  padding: 0;
+  border: 2px solid var(--tp-colour-background);
+  border-radius: 50%;
+  background: var(--tp-colour-primary);
+  cursor: grab;
+}
+
+.crop__handle:active {
+  cursor: grabbing;
+}
+
+/* --- Signing (P1c-3) ------------------------------------------------------
+ * Documents sent to Loppa Sign. The finished states get the colours the rest of the app already
+ * uses for a good or a stopped ending; everything in between reads as rest, like a sent invoice.
+ */
+
+.signing__parties {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.signing__party {
+  align-items: flex-end;
+}
+
+.badge--completed,
+.badge--signed {
+  color: var(--tp-colour-success);
+  border-color: color-mix(in srgb, var(--tp-colour-success) 40%, transparent);
+  background: color-mix(in srgb, var(--tp-colour-success) 10%, transparent);
+}
+
+.badge--declined,
+.badge--expired {
+  color: var(--tp-colour-danger);
+  border-color: color-mix(in srgb, var(--tp-colour-danger) 40%, transparent);
+  background: color-mix(in srgb, var(--tp-colour-danger) 10%, transparent);
+}
+
+.badge--invited,
+.badge--viewed,
+.badge--waiting {
+  color: var(--tp-colour-muted);
+  border-color: var(--tp-colour-border);
+  background: none;
+}
+
+/* --- Camera scanning -------------------------------------------------------
+ * The live camera for scanning paper, on a phone or a PC. The preview keeps the camera's own shape;
+ * a brief dimming answers the shutter, because a capture with no feedback gets pressed twice.
+ */
+
+.scan__view {
+  position: relative;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  overflow: hidden;
+  background: var(--tp-colour-text);
+  transition: opacity var(--tp-motion-fast) var(--tp-ease);
+}
+
+.scan__view--flash {
+  opacity: 0.4;
+}
+
+.scan__video {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+.scan__hint {
+  position: absolute;
+  inset: auto 0 0 0;
+  margin: 0;
+  padding: var(--tp-spacing-unit);
+  background: var(--tp-colour-background);
+}
+
+/* The phone's QR code: never scaled soft, and always on its own light square so a phone can read
+   it in a dark theme too (the SVG carries its own background). */
+
+.phone-scan__qr {
+  image-rendering: pixelated;
+  max-width: 100%;
+  height: auto;
+}
+
+.phone-scan__link {
+  overflow-wrap: anywhere;
+}
+
+.scan__page img {
+  width: 96px;
+  height: 128px;
+  object-fit: cover;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-sm);
+}
+
+/* The message as it will be written, line breaks and all. */
+
+.outgoing__text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Send (a batch's preview): the first pages of one recipient's PDF, drawn in the page. */
+
+.send__pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+}
+
+.send__page {
+  max-inline-size: 100%;
+  block-size: auto;
+  background: var(--tp-colour-surface);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+/* Send: recent addresses offered under the To box as you type (a combobox). */
+
+.combo {
+  position: relative;
+}
+
+.combo__list {
+  position: absolute;
+  inset-inline: 0;
+  z-index: 20;
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) / 2);
+  list-style: none;
+  background: var(--tp-colour-surface);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.combo__option {
+  padding: var(--tp-spacing-unit);
+  border-radius: var(--tp-radius-sm);
+  cursor: pointer;
+}
+
+.combo__option[aria-selected='true'],
+.combo__option:hover {
+  background: var(--tp-colour-primary);
+  color: var(--tp-colour-background);
+}
+
+/* Arrange pages (Scan): the pages of the PDFs the person added, as a wrapping row of small cards. */
+
+.scan__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.scan .card--disclosure > .stack {
+  align-items: start;
+}
+
+.scan__steps .tab {
+  flex: 1 1 0;
+  justify-content: center;
+  padding-inline: calc(var(--tp-spacing-unit) * 0.5);
+}
+
+.scan__pages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.scan__page {
+  display: grid;
+  justify-items: center;
+  gap: var(--tp-spacing-unit);
+  padding: var(--tp-spacing-unit);
+  border: 1px solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+/* A square the page turns inside, so a landscape or turned page never overlaps its neighbours. */
+
+.scan__thumb {
+  display: grid;
+  place-items: center;
+  width: 9rem;
+  height: 9rem;
+  overflow: hidden;
+}
+
+.scan__canvas {
+  max-width: 100%;
+  max-height: 100%;
+  transition: transform 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan__canvas {
+    transition: none;
+  }
+}
+
+.scan__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+/* Scan filters: the chosen page large, beside the five ways of making it. */
+
+.scan-filter {
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: 1px solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.scan-filter__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+@media (min-width: 48rem) {
+  .scan-filter__body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.scan-filter__preview {
+  max-width: 100%;
+  max-height: 70vh;
+  justify-self: center;
+  border: 1px solid var(--tp-colour-border);
+}
+
+.scan-filter__choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.scan-filter__choice {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  width: 6.5rem;
+  cursor: pointer;
+}
+
+.scan-filter__choice img {
+  width: 100%;
+  border: 1px solid var(--tp-colour-border);
+}
+
+/* Reading a supplier invoice: the page with the found value outlined, beside the values to confirm. */
+
+.invoice-scan__panes {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 3);
+  align-items: start;
+}
+
+@media (min-width: 60rem) {
+  .invoice-scan__panes {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .invoice-scan__page {
+    position: sticky;
+    top: var(--tp-spacing-unit);
+  }
+}
+
+.invoice-scan__sheet {
+  position: relative;
+  line-height: 0;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  background: var(--tp-colour-surface);
+}
+
+.invoice-scan__sheet canvas,
+.invoice-scan__sheet img {
+  width: 100%;
+  height: auto;
+}
+
+.invoice-scan__mark {
+  position: absolute;
+  border: 3px solid var(--tp-colour-primary);
+  background: color-mix(in srgb, var(--tp-colour-primary) 14%, transparent);
+  pointer-events: none;
+}
+
+.invoice-scan__field {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.invoice-scan__field--active {
+  border-color: var(--tp-colour-primary);
+}
+
+.invoice-scan__status,
+.invoice-scan__read,
+.invoice-scan__flag {
+  margin: 0;
+}
+
+.invoice-scan__status[data-tone='warn'] {
+  color: var(--tp-colour-danger);
+}
+
+.invoice-scan__status[data-tone='good'] {
+  color: var(--tp-colour-success);
+}
+
+.invoice-scan__edit,
+.invoice-scan__language {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.invoice-scan__edit input[type='text'] {
+  flex: 1 1 12rem;
+}
+
+.invoice-scan__note {
+  margin: 0;
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  white-space: pre-wrap;
+}
+
+.copy__bar,
+.copy__edit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--tp-spacing-unit);
+}
+
+.copy__language,
+.copy__field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.copy__option {
+  display: grid;
+  gap: 0.25rem;
+  max-width: 16rem;
+}
+
+.copy__panes {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  align-items: start;
+}
+
+@media (min-width: 48rem) {
+  .copy__panes {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.copy__figure {
+  margin: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.copy__photo,
+.copy__svg {
+  width: 100%;
+  height: auto;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.copy__word {
+  cursor: pointer;
+}
+
+.copy__word:focus-visible {
+  outline: 2px solid var(--tp-colour-primary);
+  outline-offset: 2px;
+}
+
+.copy__doubt {
+  stroke: var(--tp-colour-danger);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 2;
+}
+
+.copy__selected {
+  stroke: var(--tp-colour-primary);
+  stroke-width: 1.5;
+}
+
+.room__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 1.5) calc(var(--tp-spacing-unit) * 2);
+}
+
+.room__bar .wordmark {
+  min-inline-size: 0;
+}
+
+.room__bar .wordmark strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.room__session {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.room__who {
+  color: var(--tp-room-quiet);
+}
+
+.room__floor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--tp-spacing-unit) * 3);
+  padding: calc(var(--tp-spacing-unit) * 2);
+  /* A glow is wider than its catcher; it may not push the page sideways. */
+  overflow: hidden;
+}
+
+.room__catchers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 4vw, 4rem);
+  inline-size: min(100%, 60rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.catcher--gold {
+  --catcher-hue: var(--tp-room-gold);
+}
+
+.catcher--platinum {
+  --catcher-hue: var(--tp-room-platinum);
+}
+
+.catcher--bronze {
+  --catcher-hue: var(--tp-room-bronze);
+}
+
+/* The colour beneath: a pool of light on the floor that dims as the catcher rises out of it. */
+
+.catcher__glow {
+  position: absolute;
+  inset-block-start: calc(var(--tp-spacing-unit) * 2 + var(--catcher-size) * 0.7);
+  inline-size: calc(var(--catcher-size) * 1.4);
+  aspect-ratio: 3;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--catcher-hue) 75%, transparent),
+    transparent
+  );
+  animation: room-glow 3.6s var(--tp-ease-chomp) infinite alternate;
+}
+
+.catcher__art {
+  position: relative;
+  inline-size: var(--catcher-size);
+  animation: room-float 3.6s var(--tp-ease-chomp) infinite alternate;
+}
+
+.catcher__art .mark {
+  inline-size: 100%;
+}
+
+.catcher__name {
+  position: relative;
+  margin-block-start: calc(var(--tp-spacing-unit) * 1.5);
+  font-size: var(--tp-text-lg);
+  font-weight: var(--tp-type-weight-bold);
+  line-height: 1.2;
+}
+
+.catcher__note {
+  color: var(--tp-room-quiet);
+}
+
+/* A placeholder floats like the others and is plainly not ready: dimmer, and it says so. */
+
+.catcher--idle .catcher__art {
+  opacity: 0.55;
+}
+
+.room__catchers > li:nth-child(2) :is(.catcher__art, .catcher__glow) {
+  animation-delay: -1.2s;
+}
+
+.room__catchers > li:nth-child(3) :is(.catcher__art, .catcher__glow) {
+  animation-delay: -2.4s;
+}
+
+.room--still :is(.catcher__art, .catcher__glow) {
+  animation-play-state: paused;
+}
+
+.catcher--documents {
+  transition: background-color var(--tp-motion) var(--tp-ease);
+}
+
+.catcher--documents:hover {
+  background: color-mix(in srgb, var(--tp-room-shade) 70%, transparent);
+}
+
+.catcher--documents:hover .catcher__name {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.catcher--documents:focus-visible {
+  outline: 2px solid var(--tp-room-gold);
+  outline-offset: 4px;
+}
+
+.room__pause {
+  color: var(--tp-room-quiet);
+}
+
+/* --- The opened catcher --- */
+
+.room__open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  inline-size: 100%;
+}
+
+.room__back {
+  align-self: flex-start;
+}
+
+.room__title {
+  margin: 0;
+  font-size: var(--tp-text-2xl);
+}
+
+.rosette__heart {
+  fill: var(--tp-room-shade);
+}
+
+.rosette__facet--face {
+  fill: var(--tp-room-gold);
+}
+
+.rosette__facet--fold {
+  fill: color-mix(in srgb, var(--tp-room-gold) 70%, var(--tp-room-shade));
+}
+
+.rosette__facet--warm {
+  fill: var(--tp-room-platinum);
+}
+
+.rosette__facet--glow {
+  fill: color-mix(in srgb, var(--tp-room-platinum) 70%, var(--tp-room-shade));
+}
+
+/* The pockets part from the centre, which is how the paper opens, as the zoom (`Room.tsx`) lands. */
+
+.rosette__pocket {
+  animation: rosette-part 600ms var(--tp-ease-unfurl) 300ms backwards;
+}
+
+.rosette__pocket--north {
+  transform: translateY(-14px);
+}
+
+.rosette__pocket--east {
+  transform: translateX(14px);
+}
+
+.rosette__pocket--south {
+  transform: translateY(14px);
+}
+
+.rosette__pocket--west {
+  transform: translateX(-14px);
+}
+
+.room__part {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  max-inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.75);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-room-shade);
+  box-shadow: 0 0.25rem 0.75rem color-mix(in srgb, var(--tp-room-shade) 70%, transparent);
+  color: var(--tp-room-ink);
+  font-weight: var(--tp-type-weight-bold);
+  text-decoration: none;
+  animation: room-arrive 320ms var(--tp-ease) 450ms backwards;
+}
+
+.room__part--forms {
+  grid-area: forms;
+}
+
+.room__part--scan {
+  grid-area: scan;
+}
+
+.room__part--sign {
+  grid-area: sign;
+}
+
+.room__part--send {
+  grid-area: send;
+}
+
+/* Each part's icon wears its pocket's metal: gold north and south, platinum east and west. */
+
+:is(.room__part--forms, .room__part--sign) .icon {
+  color: var(--tp-room-gold);
+}
+
+:is(.room__part--scan, .room__part--send) .icon {
+  color: var(--tp-room-platinum);
+}
+
+a.room__part {
+  transition: background-color var(--tp-motion-fast) var(--tp-ease);
+}
+
+a.room__part:hover {
+  background: color-mix(in srgb, var(--tp-room-shade) 80%, var(--tp-room-ink));
+}
+
+a.room__part:focus-visible {
+  outline: 2px solid var(--tp-room-gold);
+  outline-offset: 3px;
+}
+
+.room__part--idle {
+  color: var(--tp-room-quiet);
+  font-weight: inherit;
+}
+
+.room__partNote {
+  display: block;
+}
+
+.room__centre {
+  position: relative;
+  grid-area: centre;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: var(--tp-spacing-unit);
+  border-radius: var(--tp-radius);
+  background: var(--tp-room-shade);
+  font-size: var(--tp-text-sm);
+  line-height: 1.3;
+  text-align: center;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  animation: room-arrive 320ms var(--tp-ease) 550ms backwards;
+}
+
+a.room__centre {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.room__centre:hover,
+a.room__centre:focus-visible {
+  outline: var(--tp-border-width) solid var(--tp-room-quiet);
+}
+
+.room__centre span {
+  color: var(--tp-room-quiet);
+}
+
+@media (max-width: 40rem) {
+  .room__who {
+    display: none;
+  }
+
+  /* The organisation's name gives way before the language or Sign out does; the mark stays. */
+
+  .room__bar .wordmark strong {
+    display: none;
+  }
+
+  .room__catchers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--tp-spacing-unit);
+  }
+
+  .room__catchers > li:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .room__catchers > li:first-child .catcher {
+    --catcher-size: 8rem;
+  }
+
+  .room__part {
+    justify-self: stretch;
+    justify-content: center;
+    min-block-size: 3.5rem;
+    border-radius: var(--tp-radius-lg);
+    text-align: center;
+  }
+
+  .room__centre {
+    justify-self: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .room__pause {
+    display: none;
+  }
+
+  :is(.catcher__art, .catcher__glow, .rosette__pocket, .room__part, .room__centre) {
+    animation: none;
+  }
+}
+
+/* Summary and translation (the room's centre): text is shown as written, line breaks kept. */
+
+.summary__text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* AI reading and proofreading: one bordered item per page or per issue; an issue's words are marked. */
+
+.read__pages,
+.proof__issues {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.read__page,
+.proof__issue {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  border: 1px solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.proof__issue mark {
+  background: transparent;
+  color: inherit;
+  font-weight: var(--tp-type-weight-bold);
+  text-decoration: underline wavy var(--tp-colour-warning);
+  text-underline-offset: 0.2em;
+}
+
+/* --- Scan: edit one page (add text, cover, redact) ---------------------------------------------
+ * The page is drawn at a fixed size and marks sit on top of it in percentages of the page, so they
+ * stay put when the canvas shrinks on a phone. Marks are previews: a cover shows its own paper or
+ * ink colour (PDF content, set inline), text is outlined so it can be told from the page.
+ */
+
+.scan-edit__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(14rem, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+  align-items: start;
+}
+
+@media (max-width: 48rem) {
+  .scan-edit__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.scan-edit__page {
+  position: relative;
+  max-inline-size: 100%;
+  touch-action: none;
+  cursor: crosshair;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.scan-edit__canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.scan-edit__mark {
+  position: absolute;
+  pointer-events: none;
+  outline: 1px dashed var(--tp-colour-primary);
+}
+
+.scan-edit__mark--text {
+  white-space: pre;
+  line-height: 1;
+  transform: translateY(-80%);
+  color: var(--tp-colour-text);
+}
+
+.scan-edit__modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  border: 0;
+  padding: 0;
+}
+
+.scan-edit__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Signing: place signature, initials and date ------------------------------------------------
+ * The page is a canvas with marks over it in percentages of the page, so they stay put when it
+ * shrinks. A date's letters scale with the page through container units. Every mark is a real
+ * button: focusable, moved with the arrow keys, dragged with a pointer.
+ */
+
+.sign-place__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(14rem, 1fr);
+  gap: calc(var(--tp-spacing-unit) * 2);
+  align-items: start;
+}
+
+@media (max-width: 48rem) {
+  .sign-place__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sign-place__page {
+  position: relative;
+  container-type: inline-size;
+  max-inline-size: 100%;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.sign-place__canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.sign-place__mark {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 1px dashed var(--tp-colour-primary);
+  cursor: grab;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+}
+
+.sign-place__mark[aria-pressed='true'] {
+  border-style: solid;
+  border-width: 2px;
+}
+
+.sign-place__mark img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.sign-place__mark--date span {
+  font-size: clamp(1px, calc(var(--sp-size) * 100cqw / var(--sp-width)), 100cqw);
+  line-height: 1;
+  white-space: nowrap;
+  color: #111111; /* ink on paper, as in the PDF */
+  pointer-events: none;
+}
+
+.sign-place__sample {
+  block-size: 2rem;
+  inline-size: auto;
+  background: #ffffff; /* the mark is dark ink: shown on paper, in any theme */
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.sign-place__pad {
+  inline-size: 100%;
+  max-inline-size: 30rem;
+  background: #ffffff; /* paper */
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.sign-place__list,
+.sign-place__strip {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sign-place__strip {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+  overflow-x: auto;
+  padding-block-end: var(--tp-spacing-unit);
+}
+
+.sign-place__thumbbutton {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  background: transparent;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  padding: 0.25rem;
+  color: var(--tp-colour-text);
+}
+
+.sign-place__thumb--marked .sign-place__thumbbutton {
+  border-color: var(--tp-colour-primary);
+  border-width: 2px;
+}
+
+.sign-place__thumbbutton[aria-current='page'] {
+  background: var(--tp-colour-surface);
+}
+
+.sign-place__thumbpage {
+  position: relative;
+  display: block;
+  inline-size: 5.5rem;
+}
+
+.sign-place__thumbpage canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.sign-place__thumbmark {
+  position: absolute;
+  background: var(--tp-colour-primary);
+  opacity: 0.55;
+}
+
+/* Documents flow: what a drop was taken for, the keep panel, and the room's recent documents. */
+
+.scan__notice {
+  padding: var(--tp-spacing-unit);
+  border: 1px solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.scan__notice summary {
+  cursor: pointer;
+}
+
+.keep__sizes {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.keep__size {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.recent__title {
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+.recent__note {
+  margin: 0;
+  color: var(--tp-room-quiet);
+}
+
+.recent__list {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recent__item {
+  display: grid;
+  inline-size: 100%;
+  padding: var(--tp-spacing-unit);
+  border: 0;
+  border-radius: var(--tp-radius);
+  background: var(--tp-room-shade);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.recent__item:hover,
+.recent__item:focus-visible {
+  outline: var(--tp-border-width) solid var(--tp-room-quiet);
+}
+
+.recent__name {
+  overflow-wrap: anywhere;
+}
+
+.recent__meta {
+  color: var(--tp-room-quiet);
+}
+
+/* A file path in the model list: long, unbreakable, and still has to stay inside the card. */
+
+.ai-path {
+  overflow-wrap: anywhere;
+}
+
+/* --- Design pass 2026-10 (docs/plan/DESIGN-PASS.md) ------------------------
+ *
+ * Tokens only. Everything here is read from the theme, so a brand kit and the derived dark theme
+ * reach it without a second palette.
+ */
+
+/* An empty state that carries a photograph: a grey banner of an object above the mark. The file is
+ * made grey at build time so gold stays the one hue on the page; the box is reserved by its width
+ * and height, so nothing shifts when it arrives. */
+
+.empty--media {
+  padding-block-start: calc(var(--tp-spacing-unit) * 2);
+}
+
+.empty__media {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 36rem;
+  block-size: auto;
+  aspect-ratio: 14 / 5;
+  object-fit: cover;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+}
+
+.banner--dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .empty__media {
+    filter: brightness(0.82);
+  }
+
+  :root:not([data-theme='light']) .banner--light {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) .banner--dark {
+    display: block;
+  }
+}
+
+:root[data-theme='dark'] .empty__media {
+  filter: brightness(0.82);
+}
+
+:root[data-theme='dark'] .banner--light {
+  display: none;
+}
+
+:root[data-theme='dark'] .banner--dark {
+  display: block;
+}
+
+.banner--thin {
+  max-block-size: 5rem;
+}
+
+.pick__option {
+  flex: 1 1 auto;
+  min-block-size: 44px;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid transparent;
+  border-radius: var(--tp-radius);
+  background: transparent;
+  color: var(--tp-colour-muted);
+  font: inherit;
+  font-size: var(--tp-text-ui);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background var(--tp-motion-fast) var(--tp-ease),
+    color var(--tp-motion-fast) var(--tp-ease);
+}
+
+.pick__option:hover {
+  color: var(--tp-colour-text);
+}
+
+.pick__option[aria-checked='true'] {
+  background: var(--tp-colour-background);
+  border-color: var(--tp-colour-border);
+  color: var(--tp-colour-text);
+  font-weight: var(--tp-type-weight-bold);
+}
+
+.pick__option:focus-visible {
+  outline: 2px solid var(--tp-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pick__option {
+    transition: none;
+  }
+}
+
+.model__head {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+  align-items: center;
+  min-inline-size: 0;
+  font-size: var(--tp-text-lg);
+  overflow-wrap: anywhere;
+}
+
+.model__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 0.5);
+  margin: 0;
+}
+
+.badge--tier {
+  background: var(--tp-colour-surface);
+  border-color: var(--tp-colour-border);
+  color: var(--tp-colour-text);
+}
+
+/* Full is the tier the owner puts first: it alone takes the gold, as a fill with an ink label. */
+
+.badge--tier-full {
+  background: var(--tp-colour-primary);
+  border-color: var(--tp-button-border);
+  color: var(--tp-button-text);
+}
+
+.badge--ram {
+  background: none;
+  border-color: var(--tp-colour-border);
+  color: var(--tp-colour-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.template__cover {
+  grid-column: 1 / -1;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 15 / 8;
+  max-block-size: 8rem;
+}
+
+.tc__page {
+  fill: var(--tp-colour-background);
+  stroke: var(--tp-colour-border);
+  stroke-width: 1;
+}
+
+.tc__head {
+  fill: var(--tp-colour-primary);
+}
+
+.tc__field {
+  fill: var(--tp-colour-surface);
+  stroke: var(--tp-colour-border);
+  stroke-width: 0.75;
+}
+
+.tc__dot {
+  fill: var(--tp-colour-background);
+  stroke: var(--tp-colour-border);
+  stroke-width: 1;
+}
+
+.tc__dot--on {
+  fill: var(--tp-colour-primary);
+}
+
+.tc__cursor {
+  fill: var(--tp-colour-text);
+}
+
+.template:has(input:checked) .tc__page {
+  stroke: var(--tp-colour-primary-edge);
+}
+
+/* Waiting that explains itself: the shape of the text that is coming, and a sentence that says how
+ * long. Still under reduced motion; the sentence carries the meaning either way. */
+
+.skeleton {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 0.75);
+}
+
+.skeleton__line {
+  display: block;
+  block-size: 0.75rem;
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-surface);
+}
+
+.skeleton__line--short {
+  inline-size: 55%;
+}
+
+@keyframes draw-signature {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes field-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes room-float {
+  to {
+    transform: translateY(-0.6rem);
+  }
+}
+
+@keyframes room-glow {
+  to {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+}
+
+@keyframes rosette-part {
+  from {
+    transform: none;
+  }
+}
+
+@keyframes room-arrive {
+  from {
+    opacity: 0;
+  }
+}

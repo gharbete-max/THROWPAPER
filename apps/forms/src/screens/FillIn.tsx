@@ -14,6 +14,7 @@ import { Icon } from '../components/Icon.js';
 import { Loading } from '../components/Loading.js';
 import { LoadFailed } from '../components/LoadFailed.js';
 import { FormPreview } from './builder/FormPreview.js';
+import '../styles/builder.css';
 
 /**
  * Filling in, for a person who collects nothing: the answers end up in a PDF they keep. Nothing is

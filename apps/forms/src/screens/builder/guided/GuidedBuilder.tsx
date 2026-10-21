@@ -20,6 +20,7 @@ import { presetById, withPreset } from '../../../lib/theme-preset.js';
 import { startConversation, type Remembered, type Started } from './conversation.js';
 import { Saver, type SaveStatus } from './saver.js';
 import { Shell } from './Shell.js';
+import '../../../styles/builder.css';
 
 /**
  * "Start from questions" — the guided conversation about one form, at `/forms/:id/guided`.

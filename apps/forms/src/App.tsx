@@ -76,6 +76,7 @@ const UserWorkspace = lazy(() =>
 );
 import { Loading } from './components/Loading.js';
 import { foldOnPress } from './lib/fold.js';
+import './styles/app.css';
 
 /**
  * Code-split: the public form is loaded by anonymous visitors who will never see the app shell,

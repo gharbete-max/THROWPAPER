@@ -29,6 +29,7 @@ import { FinishedDocument, type FinishedDocumentHandle } from '../components/Fin
 import { IdentityStep } from '../components/IdentityStep.js';
 import { finishedState, readFinished } from '../lib/finished-state.js';
 import { opensOnlyHere, useEdition } from '../lib/edition.js';
+import '../styles/builder.css';
 
 type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing' | 'failed';
 
