@@ -105,6 +105,25 @@ describe('POST /v1/pdf/arrange', () => {
     expect(response.json().error.code).toBe('encrypted');
   });
 
+  it('sees a signature whose name is written with #-escapes, and encryption too', async () => {
+    const plain = await pdfOf(1);
+    const signed = new Uint8Array([
+      ...plain,
+      ...new TextEncoder().encode('\n% /Byte#52ange [0 1]\n'),
+    ]);
+    const encrypted = new Uint8Array([
+      ...plain,
+      ...new TextEncoder().encode('\ntrailer << /Encr#79pt 9 0 R >>\n'),
+    ]);
+    const plan = JSON.stringify([{ file: 0, page: 0 }]);
+    for (const url of ['/v1/pdf/arrange', '/v1/pdf/shrink']) {
+      const refused = await arrange([signed], { plan }, { url });
+      expect([url, refused.statusCode, refused.json().error.code]).toEqual([url, 409, 'signed']);
+      const locked = await arrange([encrypted], { plan }, { url });
+      expect([url, locked.json().error.code]).toEqual([url, 'encrypted']);
+    }
+  });
+
   it('refuses a signed PDF with a conflict until the person has agreed to lose the signature', async () => {
     const plain = await pdfOf(1);
     const signed = new Uint8Array([

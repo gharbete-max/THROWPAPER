@@ -34,7 +34,17 @@ export type Refusal =
   | 'past-expiry'
   | 'not-yet-expired'
   | 'wrong-document'
-  | 'wrong-environment';
+  | 'wrong-environment'
+  | 'clock-skew';
+
+/**
+ * How far back an event's time may be from the one before it. Small steps are ordinary (two
+ * requests on two instances, a clock slewing); a larger one means the clock was stepped back, and
+ * a trail whose times run backwards is not evidence of the order it claims. Not clamped: the
+ * time is the server's, and rewriting it would make `at` disagree with the evidence's `signedAt`
+ * — the event is refused (`clock-skew`) and the caller can press again once the clock is right.
+ */
+export const CLOCK_TOLERANCE_MS = 5_000;
 
 export type Applied = { ok: true; envelope: Envelope } | { ok: false; reason: Refusal };
 
@@ -44,8 +54,11 @@ export type Applied = { ok: true; envelope: Envelope } | { ok: false; reason: Re
  * Refusals are values, not exceptions: a late click on an expired link is an ordinary thing to
  * happen and the caller has to say something sensible about it.
  */
-export function apply(envelope: Envelope, event: EnvelopeEvent): Applied {
+export function apply(envelope: Envelope, event: EnvelopeEvent, previousAt?: string): Applied {
   if (FINAL_STATUSES.includes(envelope.status)) return refuse('finished');
+  if (previousAt && Date.parse(event.at) < Date.parse(previousAt) - CLOCK_TOLERANCE_MS) {
+    return refuse('clock-skew');
+  }
 
   const late = Date.parse(event.at) >= Date.parse(envelope.expiresAt);
 
@@ -108,7 +121,7 @@ export function replay(
 ): { ok: true; envelope: Envelope } | { ok: false; reason: Refusal; index: number } {
   let envelope = draft;
   for (const [index, event] of events.entries()) {
-    const result = apply(envelope, event);
+    const result = apply(envelope, event, events[index - 1]?.at);
     if (!result.ok) return { ...result, index };
     envelope = result.envelope;
   }

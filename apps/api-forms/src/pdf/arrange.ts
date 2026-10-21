@@ -1,4 +1,12 @@
-import { degrees, EncryptedPDFError, PDFDocument, type PDFImage, type PDFPage } from 'pdf-lib';
+import {
+  degrees,
+  EncryptedPDFError,
+  PDFDict,
+  PDFDocument,
+  PDFName,
+  type PDFImage,
+  type PDFPage,
+} from 'pdf-lib';
 import { checkPdf } from '../uploads/pdf-guard.js';
 import { imageSize } from '../uploads/image-size.js';
 
@@ -79,6 +87,31 @@ const SIGNATURE_MARKER = Buffer.from('/ByteRange');
 const ENCRYPTION_MARKER = Buffer.from('/Encrypt');
 
 /**
+ * The file with every `#xx` in a name spelled out, so `/Byte#52ange` reads as `/ByteRange`. A
+ * scan of the raw bytes is otherwise beaten by a spelling the format allows. Done for any `#`
+ * anywhere (a stray one in a stream only decodes to other bytes, and costs a false positive that
+ * cannot be told from the marker anyway, which is the safe side for a refusal).
+ */
+function withNamesDecoded(view: Buffer): Buffer {
+  if (!view.includes(0x23)) return view;
+  return Buffer.from(
+    view
+      .toString('latin1')
+      .replace(/#([0-9A-Fa-f]{2})/g, (_, hex: string) => String.fromCharCode(parseInt(hex, 16))),
+    'latin1',
+  );
+}
+
+/** A signature dictionary anywhere in the document, including inside a compressed object stream. */
+function hasSignatureDictionary(doc: PDFDocument): boolean {
+  const byteRange = PDFName.of('ByteRange');
+  for (const [, object] of doc.context.enumerateIndirectObjects()) {
+    if (object instanceof PDFDict && object.has(byteRange)) return true;
+  }
+  return false;
+}
+
+/**
  * One untrusted PDF, opened for editing: encryption and signature refused first (the signature
  * unless the person has agreed to lose it), then the guard's worker, then pdf-lib on this thread.
  * Shared by page work and by filling a PDF's own fields, so both treat a stranger's file alike.
@@ -89,17 +122,23 @@ export async function openChecked(
   acceptSignatureLoss = false,
 ): Promise<PDFDocument> {
   const view = Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-  if (view.includes(ENCRYPTION_MARKER)) throw new ArrangeRefusal('encrypted', index);
+  const names = withNamesDecoded(view);
+  if (names.includes(ENCRYPTION_MARKER)) throw new ArrangeRefusal('encrypted', index);
   const checked = await checkPdf(bytes);
   if (!checked.ok) {
     throw new ArrangeRefusal(checked.reason === 'too-costly' ? 'too-costly' : 'unreadable', index);
   }
-  if (!acceptSignatureLoss && view.includes(SIGNATURE_MARKER)) {
+  if (!acceptSignatureLoss && names.includes(SIGNATURE_MARKER)) {
     throw new ArrangeRefusal('signed', index);
   }
   try {
-    return await PDFDocument.load(bytes, { updateMetadata: false });
+    const doc = await PDFDocument.load(bytes, { updateMetadata: false });
+    if (!acceptSignatureLoss && hasSignatureDictionary(doc)) {
+      throw new ArrangeRefusal('signed', index);
+    }
+    return doc;
   } catch (error) {
+    if (error instanceof ArrangeRefusal) throw error;
     throw new ArrangeRefusal(
       error instanceof EncryptedPDFError ? 'encrypted' : 'unreadable',
       index,

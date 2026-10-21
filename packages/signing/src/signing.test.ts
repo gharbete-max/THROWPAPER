@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  CLOCK_TOLERANCE_MS,
   Evidence,
   apply,
   documentSha256,
@@ -163,6 +164,37 @@ describe('a signature is bound to one document and one environment', () => {
       signed('p1', 2, { method: 'eid:bankid-se', environment: 'production' }),
     ]);
     expect(result).toEqual({ ok: false, reason: 'wrong-environment', index: 1 });
+  });
+});
+
+describe('the clock', () => {
+  // Offsets from a fixed base, never the wall clock: the same under the CI job that runs the suite
+  // a year ahead, and a trail replayed years later reads the same.
+  const secondsAfter = (base: string, seconds: number) =>
+    new Date(Date.parse(base) + seconds * 1000).toISOString();
+
+  it('refuses an event earlier than the one before it by more than the tolerance', () => {
+    const sent = at(5);
+    const result = replay(envelope('parallel'), [
+      { type: 'sent', at: sent },
+      { type: 'viewed', at: secondsAfter(sent, -6), partyId: 'p1' },
+    ]);
+    expect(result).toEqual({ ok: false, reason: 'clock-skew', index: 1 });
+    expect(apply(envelope('parallel'), { type: 'sent', at: sent }, secondsAfter(sent, 6))).toEqual({
+      ok: false,
+      reason: 'clock-skew',
+    });
+  });
+
+  it('allows a small step back, and equal and later times', () => {
+    const sent = at(5);
+    for (const seconds of [-CLOCK_TOLERANCE_MS / 1000, -1, 0, 1, 60]) {
+      const result = replay(envelope('parallel'), [
+        { type: 'sent', at: sent },
+        { type: 'viewed', at: secondsAfter(sent, seconds), partyId: 'p1' },
+      ]);
+      expect(result.ok).toBe(true);
+    }
   });
 });
 

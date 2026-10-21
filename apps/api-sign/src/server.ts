@@ -1,6 +1,6 @@
 import Fastify, { type FastifyError, type FastifyInstance } from 'fastify';
 import rateLimit from '@fastify/rate-limit';
-import { RATE_LIMITS, rateLimitKey } from './rate-limit.js';
+import { RATE_LIMITS, ipFlood, rateLimitKey } from './rate-limit.js';
 import {
   serializerCompiler,
   validatorCompiler,
@@ -116,6 +116,13 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     return reply
       .code(status)
       .send({ error: { code: error.code ?? 'bad-request', message: error.message } });
+  });
+
+  // First of all, before the link's HMAC or any database read: a flood of forged links from one
+  // address is turned away here (`ipFlood`).
+  const flooding = ipFlood();
+  app.addHook('onRequest', async (request, reply) => {
+    if (flooding(request, reply)) return reply;
   });
 
   // Every route, keyed by the credential it carries (`rate-limit.ts`). /health stays unlimited:
