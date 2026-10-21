@@ -4,6 +4,7 @@ import type { Db } from '../types.js';
 import { ocrForInvoice } from '@tp/shared/invoicing';
 import { forms as formSchemas } from '@tp/shared';
 import { compareAliases } from '@tp/shared/interpret';
+import { AlreadyReversed } from './errors.js';
 import {
   brandKits,
   builderAliases,
@@ -249,10 +250,13 @@ export function createDrizzleRepositories(db: Db): Repositories {
             .limit(1),
         ),
       revokeRefreshToken: async (id, at) => {
-        await db
+        // Conditional on revoked_at being null, so of two concurrent rotations only one is told yes.
+        const updated = await db
           .update(refreshTokens)
           .set({ revokedAt: at })
-          .where(and(eq(refreshTokens.id, id), isNull(refreshTokens.revokedAt)));
+          .where(and(eq(refreshTokens.id, id), isNull(refreshTokens.revokedAt)))
+          .returning({ id: refreshTokens.id });
+        return updated.length > 0;
       },
       revokeFamily: async (familyId, at) => {
         await db
@@ -1617,68 +1621,22 @@ export function createDrizzleRepositories(db: Db): Repositories {
        * A half-written entry would put the whole book out of trial balance, and there is no repair
        * path — because there is no update. So the only safe way to write one is all of it or none.
        */
-      post: async (input) =>
-        db.transaction(async (tx) => {
-          const [entry] = await tx
-            .insert(journalEntries)
-            .values({
-              organisationId: input.organisationId,
-              reference: input.reference,
-              description: input.description,
-              occurredOn: input.occurredOn,
-              postedByUserId: input.postedByUserId,
-              currency: input.currency,
-              reversesEntryId: input.reversesEntryId ?? null,
-            })
-            .returning();
-          if (!entry) throw new Error('journal entry insert returned no row');
-
-          const lines = await tx
-            .insert(journalLines)
-            .values(
-              input.lines.map((line, position) => ({
-                entryId: entry.id,
-                accountId: line.accountId,
-                debitMinor: line.debitMinor,
-                creditMinor: line.creditMinor,
-                memo: line.memo,
-                position,
-              })),
-            )
-            .returning();
-
-          if (input.reversesEntryId) {
-            await tx
-              .update(journalEntries)
-              .set({ reversedByEntryId: entry.id })
-              .where(eq(journalEntries.id, input.reversesEntryId));
+      post: async (input) => {
+        // The reference was read before this transaction, so two postings at once can have read
+        // the same one and the unique index refuses the second. That is not the caller's mistake:
+        // take the next number and write again, a few times, rather than answer "went wrong".
+        let reference = input.reference;
+        for (let attempt = 0; ; attempt += 1) {
+          try {
+            return await postEntry(db, { ...input, reference });
+          } catch (error) {
+            if (attempt >= 5 || !isReferenceTaken(error)) throw error;
+            reference = await nextJournalReference(db, input.organisationId);
           }
-
-          return { ...entry, lines: lines as JournalLineRecord[] } as JournalEntryWithLines;
-        }),
-
-      /**
-       * The next reference, derived inside the statement rather than read and incremented.
-       *
-       * Two people posting at once would otherwise both read the same highest number. The unique
-       * index on (organisation, reference) is the backstop; this is what stops it firing.
-       */
-      nextReference: async (organisationId) => {
-        const year = new Date().getUTCFullYear();
-        const prefix = `V${year}-`;
-        const [row] = await db
-          .select({
-            highest: sql<number>`coalesce(max(nullif(regexp_replace(${journalEntries.reference}, '^.*-', ''), '')::int), 0)`,
-          })
-          .from(journalEntries)
-          .where(
-            and(
-              eq(journalEntries.organisationId, organisationId),
-              sql`${journalEntries.reference} like ${prefix + '%'}`,
-            ),
-          );
-        return `${prefix}${String((row?.highest ?? 0) + 1).padStart(4, '0')}`;
+        }
       },
+
+      nextReference: (organisationId) => nextJournalReference(db, organisationId),
 
       allLines: async (organisationId) =>
         (await db
@@ -1770,6 +1728,111 @@ async function withLines(db: Db, rows: Array<typeof invoices.$inferSelect>) {
   }
 
   return rows.map((row) => ({ ...row, lines: byInvoice.get(row.id) ?? [] }));
+}
+
+type PostInput = Parameters<Repositories['ledger']['post']>[0];
+
+/**
+ * The next reference, derived in one statement rather than read and incremented in code.
+ * It is still a read before a write: `ledger.post` takes the next number again if the unique
+ * index on (organisation, reference) says another posting got there first.
+ */
+async function nextJournalReference(db: Db, organisationId: string): Promise<string> {
+  const year = new Date().getUTCFullYear();
+  const prefix = `V${year}-`;
+  const [row] = await db
+    .select({
+      highest: sql<number>`coalesce(max(nullif(regexp_replace(${journalEntries.reference}, '^.*-', ''), '')::int), 0)`,
+    })
+    .from(journalEntries)
+    .where(
+      and(
+        eq(journalEntries.organisationId, organisationId),
+        sql`${journalEntries.reference} like ${prefix + '%'}`,
+      ),
+    );
+  return `${prefix}${String((row?.highest ?? 0) + 1).padStart(4, '0')}`;
+}
+
+/** Whether a write failed because another posting took the reference (a unique violation). */
+function isReferenceTaken(error: unknown): boolean {
+  // The driver's error may sit inside the ORM's, which wraps it as `cause`.
+  let current: unknown = error;
+  for (let depth = 0; current && depth < 4; depth += 1) {
+    const { code, constraint_name, constraint, cause } = current as {
+      code?: string;
+      constraint_name?: string;
+      constraint?: string;
+      cause?: unknown;
+    };
+    if (code === '23505' && String(constraint_name ?? constraint ?? '').includes('org_reference')) {
+      return true;
+    }
+    current = cause;
+  }
+  return false;
+}
+
+/**
+ * One transaction for the entry, its lines, and the stamp on whatever it reverses.
+ *
+ * A reversal first takes a row lock on the original and refuses if it already has one: the check
+ * in the route is a courtesy, and two requests that both passed it would otherwise each post a
+ * mirror image, leaving the book corrected twice.
+ */
+async function postEntry(db: Db, input: PostInput): Promise<JournalEntryWithLines> {
+  return db.transaction(async (tx) => {
+    if (input.reversesEntryId) {
+      const [original] = await tx
+        .select({ reversedBy: journalEntries.reversedByEntryId })
+        .from(journalEntries)
+        .where(
+          and(
+            eq(journalEntries.id, input.reversesEntryId),
+            eq(journalEntries.organisationId, input.organisationId),
+          ),
+        )
+        .for('update');
+      if (original?.reversedBy) throw new AlreadyReversed();
+    }
+
+    const [entry] = await tx
+      .insert(journalEntries)
+      .values({
+        organisationId: input.organisationId,
+        reference: input.reference,
+        description: input.description,
+        occurredOn: input.occurredOn,
+        postedByUserId: input.postedByUserId,
+        currency: input.currency,
+        reversesEntryId: input.reversesEntryId ?? null,
+      })
+      .returning();
+    if (!entry) throw new Error('journal entry insert returned no row');
+
+    const lines = await tx
+      .insert(journalLines)
+      .values(
+        input.lines.map((line, position) => ({
+          entryId: entry.id,
+          accountId: line.accountId,
+          debitMinor: line.debitMinor,
+          creditMinor: line.creditMinor,
+          memo: line.memo,
+          position,
+        })),
+      )
+      .returning();
+
+    if (input.reversesEntryId) {
+      await tx
+        .update(journalEntries)
+        .set({ reversedByEntryId: entry.id })
+        .where(eq(journalEntries.id, input.reversesEntryId));
+    }
+
+    return { ...entry, lines: lines as JournalLineRecord[] } as JournalEntryWithLines;
+  });
 }
 
 /** A `builder_aliases` row as the repository returns it: the date is `createdAt`, the key stays. */

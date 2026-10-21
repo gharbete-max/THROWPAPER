@@ -60,6 +60,34 @@ export function asTest(payload: SendPayload, testTo: string): SendPayload {
   };
 }
 
+/**
+ * A confirmation's key was used again for a different message. The queue would hand back the
+ * first press's job (that is what makes a double press safe), so the second list's recipient
+ * would be told "queued" with another recipient's job id and no mail would go to them.
+ */
+export class KeyReused extends Error {
+  readonly statusCode = 409;
+  readonly code = 'key-reused';
+  constructor() {
+    super('This confirmation was already used for different messages');
+  }
+}
+
+/** Whether a job already queued under a key is the message this press would have queued. */
+export function sameMessage(
+  queued: Record<string, unknown>,
+  wanted: { to: string; subject: string; text: string; filename?: string },
+): boolean {
+  // Not the attachment's key: every press stores its own copy of the file, so the key of a
+  // repeated press differs. The file's name is what a person would call "the same document".
+  return (
+    queued['to'] === wanted.to &&
+    queued['subject'] === wanted.subject &&
+    queued['text'] === wanted.text &&
+    queued['filename'] === wanted.filename
+  );
+}
+
 export async function queueSends(
   repos: Repositories,
   organisationId: string,
@@ -76,6 +104,7 @@ export async function queueSends(
       progressTotal: 1,
       maxAttempts: 3,
     });
+    if (!sameMessage(job.payload, payload)) throw new KeyReused();
     items.push({ index, to: payload.to, id: job.id });
   }
   return items;

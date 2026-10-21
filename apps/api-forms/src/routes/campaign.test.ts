@@ -201,6 +201,17 @@ describe('queueing a campaign', () => {
     expect(jobs()).toHaveLength(6);
   });
 
+  it('a confirmation used again for other words is refused, not answered with the old messages', async () => {
+    await post('/v1/send/campaign', campaign());
+    const edited = await post(
+      '/v1/send/campaign',
+      campaign({ subject: 'Something else entirely' }),
+    );
+    expect(edited.statusCode).toBe(409);
+    expect(edited.json().error.code).toBe('key-reused');
+    expect(jobs()).toHaveLength(3);
+  });
+
   it('has a hard cap: one over is refused whole, nothing queued', async () => {
     const many = Array.from({ length: SEND_LIMITS.campaign + 1 }, (_, i) => ({
       ...rows[0]!,
