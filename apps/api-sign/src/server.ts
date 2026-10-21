@@ -86,6 +86,9 @@ export async function buildServer(options: ServerOptions): Promise<FastifyInstan
     },
     // A PDF inline in a request is not a thing §5 does; documents arrive by URL.
     bodyLimit: 1024 * 1024,
+    // A signing link carries the party's id (up to 64 characters, `routes/signer.ts`); the
+    // default of 100 characters refused any id of fifteen or more with a 414.
+    routerOptions: { maxParamLength: 512 },
     rewriteUrl: appDir
       ? (request) => {
           const url = request.url ?? '/';

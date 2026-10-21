@@ -259,7 +259,9 @@ export async function withEnvelope<T>(
           events: trail,
           declaration: definition.declaration,
           trailSha256: prev,
-          sealedAt: now,
+          // Never before the last thing it seals: `now` was read when the request began, the
+          // event's time when it was made, and a slow request is seconds apart.
+          sealedAt: new Date(Math.max(now.getTime(), Date.parse(trail.at(-1)!.at))),
         },
         store.sealer,
       );

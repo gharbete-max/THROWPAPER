@@ -29,10 +29,29 @@ export async function fetchDocument(
     return { ok: false, reason: 'too-large' };
   }
 
-  // ponytail: buffers the whole body before the cap; stream with a running count if an allowed
-  // origin ever needs to be treated as hostile rather than merely mistaken.
-  const bytes = new Uint8Array(await response.arrayBuffer());
-  if (bytes.length > MAX_DOCUMENT_BYTES) return { ok: false, reason: 'too-large' };
+  // Counted as it arrives: an allowed origin that never stops sending is cut off at the cap,
+  // not buffered in full first.
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    const reader = response.body?.getReader();
+    for (let part = await reader?.read(); part && !part.done; part = await reader?.read()) {
+      total += part.value.length;
+      if (total > MAX_DOCUMENT_BYTES) {
+        void reader?.cancel();
+        return { ok: false, reason: 'too-large' };
+      }
+      chunks.push(part.value);
+    }
+  } catch {
+    return { ok: false, reason: 'fetch-failed' };
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.length;
+  }
   if (new TextDecoder().decode(bytes.subarray(0, 5)) !== '%PDF-') {
     return { ok: false, reason: 'not-a-pdf' };
   }

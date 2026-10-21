@@ -1,9 +1,10 @@
 import { mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { X509Certificate } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { MIGRATIONS } from '../db/client.js';
-import { readableCertificate } from '../sealing/certificate.js';
+import { generateDevCertificate, readableCertificate } from '../sealing/certificate.js';
 import { withPaddedSerial } from '../test-certificate.js';
 import { startLocalSign, type LocalSign } from './start.js';
 
@@ -81,6 +82,36 @@ describe('Sign on one computer', () => {
     const third = await startLocalSign({ dataDir: dir, migrationsFolder: MIGRATIONS, port: 0 });
     running.push(third);
     expect(readFileSync(path, 'utf8')).toBe(JSON.stringify(repaired, null, 2));
+  });
+
+  /**
+   * The development certificate is valid for two years. One past its end (or about to be) makes a
+   * validator say the seal was made with an expired certificate, so it is replaced like an
+   * unreadable one: seals already made carry their own copy, and nothing else changes.
+   */
+  it('replaces a seal certificate that has expired or is about to', async () => {
+    const dir = workspace();
+    const path = join(dir, 'secrets.json');
+    const first = await startLocalSign({ dataDir: dir, migrationsFolder: MIGRATIONS, port: 0 });
+    await first.close();
+    const saved = JSON.parse(readFileSync(path, 'utf8')) as { sealCertPem: string };
+
+    for (const issued of ['2020-01-01', new Date(Date.now() - (2 * 365 - 10) * 86_400_000)]) {
+      const old = await generateDevCertificate(new Date(issued));
+      writeFileSync(
+        path,
+        JSON.stringify({ ...saved, sealKeyPem: old.keyPem, sealCertPem: old.certPem }),
+      );
+      const again = await startLocalSign({ dataDir: dir, migrationsFolder: MIGRATIONS, port: 0 });
+      running.push(again);
+      const repaired = JSON.parse(readFileSync(path, 'utf8')) as typeof saved;
+      expect(repaired.sealCertPem).not.toBe(old.certPem);
+      expect(new Date(new X509Certificate(repaired.sealCertPem).validTo).getTime()).toBeGreaterThan(
+        Date.now() + 365 * 86_400_000,
+      );
+      await again.close();
+      running.pop();
+    }
   });
 
   it('answers only to its own loopback name, so a rebinding web page cannot drive it', async () => {

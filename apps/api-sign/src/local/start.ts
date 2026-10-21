@@ -10,7 +10,7 @@ import { buildServer } from '../server.js';
 import { openLocalSignDatabase } from '../db/pglite.js';
 import { declarations, serviceTokens } from '../db/schema.js';
 import { DEMO_DECLARATION } from '../db/demo-declaration.js';
-import { generateDevCertificate, loadSealer, readableCertificate } from '../sealing/certificate.js';
+import { generateDevCertificate, loadSealer, usableCertificate } from '../sealing/certificate.js';
 
 /**
  * Sign on one computer — the desktop edition's copy of the product (ADR 0016, ADR 0009).
@@ -50,11 +50,12 @@ async function loadOrCreateSecrets(path: string): Promise<Secrets> {
   }
   if (stored !== null) {
     const secrets = Secrets.parse(JSON.parse(stored));
-    if (readableCertificate(secrets.sealCertPem)) return secrets;
+    if (usableCertificate(secrets.sealCertPem)) return secrets;
     /*
-     * A seal certificate OpenSSL cannot read: one in 256 made before its serial was kept minimal
-     * (`certificate.ts`, `randomSerial`). Every seal it made fails to verify, and it was saved here
-     * for good, so it is replaced — only it. The seals already made carry their own copy, and the
+     * A seal certificate OpenSSL cannot read (one in 256 made before its serial was kept minimal,
+     * `certificate.ts` `randomSerial`: every seal it made fails to verify, and it was saved here
+     * for good), or one that has expired or is about to (two years' life, no one to renew it): it
+     * is replaced — only it. The seals already made carry their own copy, and the
      * link secret and the callers' tokens are what signers and Forms hold; they stay.
      */
     const pair = await generateDevCertificate();

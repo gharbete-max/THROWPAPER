@@ -19,7 +19,11 @@ import { documentBytes, withEnvelope, type Definition, type Loaded } from '../en
 import type { Deps } from '../server.js';
 import { fail } from './envelopes.js';
 
-const TokenParam = z.object({ token: z.string().min(1).max(300) });
+/**
+ * A link is 81 characters plus the party id in base64url: the contract allows 64 characters, of
+ * up to three bytes each, so 337 at the most. Fastify's own `maxParamLength` is raised to match.
+ */
+const TokenParam = z.object({ token: z.string().min(1).max(400) });
 
 const SignerView = z.object({
   envelopeId: z.string(),
@@ -136,7 +140,11 @@ export function registerSignerRoutes(app: FastifyInstance, deps: Deps): void {
       const sha =
         link &&
         (await withEnvelope(deps, link.envelopeId, deps.now(), async ({ envelope }) =>
-          envelope.partyStatus[link.partyId] ? envelope.documentSha256 : null,
+          // Cancelling, expiry and a refusal withdraw the document: a link kept in a mailbox
+          // must not open a file its sender took back. A finished one stays readable to its signers.
+          envelope.partyStatus[link.partyId] && ['sent', 'completed'].includes(envelope.status)
+            ? envelope.documentSha256
+            : null,
         ));
       const bytes = sha ? await documentBytes(deps.db, sha) : null;
       if (!bytes) return fail(reply, 404, 'not-found', 'This link does not open anything');

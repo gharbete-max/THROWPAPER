@@ -93,7 +93,32 @@ describe('which providers exist', () => {
     expect(identityProvidersFromEnv({ EID_PROVIDER: 'console' })).toHaveLength(1);
     expect(() =>
       identityProvidersFromEnv({ EID_PROVIDER: 'console', NODE_ENV: 'production' }),
-    ).toThrow(/cannot run in production/);
+    ).toThrow(/development identity provider/);
+  });
+
+  it('the development provider is refused wherever the server is reachable from outside', () => {
+    const console_ = { EID_PROVIDER: 'console' };
+    // A deployment that forgot NODE_ENV is still a deployment: the public address gives it away.
+    for (const env of [
+      { NODE_ENV: 'staging' },
+      { NODE_ENV: 'prod' },
+      { SIGN_PUBLIC_URL: 'https://sign.example.com' },
+      { API_SIGN_PUBLIC_URL: 'https://api.sign.example.com' },
+      { SIGN_PUBLIC_URL: 'http://10.0.0.5:5175' },
+    ]) {
+      expect(() => identityProvidersFromEnv({ ...console_, ...env }), JSON.stringify(env)).toThrow(
+        /development identity provider/,
+      );
+    }
+    for (const env of [
+      { NODE_ENV: 'development' },
+      { NODE_ENV: 'test' },
+      { SIGN_PUBLIC_URL: 'http://localhost:5175', API_SIGN_PUBLIC_URL: 'http://127.0.0.1:4003' },
+    ]) {
+      expect(identityProvidersFromEnv({ ...console_, ...env }), JSON.stringify(env)).toHaveLength(
+        1,
+      );
+    }
   });
 
   it('refuses a provider name it does not know rather than pretending', () => {
