@@ -1,4 +1,5 @@
 import { randomUUID, webcrypto } from 'node:crypto';
+import { IP_FLOOD_MAX } from '../rate-limit.js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { asc, eq, sql as raw } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
@@ -521,6 +522,21 @@ describe.skipIf(!database)('rate limits', () => {
     for (let i = 0; i < 5; i += 1) {
       expect((await app.inject({ method: 'GET', url: '/health' })).statusCode).toBe(200);
     }
+  });
+});
+
+describe.skipIf(!database)('a flood of forged links', () => {
+  it('is turned away by address before any link is looked at, and the computer itself is never', async () => {
+    const forged = (remoteAddress: string) =>
+      app.inject({ method: 'GET', url: `/v1/sign/forged-${randomUUID()}`, remoteAddress });
+    for (let i = 0; i < IP_FLOOD_MAX; i += 1) {
+      expect((await forged('198.51.100.7')).statusCode).toBe(404);
+    }
+    const flood = await forged('198.51.100.7');
+    expect(flood.statusCode).toBe(429);
+    expect(flood.json().error.code).toBe('rate-limited');
+    expect((await forged('198.51.100.8')).statusCode).toBe(404);
+    expect((await forged('127.0.0.1')).statusCode).toBe(404);
   });
 });
 

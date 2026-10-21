@@ -211,6 +211,29 @@ describe.skipIf(!database)('the trail under load', () => {
 });
 
 describe.skipIf(!database)('time in the record', () => {
+  it('refuses to write a time earlier than the last event by more than 5 s, and keeps the trail intact', async () => {
+    const started = await start([{ id: 'a', order: 1 }]);
+    const link = started.links['a']!;
+    const before = clock;
+    try {
+      clock = new Date(before.getTime() - 10_000);
+      const refused = await sign(link);
+      expect(refused.statusCode).toBe(409);
+      expect(refused.json().error.code).toBe('clock-skew');
+      // A small step back is ordinary, and the signature goes through once the clock is right.
+      clock = new Date(before.getTime() - 3_000);
+      expect((await sign(link)).statusCode).toBe(200);
+    } finally {
+      clock = before;
+    }
+    const trail = await db
+      .select()
+      .from(envelopeEvents)
+      .where(eq(envelopeEvents.envelopeId, started.envelopeId))
+      .orderBy(asc(envelopeEvents.seq));
+    expect(trail.map((row) => JSON.parse(row.event).type)).toEqual(['sent', 'signed']);
+  });
+
   it('never seals a file earlier than the signature it seals', async () => {
     step = 1_500;
     try {

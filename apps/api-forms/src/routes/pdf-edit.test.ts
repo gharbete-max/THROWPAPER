@@ -119,6 +119,20 @@ describe('POST /v1/pdf/edit', () => {
     expect(response.json().error.fields.characters).toEqual(['😀']);
   });
 
+  it('sees a signature whose name is written with #-escapes', async () => {
+    const signed = new Uint8Array([
+      ...(await pdfOf(1)),
+      ...new TextEncoder().encode('\n% /Byte#52ange [0 1 2 3]\n'),
+    ]);
+    const ops = '[{"page":0,"x":1,"y":1,"text":"a","size":10}]';
+    const edited = await post('/v1/pdf/edit', [signed], { ops });
+    expect([edited.statusCode, edited.json().error.code]).toEqual([409, 'signed']);
+    const redacted = await post('/v1/pdf/redact', [signed, new Uint8Array(PNG)], {
+      pages: '[0]',
+    });
+    expect([redacted.statusCode, redacted.json().error.code]).toEqual([409, 'signed']);
+  });
+
   it('refuses a signed PDF with a conflict until the person has agreed', async () => {
     const plain = await pdfOf(1);
     const signed = new Uint8Array([

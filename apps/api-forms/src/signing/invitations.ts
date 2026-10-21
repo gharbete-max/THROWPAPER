@@ -243,26 +243,29 @@ export async function queueInvitations(
  */
 export const SIGNING_COPY_JOB = 'signing.copy';
 
-/** Queues the signed copy for each signer with an address, and marks them. */
+/**
+ * Queues the signed copy for each signer with an address, and marks them. Once per (request,
+ * signer): the job key has no time in it, so a second press, or two at once, queues nothing new.
+ */
 export async function queueSignedCopies(
   repos: Repositories,
   record: SigningRequestRecord,
 ): Promise<SigningRequestRecord> {
   const due = record.parties.filter((party) => party.email);
-  if (due.length === 0) return record;
+  if (due.length === 0 || due.every((party) => party.signedCopyQueuedAt)) return record;
   const at = new Date().toISOString();
   for (const party of due) {
     await repos.jobs.enqueue({
       organisationId: record.organisationId,
       kind: SIGNING_COPY_JOB,
-      idempotencyKey: `${SIGNING_COPY_JOB}:${record.id}:${party.id}:${at}`,
+      idempotencyKey: `${SIGNING_COPY_JOB}:${record.id}:${party.id}`,
       payload: { signingRequestId: record.id, partyId: party.id },
       progressTotal: 1,
     });
   }
   const ids = new Set(due.map((p) => p.id));
   const parties = record.parties.map((party) =>
-    ids.has(party.id) ? { ...party, signedCopyQueuedAt: at } : party,
+    ids.has(party.id) ? { ...party, signedCopyQueuedAt: party.signedCopyQueuedAt ?? at } : party,
   );
   return (
     (await repos.signingRequests.saveStatus(record.id, { status: record.status, parties })) ??

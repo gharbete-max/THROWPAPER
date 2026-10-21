@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
 import { localeLabel } from '@tp/i18n';
 import type { forms as formSchemas } from '@tp/shared';
@@ -196,7 +196,10 @@ function Row({
   const confirm = useConfirm();
   const toast = useToast();
   const [busy, setBusy] = useState(false);
+  /** Set at once on a press, before React re-renders: a double click must not ask twice. */
+  const pressed = useRef(false);
   const known = ['draft', 'sent', 'completed', 'declined', 'expired', 'cancelled'];
+  const copyQueued = request.parties.some((party) => party.signedCopyQueuedAt);
   const statusKey = known.includes(request.status) ? request.status : 'sent';
 
   async function refresh() {
@@ -245,6 +248,16 @@ function Row({
 
   /** Queue the sealed PDF for the signers — it leaves only by the usual mail path (rule 7). */
   async function sendSigned() {
+    if (pressed.current) return;
+    pressed.current = true;
+    try {
+      await askAndSendSigned();
+    } finally {
+      pressed.current = false;
+    }
+  }
+
+  async function askAndSendSigned() {
     const count = request.parties.filter((party) => party.email).length;
     const ok = await confirm(
       t('signing.sendSignedConfirm', { document: request.documentName, count }),
@@ -361,13 +374,13 @@ function Row({
                 <button
                   type="button"
                   className="button button--quiet small"
-                  disabled={busy}
+                  disabled={busy || copyQueued}
                   onClick={() => void sendSigned()}
                 >
                   {t('signing.sendSigned')}
                 </button>
               )}
-              {request.parties.some((party) => party.signedCopyQueuedAt) && (
+              {copyQueued && (
                 <span className="small muted" data-testid="signing-copy-queued">
                   {t('signing.copyQueued')}
                 </span>

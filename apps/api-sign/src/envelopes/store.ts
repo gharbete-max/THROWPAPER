@@ -209,7 +209,7 @@ export async function withEnvelope<T>(
     let seq = rows.length;
     const trail = [...events];
     const append: Append = async (event) => {
-      const result = apply(envelope, event);
+      const result = apply(envelope, event, trail.at(-1)?.at);
       if (!result.ok) return result.reason;
       const text = JSON.stringify(EnvelopeEvent.parse(event));
       const hash = chain(prev, text);

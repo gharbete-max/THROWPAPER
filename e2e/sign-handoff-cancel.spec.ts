@@ -91,6 +91,8 @@ test('a PDF from Arrange pages is signed, and its sealed copy is queued to the s
   await row.getByRole('button', { name: 'Send the signed copy' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Send the signed copy' }).click();
   await expect(row.getByTestId('signing-copy-queued')).toHaveText('Signed copy queued');
+  // Queued once: the button is spent, so a second press cannot queue a second mail.
+  await expect(row.getByRole('button', { name: 'Send the signed copy' })).toBeDisabled();
 
   // The worker handed it to the configured provider (the console, here), sealed PDF attached.
   const sql = db();

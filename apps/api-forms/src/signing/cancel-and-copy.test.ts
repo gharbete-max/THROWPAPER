@@ -191,6 +191,27 @@ describe('sending the signed copy', () => {
     expect(anna.attachments![0]!.content.equals(SEALED)).toBe(true);
   });
 
+  it('a double press queues one mail per signer, not two', async () => {
+    const id = await send();
+    envelope.status = 'completed';
+    const keys: string[] = [];
+    const enqueue = harness.repos.jobs.enqueue.bind(harness.repos.jobs);
+    harness.repos.jobs.enqueue = (input) => {
+      if (input.kind === 'signing.copy') keys.push(input.idempotencyKey);
+      return enqueue(input);
+    };
+    const [first, second] = await Promise.all([post(id, 'send-signed'), post(id, 'send-signed')]);
+    expect(first.statusCode).toBe(200);
+    expect(second.statusCode).toBe(200);
+    expect((await post(id, 'send-signed')).statusCode).toBe(200);
+    expect(new Set(keys).size).toBe(2);
+    await harness.app.worker.drain();
+    expect(harness.mail.sent.map((m) => m.to).sort()).toEqual([
+      'anna@example.com',
+      'bo@example.com',
+    ]);
+  });
+
   it('is for the person who can see the request', async () => {
     const id = await send();
     envelope.status = 'completed';
