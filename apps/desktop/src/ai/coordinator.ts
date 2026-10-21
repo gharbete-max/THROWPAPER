@@ -849,6 +849,17 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
             (f): f is typeof f & { sha256: string } => f.sha256 !== undefined,
           );
           const modelTotal = hashed.reduce((sum, f) => sum + f.bytes, 0);
+          // Room first, as for a download: a join that fills the disk is not a failure to report
+          // after six gigabytes, and a full system disk is worse than a refused install.
+          let left = modelTotal;
+          for (const f of hashed) {
+            const have = await stat(join(deps.dir, f.name)).catch(() => null);
+            if (have?.isFile() && have.size === f.bytes) left -= f.bytes;
+          }
+          const room = await freeDisk(deps.dir);
+          if (left > 0 && room !== null && room < left + DISK_MARGIN_BYTES) {
+            return fail('no-disk-space');
+          }
           const paths = await installFromFolder(hashed, dirname(chosen), deps.dir, {
             signal,
             onProgress: (file, files, p) =>

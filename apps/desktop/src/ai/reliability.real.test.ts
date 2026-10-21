@@ -179,12 +179,21 @@ async function real(
 let sequence = 0;
 const nextId = (label: string) => `${label}-${(sequence += 1)}`;
 
+/** How a task ended, whether it was refused up front or settled with an event. */
+interface Outcome {
+  kind: string;
+  problem?: string;
+}
+
 async function ok(r: Real, task: AiTask, label = 'task') {
   const id = nextId(label);
   const started = Date.now();
   const start = await r.coordinator.run(id, task);
-  if (!start.ok) return { id, verdict: start, seconds: 0 };
-  const verdict = await r.settled(id);
+  if (!start.ok)
+    return { id, verdict: { kind: 'refused', problem: start.problem } as Outcome, seconds: 0 };
+  const event = await r.settled(id);
+  const verdict: Outcome =
+    event.kind === 'error' ? { kind: 'error', problem: event.problem } : { kind: event.kind };
   return { id, verdict, seconds: (Date.now() - started) / 1000 };
 }
 

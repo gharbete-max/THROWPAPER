@@ -269,9 +269,7 @@ describe('one model resident at a time', () => {
     const sample = r.sampler();
     await r.run('one', TEXT_TASK);
     await r.settled('one');
-    await r.until(
-      () => false || r.transitions.some((t) => t.type === 'released' && t.reason === 'idle'),
-    );
+    await r.until(() => r.transitions.some((t) => t.type === 'released' && t.reason === 'idle'));
     // The process is still ending (the engine takes 400 ms); this is the moment a person presses Summarise.
     expect(r.aliveCount()).toBe(1);
     const started = await r.run('two', TEXT_TASK);
@@ -285,7 +283,7 @@ describe('one model resident at a time', () => {
     const r = await rig({ idleMs: 100, disposeDelayMs: 300 });
     await r.run('one', TEXT_TASK);
     await r.settled('one');
-    await r.until(() => false || r.transitions.some((t) => t.type === 'released'));
+    await r.until(() => r.transitions.some((t) => t.type === 'released'));
     await r.coordinator.close();
     expect(r.aliveCount()).toBe(0);
   });
