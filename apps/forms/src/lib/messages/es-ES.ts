@@ -1789,6 +1789,12 @@ export const esES: Record<MessageKey, string> = {
   'invoiceScan.note.reference': 'Referencia: {reference}',
   'invoiceScan.note.due': 'Pagar antes del: {date}',
   'invoiceScan.note.vat': 'IVA según la factura: {amount}',
+  'scan.step.bring': 'Añadir',
+  'scan.step.fix': 'Corregir',
+  'scan.step.keep': 'Guardar',
+  'scan.steps': 'Pasos',
+  'scan.more': 'Más herramientas',
+  'scan.doneFixing': 'Listo para guardar',
   'scan.heading': 'Ordenar páginas',
   'scan.intro':
     'Une PDF y fotos, quita páginas, gíralas y colócalas en orden. No se guarda nada: el nuevo PDF se crea para que lo descargues.',

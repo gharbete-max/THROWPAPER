@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
-import { db, signInAs } from './support.js';
+import { db, openMoreTools, signInAs } from './support.js';
 import {
   daStandard,
   deStandard,
@@ -44,6 +44,7 @@ async function picture(page: Page, fixture: InvoiceFixture): Promise<Buffer> {
 async function open(page: Page) {
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   await page.goto('/scan');
+  await openMoreTools(page);
   await page.getByTestId('scan-invoice-open').click();
   await expect(page.getByTestId('invoice-scan')).toBeVisible();
 }

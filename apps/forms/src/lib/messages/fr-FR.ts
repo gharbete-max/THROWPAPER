@@ -1808,6 +1808,12 @@ export const frFR: Record<MessageKey, string> = {
   'invoiceScan.note.reference': 'Référence : {reference}',
   'invoiceScan.note.due': 'À payer avant le : {date}',
   'invoiceScan.note.vat': 'TVA selon la facture : {amount}',
+  'scan.step.bring': 'Ajouter',
+  'scan.step.fix': 'Corriger',
+  'scan.step.keep': 'Garder',
+  'scan.steps': 'Étapes',
+  'scan.more': 'Autres outils',
+  'scan.doneFixing': 'Corrections terminées',
   'scan.heading': 'Organiser les pages',
   'scan.intro':
     'Assemblez des PDF et des photos, retirez des pages, faites-les pivoter et mettez-les dans l’ordre. Rien n’est conservé : le nouveau PDF est créé pour que vous le téléchargiez.',

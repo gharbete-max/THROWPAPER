@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { db, plantLoginToken } from './support.js';
+import { db, plantLoginToken, scanStep } from './support.js';
 import { docxBytes, paragraph } from '../apps/forms/src/screens/builder/paper/docx.fixture.js';
 
 /**
@@ -40,10 +40,11 @@ test('a Word file with a footer becomes a labelled PDF page, and the footer is n
   });
 
   await expect(page.locator('.scan__page')).toHaveCount(1);
-  await expect(page.getByText('Layout may differ from Word')).toBeVisible();
+  await expect(page.getByTestId('scan-word-notice')).toContainText('Layout may differ from Word');
   await expect(page.getByTestId('scan-word-dropped')).toContainText('Headers and footers: 1');
 
   const download = page.waitForEvent('download');
+  await scanStep(page, 'keep');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
   await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
   expect((await download).suggestedFilename()).toBe('protokoll (Layout may differ from Word).pdf');

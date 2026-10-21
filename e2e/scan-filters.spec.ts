@@ -2,7 +2,7 @@ import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
 import { deflateSync, inflateSync } from 'node:zlib';
 import { expect, test } from '@playwright/test';
-import { db, plantLoginToken } from './support.js';
+import { db, plantLoginToken, scanStep } from './support.js';
 
 /**
  * Scan filters (Track A): a photographed page of text under a shadow, filtered to Black and white
@@ -100,6 +100,7 @@ test('scan filters: a shadowed photo made Black and white embeds as ink and pape
   await expect(panel).toHaveCount(0);
 
   const download = page.waitForEvent('download');
+  await scanStep(page, 'keep');
   await page.getByRole('button', { name: 'Make the PDF' }).click();
   await page.getByTestId('keep-panel').getByRole('button', { name: 'Download' }).click();
   const saved = await (await download).path();

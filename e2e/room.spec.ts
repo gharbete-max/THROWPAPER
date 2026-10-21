@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { db, plantLoginToken, signInAs } from './support.js';
+import { db, openMoreTools, plantLoginToken, signInAs } from './support.js';
 
 /**
  * The room — phase 2 of `docs/plan/DOCUMENTS.md`, ADR 0022.
@@ -122,6 +122,7 @@ test('the parts lead to the screens that do the work, and every screen leads bac
   await expect(page).toHaveURL(/\/scan$/);
   await expect(page.getByRole('heading', { name: 'Arrange pages' })).toBeVisible();
   // The paper door is one step on: Scan offers to make a form from a document instead.
+  await openMoreTools(page);
   await page.getByRole('link', { name: 'Make a form from a document instead' }).click();
   await expect(page).toHaveURL(/\/forms\?new$/);
   await expect(page.getByRole('button', { name: /Start from paper/ })).toBeVisible();

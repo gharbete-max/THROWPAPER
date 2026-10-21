@@ -36,23 +36,25 @@ export function WordToPdf({
   onPdf,
   incoming = [],
   onTaken,
+  onDropped,
 }: {
   onPdf: (file: File) => void;
   /** Word files dropped or chosen elsewhere on the screen, to convert one after another. */
   incoming?: File[];
   /** Called once `incoming` has been taken up, so the screen can empty it. */
   onTaken?: () => void;
+  /** What the PDF left out, said by `DroppedNotice` wherever the screen keeps it. */
+  onDropped: (dropped: Dropped[] | null) => void;
 }) {
   const t = useT();
   const toast = useToast();
   const { contentLocale } = useSession();
   const picker = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
-  const [dropped, setDropped] = useState<Dropped[]>([]);
 
   async function convert(file: File) {
     setBusy(true);
-    setDropped([]);
+    onDropped(null);
     try {
       const read = await readWordBlocks(await file.arrayBuffer());
       if (read.blocks.length === 0) throw new DocxRefused('unreadable', 'no content');
@@ -64,7 +66,7 @@ export function WordToPdf({
       });
       fromWord.add(made);
       onPdf(made);
-      setDropped(read.dropped);
+      onDropped(read.dropped);
     } catch (error) {
       toast.show(
         error instanceof DocxRefused ? t(`paper.docx.${error.reason}`) : t('scan.error.failed'),
@@ -110,8 +112,22 @@ export function WordToPdf({
         </button>
         <span className="muted small">{t('scan.word.label')}</span>
       </div>
+    </div>
+  );
+}
+
+/**
+ * What a made PDF says about itself, every time: the layout may differ from Word, and the parts of
+ * the file it leaves out, named with how many there were. `null` is no conversion yet.
+ */
+export function DroppedNotice({ dropped }: { dropped: Dropped[] | null }) {
+  const t = useT();
+  if (!dropped) return null;
+  return (
+    <div className="small" role="status" data-testid="scan-word-notice">
+      <p>{t('scan.word.label')}</p>
       {dropped.length > 0 ? (
-        <div className="small" role="status" data-testid="scan-word-dropped">
+        <div data-testid="scan-word-dropped">
           <p>{t('scan.word.dropped')}</p>
           <ul>
             {dropped.map((item) => (

@@ -1830,6 +1830,12 @@ export const deDE: Record<MessageKey, string> = {
   'invoiceScan.note.reference': 'Referenz: {reference}',
   'invoiceScan.note.due': 'Zahlen bis: {date}',
   'invoiceScan.note.vat': 'MwSt laut Rechnung: {amount}',
+  'scan.step.bring': 'Hinzufügen',
+  'scan.step.fix': 'Anpassen',
+  'scan.step.keep': 'Sichern',
+  'scan.steps': 'Schritte',
+  'scan.more': 'Weitere Werkzeuge',
+  'scan.doneFixing': 'Fertig bearbeitet',
   'scan.heading': 'Seiten ordnen',
   'scan.intro':
     'PDFs und Fotos zusammenfügen, Seiten entfernen, drehen und in die richtige Reihenfolge bringen. Nichts wird gespeichert: Die neue PDF wird zum Herunterladen erstellt.',

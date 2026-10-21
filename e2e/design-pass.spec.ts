@@ -45,7 +45,7 @@ test('Scan: a photograph with its alt text, one filled button, nothing from anot
   ).toBeVisible();
 
   // One filled button on the screen: adding is the primary action until there is a document.
-  await expect(page.locator('main .button:not(.button--quiet)')).toHaveCount(1);
+  await expect(page.locator('main .button:not(.button--quiet):visible')).toHaveCount(1);
 
   for (const path of ['/send', '/signing', '/forms']) await page.goto(path);
   expect(foreign).toEqual([]);

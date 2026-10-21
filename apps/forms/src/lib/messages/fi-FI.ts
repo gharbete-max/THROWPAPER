@@ -1774,6 +1774,12 @@ export const fiFI: Record<MessageKey, string> = {
   'invoiceScan.note.reference': 'Viite: {reference}',
   'invoiceScan.note.due': 'Eräpäivä: {date}',
   'invoiceScan.note.vat': 'Alv laskun mukaan: {amount}',
+  'scan.step.bring': 'Lisää',
+  'scan.step.fix': 'Korjaa',
+  'scan.step.keep': 'Tallenna',
+  'scan.steps': 'Vaiheet',
+  'scan.more': 'Lisää työkaluja',
+  'scan.doneFixing': 'Korjaukset valmiit',
   'scan.heading': 'Järjestä sivut',
   'scan.intro':
     'Yhdistä PDF-tiedostoja ja valokuvia, poista sivuja, käännä niitä ja järjestä ne. Mitään ei tallenneta: uusi PDF luodaan ladattavaksesi.',
