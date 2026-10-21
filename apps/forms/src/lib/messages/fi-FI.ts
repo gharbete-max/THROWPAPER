@@ -6,6 +6,7 @@ export const fiFI: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Palvelun tarjoaa Loppa',
   'app.signOut': 'Kirjaudu ulos',
+  'app.skipToContent': 'Siirry sisältöön',
   'app.language': 'Kieli',
   'app.loading': 'Ladataan…',
   'app.loadFailed': 'Tätä ei voitu ladata. Tarkista yhteys ja yritä uudelleen.',

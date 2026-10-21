@@ -16,10 +16,25 @@ test.afterAll(async () => {
 
 /** The page's main thread answers quickly: nothing is looping behind the rendered screen. */
 async function expectResponsive(page: Page) {
-  await page.waitForTimeout(1000);
-  const started = Date.now();
-  await page.evaluate(() => 1);
-  expect(Date.now() - started).toBeLessThan(1000);
+  // Watch the main thread for a second: a timer that keeps firing every 50 ms means nothing is looping.
+  const worstGap = await page.evaluate(
+    () =>
+      new Promise<number>((resolve) => {
+        const begin = performance.now();
+        let last = begin;
+        let worst = 0;
+        const timer = setInterval(() => {
+          const now = performance.now();
+          worst = Math.max(worst, now - last);
+          last = now;
+          if (now - begin >= 1000) {
+            clearInterval(timer);
+            resolve(worst);
+          }
+        }, 50);
+      }),
+  );
+  expect(worstGap).toBeLessThan(1000);
 }
 
 test('AI setup without the bridge says it is a desktop feature @smoke', async ({ page }) => {

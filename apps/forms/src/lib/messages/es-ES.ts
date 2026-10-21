@@ -6,6 +6,7 @@ export const esES: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Con tecnología de Loppa',
   'app.signOut': 'Cerrar sesión',
+  'app.skipToContent': 'Saltar al contenido',
   'app.language': 'Idioma',
   'app.loading': 'Cargando…',
   'app.loadFailed': 'No se pudo cargar. Comprueba la conexión e inténtalo de nuevo.',

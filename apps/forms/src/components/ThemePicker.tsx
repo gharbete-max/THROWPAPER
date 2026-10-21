@@ -1,6 +1,12 @@
-import { THEME_PRESETS, type TokenSet } from '@tp/tokens';
+import { THEME_PRESETS, buttonSurface, type TokenSet } from '@tp/tokens';
 import { useT } from '../lib/i18n.js';
 import { withPreset } from '../lib/theme-preset.js';
+
+/** The sample button is painted as the real one is, so it can never be a colour nobody could read. */
+function buttonLook(tokens: TokenSet) {
+  const { background, text, border } = buttonSurface(tokens);
+  return { background, color: text, borderColor: border };
+}
 
 /**
  * A gallery of ready-made looks.
@@ -84,15 +90,7 @@ export function ThemePicker({
               <span
                 className="theme__button"
                 style={{
-                  background:
-                    theme.tokens.buttonStyle === 'solid'
-                      ? theme.tokens.colour.primary
-                      : theme.tokens.colour.background,
-                  color:
-                    theme.tokens.buttonStyle === 'solid'
-                      ? theme.tokens.colour.background
-                      : theme.tokens.colour.primary,
-                  borderColor: theme.tokens.colour.primary,
+                  ...buttonLook(theme.tokens),
                   borderRadius: theme.tokens.radius,
                 }}
               >

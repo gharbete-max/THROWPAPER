@@ -11,6 +11,7 @@ export const zhCN: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': '由 Loppa 提供支持',
   'app.signOut': '退出登录',
+  'app.skipToContent': '跳到正文',
   'app.language': '语言',
   'app.loading': '加载中…',
   'app.loadFailed': '无法加载。请检查网络连接后重试。',

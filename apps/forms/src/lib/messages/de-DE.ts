@@ -6,6 +6,7 @@ export const deDE: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Bereitgestellt von Loppa',
   'app.signOut': 'Abmelden',
+  'app.skipToContent': 'Zum Inhalt springen',
   'app.language': 'Sprache',
   'app.loading': 'Wird geladen…',
   'app.loadFailed':

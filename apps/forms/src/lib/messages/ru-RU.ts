@@ -13,6 +13,7 @@ export const ruRU: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Работает на Loppa',
   'app.signOut': 'Выйти',
+  'app.skipToContent': 'Перейти к содержимому',
   'app.language': 'Язык',
   'app.loading': 'Загрузка…',
   'app.loadFailed': 'Не удалось загрузить. Проверьте подключение и попробуйте снова.',
