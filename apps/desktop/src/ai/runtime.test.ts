@@ -112,4 +112,13 @@ describe('what the engine and the panel ask', () => {
     await expect(checker().entry()).rejects.toMatchObject({ problem: 'cannot-start' });
     expect(await checker().status()).toMatchObject({ path: null, hash: 'missing' });
   });
+
+  it('believes a folder that was damaged and then mended, without a restart', async () => {
+    const same = checker();
+    await writeFile(join(root, 'pack', 'libggml.so'), 'tamper!');
+    await expect(same.entry()).rejects.toMatchObject({ problem: 'damaged' });
+    await writeFile(join(root, 'pack', 'libggml.so'), 'library'); // the pack opened again, or a file copied back
+    expect(await same.entry()).toBe(join(root, 'pack', 'llama-server'));
+    expect((await same.status()).hash).toBe('verified');
+  });
 });

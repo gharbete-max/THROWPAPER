@@ -1,10 +1,10 @@
 import { createHash } from 'node:crypto';
 import { createReadStream, createWriteStream, existsSync } from 'node:fs';
-import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
-import { verifyFile, type OnProgress } from './download.js';
+import { renameRetry, verifyFile, type OnProgress } from './download.js';
 
 /**
  * The AI pack on disk (ADR 0025 section 4, ADR 0026 decision 8): the model's files cut into parts
@@ -210,7 +210,7 @@ export async function joinFile(
     if (sha256Hex(whole) !== file.sha256) {
       throw new PackError('hash', `${file.name} joined is not the file in the manifest`);
     }
-    await rename(joining, target);
+    await renameRetry(joining, target);
   } catch (error) {
     await rm(joining, { force: true });
     if (error instanceof PackError || options.signal?.aborted) throw error;

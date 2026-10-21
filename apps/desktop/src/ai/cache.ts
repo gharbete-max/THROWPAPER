@@ -1,5 +1,6 @@
-import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
+import { renameRetry } from './download.js';
 
 /**
  * The local result cache (docs/plan/AI-SYSTEM.md D4, ADR 0024): what a model made for one page of
@@ -31,6 +32,8 @@ export class ResultCache {
   private counter = 0;
   private total = 0;
   private loaded: Promise<void> | null = null;
+  /** Saves run one after another: two at once would write the same temporary file. */
+  private writing: Promise<void> = Promise.resolve();
 
   constructor(
     private readonly file: string,
@@ -57,7 +60,13 @@ export class ResultCache {
     return this.loaded;
   }
 
-  private async save(): Promise<void> {
+  /** Best effort: a cache that cannot be written (a scanner holds the file) is a cache that stays in memory. */
+  private save(): Promise<void> {
+    this.writing = this.writing.then(() => this.write()).catch(() => undefined);
+    return this.writing;
+  }
+
+  private async write(): Promise<void> {
     const stored: Stored = {
       version: 1,
       counter: this.counter,
@@ -66,7 +75,7 @@ export class ResultCache {
     await mkdir(dirname(this.file), { recursive: true });
     const temporary = `${this.file}.tmp`;
     await writeFile(temporary, JSON.stringify(stored), 'utf8');
-    await rename(temporary, this.file);
+    await renameRetry(temporary, this.file);
   }
 
   async get<T = unknown>(key: string): Promise<T | undefined> {
@@ -105,7 +114,8 @@ export class ResultCache {
     await this.load();
     this.entries.clear();
     this.total = 0;
-    await rm(this.file, { force: true });
+    this.writing = this.writing.then(() => rm(this.file, { force: true })).catch(() => undefined);
+    await this.writing;
   }
 
   async stats(): Promise<{ entries: number; bytes: number; maxBytes: number }> {

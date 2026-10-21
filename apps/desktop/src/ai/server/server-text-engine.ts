@@ -101,7 +101,9 @@ export async function streamChat(
         }
       }
     }
-    return text;
+    // The server always ends a stream with [DONE]. A stream that just stops is a process that died
+    // (or a connection that was cut) and the text so far is not an answer: it must not pass for one.
+    throw new Error('llama-server closed the stream before the answer was complete');
   } catch (error) {
     if (signal.aborted) return text;
     throw error;

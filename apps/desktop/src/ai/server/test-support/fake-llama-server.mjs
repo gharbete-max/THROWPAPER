@@ -1,7 +1,9 @@
 /* global process, console, setTimeout, setInterval */
 // A stand-in for `llama-server`, for tests only: the same HTTP surface the engine uses, no model.
 // Behaviour comes from FAKE_LLAMA (comma-separated): no-avx2, crash-on-start, oom, die-mid-stream,
-// slow-load, slow-stream, and for the Vulkan build (started with --device): card-oom, card-crash-start,
+// slow-load, slow-stream, hang-prompt (accepts the request and never answers, as a long prompt does),
+// stall-stream (one token, then nothing), truncate-stream (one token, then the stream ends without [DONE]),
+// and for the Vulkan build (started with --device): card-oom, card-crash-start,
 // card-crash-request, card-empty. It prints what it was asked to do on stdout as `fake:` lines.
 import { createServer } from 'node:http';
 
@@ -39,6 +41,7 @@ if (modes.includes('no-avx2')) {
       `load_tensors: offloaded ${modes.includes('card-empty') ? 0 : 29}/29 layers to GPU`,
     );
   }
+  let hung = false;
   const readyAt = Date.now() + (modes.includes('slow-load') ? 800 : 50);
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   createServer(async (req, res) => {
@@ -53,6 +56,12 @@ if (modes.includes('no-avx2')) {
     let body = '';
     for await (const chunk of req) body += chunk;
     if (card && modes.includes('card-crash-request')) process.exit(9);
+    console.log('fake: request');
+    if (modes.includes('hang-prompt') && !hung) {
+      hung = true;
+      res.on('close', () => console.log('fake: client closed'));
+      return; // never answers; the client gives up, or the process is ended
+    }
     const request = JSON.parse(body);
     const last = request.messages.at(-1).content;
     const text = typeof last === 'string' ? last : '(a picture)';
@@ -77,8 +86,11 @@ if (modes.includes('no-avx2')) {
     for (const [index, piece] of pieces.entries()) {
       if (modes.includes('die-mid-stream') && index === 1) process.exit(9);
       if (modes.includes('slow-stream')) await sleep(150);
+      if (index === 1 && modes.includes('stall-stream')) await new Promise(() => undefined);
+      if (index === 1 && modes.includes('truncate-stream')) return void res.end();
       if (res.destroyed) return;
       res.write(`data: ${JSON.stringify({ choices: [{ delta: { content: piece } }] })}\n\n`);
+      console.log(`fake: piece ${index}`);
     }
     res.write('data: [DONE]\n\n');
     res.end();
