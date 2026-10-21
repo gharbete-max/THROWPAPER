@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { adminUser, bearer, createTestHarness, signIn, type TestHarness } from '../test-support.js';
+import { createAuthService } from './service.js';
 
 let harness: TestHarness;
 
@@ -153,6 +154,28 @@ describe('refresh tokens', () => {
       payload: { refreshToken: current },
     });
     expect(afterBreach.statusCode).toBe(401);
+    expect(harness.state.refreshTokens.every((token) => token.revokedAt !== null)).toBe(true);
+  });
+
+  it('lets one of two simultaneous refreshes of the same token win, and ends the family', async () => {
+    const session = await signIn(harness, adminUser.email);
+    // The service itself, so the two calls are really concurrent (the HTTP layer serialises them).
+    const service = createAuthService({
+      repos: harness.repos,
+      mail: harness.mail,
+      config: { jwtSecret: 'j'.repeat(40), appUrl: 'http://localhost:5173' },
+    });
+
+    const [a, b] = await Promise.all([
+      service.refresh(session.refreshToken),
+      service.refresh(session.refreshToken),
+    ]);
+
+    // Exactly one new token is issued from one old one: a second would fork the chain, and the
+    // reuse detection above would never see it.
+    expect([a.ok, b.ok].sort()).toEqual([false, true]);
+    expect(harness.state.refreshTokens).toHaveLength(2);
+    // Losing the race is the same signal as presenting a rotated token: the family is revoked.
     expect(harness.state.refreshTokens.every((token) => token.revokedAt !== null)).toBe(true);
   });
 

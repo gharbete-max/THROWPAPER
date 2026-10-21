@@ -1,7 +1,8 @@
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { contentTypeOf, extensionOf, type ImageFormat } from './image.js';
+import { storeAtomically } from './atomic.js';
 
 /**
  * Uploaded images: logos, and later the illustrations a form author puts on a question.
@@ -59,14 +60,8 @@ export function createLocalAssetStore(options: { directory: string }): AssetStor
       const key = `${digest}.${extensionOf(format)}`;
       const target = join(root, key);
 
-      let deduplicated = true;
-      try {
-        await readFile(target);
-      } catch {
-        deduplicated = false;
-        await mkdir(dirname(target), { recursive: true });
-        await writeFile(target, content);
-      }
+      await mkdir(dirname(target), { recursive: true });
+      const deduplicated = await storeAtomically(target, content);
 
       return {
         key,

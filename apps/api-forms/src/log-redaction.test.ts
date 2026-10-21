@@ -82,3 +82,33 @@ describe('base64url tokens, whole', () => {
     expect(redactSecretsInUrl(`/public/forms/${slug}`)).toBe(`/public/forms/${slug}`);
   });
 });
+
+describe('personal data in a URL', () => {
+  it('keeps the address in an unsubscribe link out of the log, however short it is', async () => {
+    const { deriveUnsubscribeKey, signUnsubscribeToken } = await import('./send/unsubscribe.js');
+    const key = deriveUnsubscribeKey('k'.repeat(40));
+    const organisationId = '3ff75281-4dbf-46ab-bebd-e982a7180530';
+    for (const address of [
+      'a@b.se',
+      'asa.berg@example.com',
+      'a-very-long.name+tag@subdomain.example.org',
+    ]) {
+      const token = signUnsubscribeToken(organisationId, address, key);
+      const logged = redactSecretsInUrl(`/v1/unsubscribe?t=${token}`);
+      const encoded = token.split('.')[1]!;
+      expect(logged, address).not.toContain(encoded);
+      expect(logged, address).not.toContain(token.split('.')[2]!.slice(4));
+    }
+  });
+
+  it('keeps an address typed into a query out of the log', () => {
+    const logged = redactSecretsInUrl('/v1/send/suppressions?email=asa.berg%40example.com');
+    expect(logged).not.toContain('asa');
+    expect(logged).not.toContain('example');
+  });
+
+  it('does not eat parameters that merely end in the same letter', () => {
+    const url = '/v1/forms?sort=name&limit=5&format=csv&host=a';
+    expect(redactSecretsInUrl(url)).toBe(url);
+  });
+});

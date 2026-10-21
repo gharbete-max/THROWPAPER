@@ -1,7 +1,8 @@
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm } from 'node:fs/promises';
 import { dirname, join, resolve, sep } from 'node:path';
 import { isUploadKey, type UploadExtension } from '@tp/shared/forms';
+import { storeAtomically } from './atomic.js';
 
 /**
  * Files a respondent attached — private, and a different store from the public one on purpose.
@@ -42,13 +43,7 @@ export function createLocalUploadStore(directory: string): PrivateUploadStore {
       await mkdir(dirname(target), { recursive: true });
 
       // Content-addressed, so writing the same bytes again is writing the same bytes again.
-      let deduplicated = true;
-      try {
-        await readFile(target);
-      } catch {
-        deduplicated = false;
-        await writeFile(target, content);
-      }
+      const deduplicated = await storeAtomically(target, content);
 
       return { key, bytes: content.byteLength, deduplicated };
     },

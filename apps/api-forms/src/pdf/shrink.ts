@@ -26,9 +26,12 @@ export async function shrinkPdf(bytes: Uint8Array): Promise<Uint8Array> {
       reachable.add(object.tag);
       const target = context.lookup(object);
       if (target) todo.push(target);
-    } else if (object instanceof PDFDict) todo.push(...object.values());
-    else if (object instanceof PDFArray) todo.push(...object.asArray());
-    else if (object instanceof PDFStream) todo.push(object.dict);
+    } else if (object instanceof PDFDict) {
+      // A loop, not `push(...values)`: a spread of a 125 000-entry array overflows the call stack.
+      for (const value of object.values()) todo.push(value);
+    } else if (object instanceof PDFArray) {
+      for (const value of object.asArray()) todo.push(value);
+    } else if (object instanceof PDFStream) todo.push(object.dict);
   }
   for (const [ref] of context.enumerateIndirectObjects()) {
     if (!reachable.has(ref.tag)) context.delete(ref);

@@ -559,9 +559,12 @@ function readReference(rows: Row[]): FieldReading<PaymentReference> {
         /^\d[\dA-Za-z]*$/.test(first.text) &&
         first.text.replace(/\D/g, '').length >= 4;
       if (rf || digits) {
-        const ok = (w: PayableWord) => (rf ? /^[A-Za-z0-9]{1,8}$/ : /^\d+$/).test(w.text);
+        // A PDF's text layer prints an RF reference as one item ("RF18539007547034"); optical
+        // reading splits it in groups of four. The first word may therefore be the whole of it.
+        const ok = (w: PayableWord, i: number) =>
+          (rf ? (i === 0 ? /^[A-Za-z0-9]{1,25}$/ : /^[A-Za-z0-9]{1,8}$/) : /^\d+$/).test(w.text);
         let n = 0;
-        while (n < run.length && ok(run[n]!)) n += 1;
+        while (n < run.length && ok(run[n]!, n)) n += 1;
         // The longest stretch that is a reference: its check digits hold, length digit first.
         let best = 0;
         let rank = -1;
@@ -578,7 +581,8 @@ function readReference(rows: Row[]): FieldReading<PaymentReference> {
             rank = score;
           }
         }
-        const take = best || n;
+        // Never zero words: `rf` or `digits` matched the first word, so it is at least that one.
+        const take = best || n || 1;
         const span = asRow(take);
         const checked = checkReference(
           run

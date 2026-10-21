@@ -1,4 +1,4 @@
-import { degrees, EncryptedPDFError, PDFDocument, type PDFImage } from 'pdf-lib';
+import { degrees, EncryptedPDFError, PDFDocument, type PDFImage, type PDFPage } from 'pdf-lib';
 import { checkPdf } from '../uploads/pdf-guard.js';
 import { imageSize } from '../uploads/image-size.js';
 
@@ -22,6 +22,8 @@ export const MAX_FILES = 40;
 export const MAX_FILE_BYTES = 25 * 1024 * 1024;
 /** Steps in a plan, which is also the page count of the output. */
 export const MAX_STEPS = 500;
+/** What pages named more than once may cost together, counting each repeat as its whole file. */
+export const MAX_REPEAT_BYTES = 64 * 1024 * 1024;
 /**
  * The most pixels a photograph may claim, read from its header before anything decodes it. A phone
  * photo is 12 to 50 MP, but the screen shrinks to 2400 px on the long side (under 6 MP) before
@@ -161,6 +163,20 @@ export async function arrangePdf(
       throw new ArrangeRefusal('unreadable', index);
     }
   }
+  // Each source's pages are copied in ONE call, in the order the plan first needs them. pdf-lib
+  // copies what the pages in a call share (a font, a logo) once; a call per page copied it once
+  // per page, so reordering a 100-page PDF made the file 100 times as heavy as what it shares.
+  // A page the plan names again is copied again (it may be turned differently), and that second
+  // copy is the price of the repeat: `repeatCost` bounds the sum of those.
+  const firstCopies = new Map<string, PDFPage>();
+  for (const [index, source] of sources) {
+    const wanted = [
+      ...new Set(plan.filter((step) => step.file === index).map((step) => step.page)),
+    ];
+    const copies = await out.copyPages(source, wanted);
+    wanted.forEach((page, n) => firstCopies.set(`${index}:${page}`, copies[n]!));
+  }
+  let repeatCost = 0;
   for (const step of plan) {
     const photo = photos.get(step.file);
     if (photo) {
@@ -179,11 +195,19 @@ export async function arrangePdf(
       page.setRotation(degrees((photo.turn + (step.rotate ?? 0)) % 360));
       continue;
     }
-    const [copy] = await out.copyPages(sources.get(step.file)!, [step.page]);
-    if (step.rotate) {
-      copy!.setRotation(degrees((copy!.getRotation().angle + step.rotate) % 360));
+    const key = `${step.file}:${step.page}`;
+    let copy = firstCopies.get(key);
+    if (copy) firstCopies.delete(key);
+    else {
+      // A repeat can weigh as much as the whole file (a page may hold all of its pictures).
+      repeatCost += files[step.file]!.length;
+      if (repeatCost > MAX_REPEAT_BYTES) throw new ArrangeRefusal('too-many-pages');
+      copy = (await out.copyPages(sources.get(step.file)!, [step.page]))[0]!;
     }
-    out.addPage(copy!);
+    if (step.rotate) {
+      copy.setRotation(degrees((copy.getRotation().angle + step.rotate) % 360));
+    }
+    out.addPage(copy);
   }
   return out.save();
 }

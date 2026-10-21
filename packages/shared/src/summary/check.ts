@@ -7,10 +7,17 @@
  * about the language is a safeguard; these two are.
  */
 
+/**
+ * A digit run without its leading zeros, as text. Never through a Number: past 2^53 two different
+ * account or reference numbers become the same float (and 21 digits become "1e+21"), which is
+ * exactly the number a model must not be allowed to change unseen.
+ */
+export const normalDigits = (digits: string): string => digits.replace(/^0+(?=\d)/, '');
+
 /** Whole numbers in a text, as written in any script's digits, without leading zeros. */
 export function numbersIn(text: string): Set<string> {
   const found = text.normalize('NFKC').match(/\d+/g) ?? [];
-  return new Set(found.map((digits) => String(Number.parseInt(digits, 10))));
+  return new Set(found.map(normalDigits));
 }
 
 export interface DigitCheck {
@@ -21,7 +28,8 @@ export interface DigitCheck {
 }
 
 function numeric(a: string, b: string): number {
-  return Number(a) - Number(b);
+  // Normal digit strings: shorter is smaller, equal lengths compare as text. No float involved.
+  return a.length - b.length || (a < b ? -1 : a > b ? 1 : 0);
 }
 
 /**

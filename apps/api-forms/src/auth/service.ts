@@ -145,7 +145,13 @@ export function createAuthService({ repos, mail, config, now = () => new Date() 
       const organisation = await repos.organisations.findById(user.organisationId);
       if (!organisation) return { ok: false, reason: 'unknown-user' };
 
-      await repos.tokens.revokeRefreshToken(record.id, now());
+      // The revocation is the claim on this token. Two refreshes that both passed the check above
+      // race here, and only one is told yes: the other presented a token that was rotated a
+      // moment before, which is reuse, and ends the family like any other.
+      if (!(await repos.tokens.revokeRefreshToken(record.id, now()))) {
+        await repos.tokens.revokeFamily(record.familyId, now());
+        return { ok: false, reason: 'reused' };
+      }
       return {
         ok: true,
         session: await issue(user, organisation, {
