@@ -49,6 +49,8 @@ const command = [
   '--repo',
   repo,
   '--draft',
+  // The README links to releases/latest/download/<installer>: the pack must never become 'Latest'.
+  '--latest=false',
   '--title',
   `AI pack: ${TEXT_MODEL.name}`,
   '--notes',
@@ -65,7 +67,7 @@ const command = [
 console.log(`release ${tag} on ${repo}: ${names.length} parts, ${(total / 1e9).toFixed(2)} GB`);
 for (const [i, n] of names.entries()) console.log(`  ${n}  ${sizes[i]} bytes`);
 console.log(
-  `\n${command.map((c) => (/\s/.test(c) ? `"${c}"` : c)).join(' ')}\ngh release edit ${tag} --repo ${repo} --draft=false`,
+  `\n${command.map((c) => (/\s/.test(c) ? `"${c}"` : c)).join(' ')}\ngh release edit ${tag} --repo ${repo} --draft=false --latest=false`,
 );
 
 if (!process.argv.includes('--yes')) {
@@ -73,7 +75,9 @@ if (!process.argv.includes('--yes')) {
   process.exit(0);
 }
 execFileSync(command[0]!, command.slice(1), { stdio: 'inherit' });
-execFileSync('gh', ['release', 'edit', tag, '--repo', repo, '--draft=false'], { stdio: 'inherit' });
+execFileSync('gh', ['release', 'edit', tag, '--repo', repo, '--draft=false', '--latest=false'], {
+  stdio: 'inherit',
+});
 console.log(
   'published. The manifest is unchanged: the Get button downloads from Hugging Face (the only hosts the download manager allows); this release is the pack to open from a folder, or to hand to a computer with no access to Hugging Face.',
 );
