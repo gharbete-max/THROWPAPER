@@ -1502,6 +1502,7 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.setup.another': 'Valitse toinen malli',
   'ai.setup.showAll': 'Näytä kaikki, myös mallit, jotka eivät vielä toimi',
   'ai.setup.advanced': 'Lisäasetukset',
+  'ai.setup.desktopOnly': 'Tekoälyn asetukset ovat työpöytäsovelluksessa.',
   'ai.models.tier.full': 'Täysi',
   'ai.models.tier.balanced': 'Tasapainoinen',
   'ai.models.tier.light': 'Kevyt',

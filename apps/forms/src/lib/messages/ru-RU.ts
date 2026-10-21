@@ -1529,6 +1529,7 @@ export const ruRU: Record<MessageKey, string> = {
   'ai.setup.another': 'Выбрать другую модель',
   'ai.setup.showAll': 'Показать все, включая модели, которые пока не работают',
   'ai.setup.advanced': 'Дополнительно',
+  'ai.setup.desktopOnly': 'Настройка ИИ доступна в приложении для компьютера.',
   'ai.models.tier.full': 'Полная',
   'ai.models.tier.balanced': 'Сбалансированная',
   'ai.models.tier.light': 'Лёгкая',

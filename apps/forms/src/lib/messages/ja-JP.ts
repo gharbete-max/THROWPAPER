@@ -1492,6 +1492,7 @@ export const jaJP: Record<MessageKey, string> = {
   'ai.setup.another': '別のモデルを選ぶ',
   'ai.setup.showAll': 'まだ動作しないモデルも含めてすべて表示',
   'ai.setup.advanced': '詳細設定',
+  'ai.setup.desktopOnly': 'AI の設定はデスクトップアプリで行えます。',
   'ai.models.tier.full': 'フル',
   'ai.models.tier.balanced': 'バランス',
   'ai.models.tier.light': '軽量',

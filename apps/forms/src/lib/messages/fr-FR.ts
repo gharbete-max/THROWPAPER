@@ -1530,6 +1530,7 @@ export const frFR: Record<MessageKey, string> = {
   'ai.setup.another': 'Choisir un autre modèle',
   'ai.setup.showAll': 'Tout afficher, y compris les modèles qui ne fonctionnent pas encore',
   'ai.setup.advanced': 'Avancé',
+  'ai.setup.desktopOnly': 'La configuration de l’IA est disponible dans l’application de bureau.',
   'ai.models.tier.full': 'Complet',
   'ai.models.tier.balanced': 'Équilibré',
   'ai.models.tier.light': 'Léger',

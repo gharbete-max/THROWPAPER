@@ -1507,6 +1507,7 @@ export const enGB = {
   'ai.setup.another': 'Choose another model',
   'ai.setup.showAll': 'Show all, including models that do not work yet',
   'ai.setup.advanced': 'Advanced',
+  'ai.setup.desktopOnly': 'AI setup is available in the desktop app.',
   'ai.models.tier.full': 'Full',
   'ai.models.tier.balanced': 'Balanced',
   'ai.models.tier.light': 'Light',

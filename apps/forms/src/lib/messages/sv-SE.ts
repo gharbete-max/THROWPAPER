@@ -1492,6 +1492,7 @@ export const svSE: Record<MessageKey, string> = {
   'ai.setup.another': 'Välj en annan modell',
   'ai.setup.showAll': 'Visa alla, även modeller som inte fungerar ännu',
   'ai.setup.advanced': 'Avancerat',
+  'ai.setup.desktopOnly': 'Att ställa in AI finns i skrivbordsappen.',
   'ai.models.tier.full': 'Fullständig',
   'ai.models.tier.balanced': 'Balanserad',
   'ai.models.tier.light': 'Lätt',
