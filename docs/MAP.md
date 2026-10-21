@@ -101,26 +101,23 @@ before DB tests/e2e, `rmdir` after. Run agents one at a time unless work is trul
 Merge `origin/main` in (never rebase or force-push a PR branch that Auto-fix watches).
 
 ## Current state (2026-10-21)
-Merged: the whole Documents plan (Forms, Scan, Sign, Send, invoices); the AI coordinator and the single
-model (Qwen2.5-VL-7B through a pinned llama-server), the optional catalogue (Full/Balanced/Light/Very light,
-direct Hugging Face download after a confirmation), the AI reader, proofreading, corporate email and the Send
-reply helper; the campaign footer skeleton and the passphrase-protected keys backup; the AI pack (runtime in
-the package, split/join/publish scripts, offline install); e2e health (156/156); the user guide (#205); UI
-polish with the empty actions `<th>` named and the textarea without a combobox role (#206); the security
-review of 2026-10 (#207: llama-server child, AI IPC, downloads, pack, backup); the design pass with
-photographs, model cards and template covers (#208); vision tuning (#209: tables as rows, -31% a page, the
-Q8_0 projector preferred, measured tiers, the Vulkan build pinned); twelve graded photographs (#210, #211).
-The optional graphics-card setting (#212, off by default, falls back to the processor), and the summary pane's
-download confirmation names the real host from the manifest (huggingface.co).
-Cleanup (`claude/cleanup-obsolete`): the Mailer stubs, the old wizard (`wizardAnswers`), spike raw data, `.impeccable/critique/` and the finished builder plans (now `docs/archive/`, index in its README) are gone; before/after sizes are in that PR. Kept on purpose: events, door, attendance, inbox, ledger, invoicing (reserved for the other catchers).
-Not done: **uploading the ~6.9 GB pack** (`publish-ai-pack.ts <folder> --yes`, owner's go; until then the
-in-app Get stays off and a pack installs from a folder); the graphics card on macOS (Metal) and inside the AI
-pack; SmolVLM2-500M is marked not-working-yet; Qwen3-VL-4B, SmolVLM2-2.2B/256M never run. Unverified
-everywhere: macOS, 8-12 GB laptops, CPUs without AVX2, graphics drivers other than this machine's NVIDIA and
-Intel pair, native-speaker quality. Plans/ADRs are history unless linked above.
-Scan is three steps (SIMPLIFY 2, `claude/scan-three-steps`): a step bar (`scan/StepBar.tsx`, reusing `.tabs`),
-the page list in every step, one filled button per step, Word / invoice / form link under Bring in's *More
-tools* and the digital copy under Fix's; the three panels are `hidden`, not unmounted, so a conversion or an
-open invoice reader survives a step change. e2e use `scanStep()` / `openMoreTools()` in `e2e/support.ts`.
-Next: the rest of the structure review `docs/plan/SIMPLIFY.md` (feature folders, split CSS, one word per step);
-order is at its end. No agents or PRs are open as of this update.
+**Built and merged** (everything is on `main`; no PRs or agents are open):
+- **Documents catcher**: the room, Forms (guided and manual, draft PDF, fill), Scan as three steps (Bring in, Fix,
+  Keep) with filters, digital copy, searchable PDF, redaction, Word to PDF, invoice reading; Sign (own marks, placement,
+  cancel, second seal verifier); Send (one document, batch, campaigns with a footer you complete, do-not-email list,
+  reply helper, corporate email, proofreading).
+- **AI**: one model (Qwen2.5-VL-7B) through a pinned llama-server, a catalogue of smaller Apache-2.0 tiers, a 'Set up
+  AI' page, an optional graphics-card setting with a processor fallback, the AI pack (split/join/publish scripts,
+  offline install), measured speeds (docs/plan/VISION-TUNING.md).
+- **Structure**: the rail follows the room (earlier features folded), `screens/` in feature folders, CSS split (entry
+  11.8 KB), Mailer stubs and the old wizard removed, finished plans in `docs/archive/`, ADR index, this map.
+- **Quality**: reviews of backend/shared (fuzz tests, 11 fixes), forms UI (432 renders in twelve languages, axe
+  clean), desktop/AI (50-task soak, installer smoke) and Sign (8 fixes), all in `docs/reviews/`; e2e 178/178,
+  unit 7 778; security review in `docs/SECURITY-REVIEW-2026-10.md`.
+
+**Not done / owner's go**: uploading the ~6.9 GB AI pack (`publish-ai-pack.ts <folder> --yes`; until then the in-app
+Get stays off and a pack installs from a folder); one word per step across the catalogues and a hardware-based
+default model (SIMPLIFY 8 and 9); the graphics card on macOS (Metal); SmolVLM2 tiers marked not-working-yet.
+**Unverified**: macOS, 8-12 GB laptops, CPUs without AVX2, other graphics drivers, screen readers, native-speaker
+quality (strings for a native read are listed in docs/reviews/2026-10-forms-ui.md).
+Web bundle total is at its cap (1 249 of 1 250 KB): a new feature must cut elsewhere or raise the cap with a reason.
