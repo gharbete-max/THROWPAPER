@@ -1512,6 +1512,8 @@ export const esES: Record<MessageKey, string> = {
   'ai.setup.another': 'Elegir otro modelo',
   'ai.setup.showAll': 'Mostrar todos, también los modelos que aún no funcionan',
   'ai.setup.advanced': 'Avanzado',
+  'ai.setup.desktopOnly':
+    'La configuración de la IA está disponible en la aplicación de escritorio.',
   'ai.models.tier.full': 'Completo',
   'ai.models.tier.balanced': 'Equilibrado',
   'ai.models.tier.light': 'Ligero',

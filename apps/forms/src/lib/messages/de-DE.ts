@@ -1545,6 +1545,7 @@ export const deDE: Record<MessageKey, string> = {
   'ai.setup.another': 'Anderes Modell wählen',
   'ai.setup.showAll': 'Alle anzeigen, auch Modelle, die noch nicht funktionieren',
   'ai.setup.advanced': 'Erweitert',
+  'ai.setup.desktopOnly': 'Die KI-Einrichtung gibt es in der Desktop-App.',
   'ai.models.tier.full': 'Voll',
   'ai.models.tier.balanced': 'Ausgewogen',
   'ai.models.tier.light': 'Leicht',

@@ -1499,6 +1499,7 @@ export const isIS: Record<MessageKey, string> = {
   'ai.setup.another': 'Velja annað líkan',
   'ai.setup.showAll': 'Sýna öll, líka líkön sem virka ekki enn',
   'ai.setup.advanced': 'Ítarlegt',
+  'ai.setup.desktopOnly': 'Uppsetning gervigreindar er í skjáborðsforritinu.',
   'ai.models.tier.full': 'Fullt',
   'ai.models.tier.balanced': 'Jafnvægi',
   'ai.models.tier.light': 'Létt',

@@ -1419,6 +1419,7 @@ export const zhCN: Record<MessageKey, string> = {
   'ai.setup.another': '选择其他模型',
   'ai.setup.showAll': '显示全部，包括尚不能使用的模型',
   'ai.setup.advanced': '高级',
+  'ai.setup.desktopOnly': 'AI 设置可在桌面应用中使用。',
   'ai.models.tier.full': '完整',
   'ai.models.tier.balanced': '均衡',
   'ai.models.tier.light': '轻量',

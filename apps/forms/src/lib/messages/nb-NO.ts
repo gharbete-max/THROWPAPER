@@ -1486,6 +1486,7 @@ export const nbNO: Record<MessageKey, string> = {
   'ai.setup.another': 'Velg en annen modell',
   'ai.setup.showAll': 'Vis alle, også modeller som ikke fungerer ennå',
   'ai.setup.advanced': 'Avansert',
+  'ai.setup.desktopOnly': 'Oppsett av AI finnes i skrivebordsappen.',
   'ai.models.tier.full': 'Fullstendig',
   'ai.models.tier.balanced': 'Balansert',
   'ai.models.tier.light': 'Lett',

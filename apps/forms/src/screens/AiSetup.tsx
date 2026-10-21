@@ -2,7 +2,6 @@ import { Link, useLocation } from 'react-router';
 import { useT } from '../lib/i18n.js';
 import { useEdition } from '../lib/edition.js';
 import { aiBridge } from '../lib/ai-bridge.js';
-import { Loading } from '../components/Loading.js';
 import { ModelsPanel } from './summary/ModelsPanel.js';
 
 /**
@@ -33,10 +32,9 @@ export function AiSetup() {
             </Link>
           </p>
         </>
-      ) : edition === null ? (
-        <Loading />
       ) : (
-        <p>{edition === 'desktop' ? t('room.centreLater') : t('room.centreNone')}</p>
+        // No bridge: a browser or the hosted edition. Never wait on the server to say so.
+        <p>{edition === 'desktop' ? t('room.centreLater') : t('ai.setup.desktopOnly')}</p>
       )}
     </section>
   );

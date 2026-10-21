@@ -1490,6 +1490,7 @@ export const daDK: Record<MessageKey, string> = {
   'ai.setup.another': 'Vælg en anden model',
   'ai.setup.showAll': 'Vis alle, også modeller der ikke virker endnu',
   'ai.setup.advanced': 'Avanceret',
+  'ai.setup.desktopOnly': 'Opsætning af AI findes i skrivebordsappen.',
   'ai.models.tier.full': 'Fuld',
   'ai.models.tier.balanced': 'Afbalanceret',
   'ai.models.tier.light': 'Let',
