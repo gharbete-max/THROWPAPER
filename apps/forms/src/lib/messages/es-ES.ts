@@ -112,6 +112,10 @@ export const esES: Record<MessageKey, string> = {
     '¿Mover «{title}» a la papelera? Dejará de aceptar respuestas y podrás restaurarlo más adelante.',
   'forms.confirmDelete':
     'plural:one ¿Eliminar definitivamente «{title}» y su {count} respuesta? Esto no se puede deshacer. | other ¿Eliminar definitivamente «{title}» y sus {count} respuestas? Esto no se puede deshacer.',
+  'forms.abandoned':
+    'plural:one {count} borrador vacío se empezó hace más de un día y nunca se respondió | other {count} borradores vacíos se empezaron hace más de un día y nunca se respondieron',
+  'forms.confirmAbandoned':
+    'plural:one ¿Mover el borrador vacío a la papelera? No tenía nada escrito y se puede restaurar desde allí. | other ¿Mover los {count} borradores vacíos a la papelera? No tenían nada escrito y se pueden restaurar desde allí.',
 
   'share.title': 'Compartir',
   'share.with': 'plural:one Compartido con {count} persona | other Compartido con {count} personas',

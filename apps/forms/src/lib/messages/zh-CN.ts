@@ -114,6 +114,9 @@ export const zhCN: Record<MessageKey, string> = {
   'forms.confirmTrash': '要把“{title}”移到回收站吗？它将停止接收回复，之后可以恢复。',
   'forms.confirmDelete':
     'plural:other 要永久删除“{title}”及其全部 {count} 条回复吗？此操作无法撤销。',
+  'forms.abandoned': 'plural:other 有 {count} 份空草稿在一天多前开始后一直没有填写',
+  'forms.confirmAbandoned':
+    'plural:other 要把这 {count} 份空草稿移到回收站吗？里面没有任何内容，可以从回收站恢复。',
 
   'share.title': '共享',
   'share.with': 'plural:other 已与 {count} 人共享',

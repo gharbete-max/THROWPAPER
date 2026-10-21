@@ -90,3 +90,45 @@ describe('the relay, listening', () => {
     expect(other.status).toBe(404);
   });
 });
+
+/** Listening servers in this process; a closed one leaves the list a turn after `close` calls back. */
+const listeners = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  return process.getActiveResourcesInfo().filter((r) => r === 'TCPServerWrap').length;
+};
+
+describe('opening the LAN relay', () => {
+  const make = () =>
+    createPhoneRelay({ app: () => ({}) as never, active: () => 1, address: () => '127.0.0.1' });
+
+  it('opens one listener however many presses arrive at once', async () => {
+    const before = await listeners();
+    const relay = make();
+    const origins = await Promise.all([relay.open(), relay.open(), relay.open()]);
+    expect(new Set(origins).size).toBe(1);
+    expect(await listeners()).toBe(before + 1);
+    await relay.close();
+    // A second listener would still be open: nothing holds a reference to close it.
+    expect(await listeners()).toBe(before);
+  });
+
+  it('leaves nothing listening when it is closed while it is still opening', async () => {
+    const before = await listeners();
+    const relay = make();
+    const opening = relay.open();
+    await relay.close();
+    await opening;
+    expect(await listeners()).toBe(before);
+  });
+
+  it('opens again after a close', async () => {
+    const relay = make();
+    const first = await relay.open();
+    await relay.close();
+    const second = await relay.open();
+    expect(second).toMatch(/^http:\/\/127\.0\.0\.1:\d+$/);
+    expect(second).not.toBeNull();
+    expect(first).not.toBeNull();
+    await relay.close();
+  });
+});

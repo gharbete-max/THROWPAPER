@@ -110,6 +110,10 @@ export const daDK: Record<MessageKey, string> = {
     'Flyt “{title}” til papirkurven? Den holder op med at tage imod svar, og du kan gendanne den senere.',
   'forms.confirmDelete':
     'plural:one Slet “{title}” og dens {count} svar permanent? Det kan ikke fortrydes. | other Slet “{title}” og alle {count} svar permanent? Det kan ikke fortrydes.',
+  'forms.abandoned':
+    'plural:one {count} tom kladde blev påbegyndt for over et døgn siden og fik aldrig noget svar | other {count} tomme kladder blev påbegyndt for over et døgn siden og fik aldrig noget svar',
+  'forms.confirmAbandoned':
+    'plural:one Flyt den tomme kladde til papirkurven? Der var intet skrevet i den, og du kan gendanne den derfra. | other Flyt de {count} tomme kladder til papirkurven? Der var intet skrevet i dem, og du kan gendanne dem derfra.',
 
   'share.title': 'Del',
   'share.with': 'plural:one Delt med {count} person | other Delt med {count} personer',

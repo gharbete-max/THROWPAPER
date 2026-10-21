@@ -111,6 +111,10 @@ export const svSE: Record<MessageKey, string> = {
     'Flytta ”{title}” till papperskorgen? Formuläret slutar ta emot svar men går att återställa.',
   'forms.confirmDelete':
     'plural:one Radera ”{title}” och dess {count} svar permanent? Detta går inte att ångra. | other Radera ”{title}” och alla {count} svar permanent? Detta går inte att ångra.',
+  'forms.abandoned':
+    'plural:one {count} tomt utkast påbörjades för mer än ett dygn sedan och fick aldrig något svar | other {count} tomma utkast påbörjades för mer än ett dygn sedan och fick aldrig något svar',
+  'forms.confirmAbandoned':
+    'plural:one Flytta det tomma utkastet till papperskorgen? Inget var skrivet i det, och du kan återställa det därifrån. | other Flytta de {count} tomma utkasten till papperskorgen? Inget var skrivet i dem, och du kan återställa dem därifrån.',
 
   'share.title': 'Dela',
   'share.with': 'plural:one Delad med {count} person | other Delad med {count} personer',

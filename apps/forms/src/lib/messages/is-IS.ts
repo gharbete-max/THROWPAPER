@@ -112,6 +112,10 @@ export const isIS: Record<MessageKey, string> = {
     'Setja “{title}” í ruslafötuna? Það hættir að taka við svörum og þú getur endurheimt það síðar.',
   'forms.confirmDelete':
     'plural:one Eyða “{title}” og {count} svari þess varanlega? Þetta er ekki hægt að afturkalla. | other Eyða “{title}” og öllum {count} svörum varanlega? Þetta er ekki hægt að afturkalla.',
+  'forms.abandoned':
+    'plural:one {count} tómt uppkast var byrjað fyrir meira en degi og var aldrei svarað | other {count} tóm uppköst voru byrjuð fyrir meira en degi og var aldrei svarað',
+  'forms.confirmAbandoned':
+    'plural:one Setja tóma uppkastið í ruslafötuna? Ekkert var skrifað í það og hægt er að endurheimta það þaðan. | other Setja þessi {count} tómu uppköst í ruslafötuna? Ekkert var skrifað í þau og hægt er að endurheimta þau þaðan.',
 
   'share.title': 'Deila',
   'share.with': 'plural:one Deilt með {count} aðila | other Deilt með {count} aðilum',

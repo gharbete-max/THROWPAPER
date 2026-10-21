@@ -116,6 +116,10 @@ export const jaJP: Record<MessageKey, string> = {
     '「{title}」をごみ箱に移動しますか？回答の受付を停止しますが、後で復元できます。',
   'forms.confirmDelete':
     'plural:other 「{title}」と {count} 件すべての回答を完全に削除しますか？この操作は取り消せません。',
+  'forms.abandoned':
+    'plural:other 1 日以上前に始めて、まだ何も答えていない空の下書きが {count} 件あります',
+  'forms.confirmAbandoned':
+    'plural:other 空の下書き {count} 件をごみ箱に移動しますか？何も書かれておらず、ごみ箱から元に戻せます。',
 
   'share.title': '共有',
   'share.with': 'plural:other {count} 人と共有中',

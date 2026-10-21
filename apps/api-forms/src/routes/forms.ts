@@ -207,6 +207,14 @@ export function registerFormRoutes(
       if (!auth) return unauthenticated(reply);
       const body = formSchemas.CreateForm.parse(request.body);
 
+      const idTaken = () =>
+        reply
+          .code(409)
+          .send({ error: { code: 'id-taken', message: 'That form id is already in use' } });
+      if (body.id && (await deps.repos.forms.findById(auth.organisation.id, body.id))) {
+        return idTaken();
+      }
+
       const clash = await deps.repos.forms.findBySlug(auth.organisation.id, body.slug);
       if (clash) {
         return reply
@@ -234,17 +242,25 @@ export function registerFormRoutes(
 
       if (body.eventId && !(await ownsEvent(auth, body.eventId))) return unknownEvent(reply);
 
-      const record = await deps.repos.forms.create({
-        organisationId: auth.organisation.id,
-        eventId: body.eventId ?? null,
-        slug: body.slug,
-        title: body.title,
-        draftDefinition,
-        opensAt: null,
-        closesAt: null,
-        // Yours, from the moment it exists. Nothing else in the product assigns ownership.
-        ownerUserId: auth.user.id,
-      });
+      let record;
+      try {
+        record = await deps.repos.forms.create({
+          ...(body.id ? { id: body.id } : {}),
+          organisationId: auth.organisation.id,
+          eventId: body.eventId ?? null,
+          slug: body.slug,
+          title: body.title,
+          draftDefinition,
+          opensAt: null,
+          closesAt: null,
+          // Yours, from the moment it exists. Nothing else in the product assigns ownership.
+          ownerUserId: auth.user.id,
+        });
+      } catch (error) {
+        // Another organisation's form has this id (ids are global): the same answer, not whose.
+        if (body.id && (error as { code?: string }).code === '23505') return idTaken();
+        throw error;
+      }
 
       await recordAudit(deps.repos, request, {
         action: 'form.created',

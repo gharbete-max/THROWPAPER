@@ -112,6 +112,10 @@ export const nbNO: Record<MessageKey, string> = {
     'Flytte “{title}” til papirkurven? Det slutter å ta imot svar, og du kan gjenopprette det senere.',
   'forms.confirmDelete':
     'plural:one Slette “{title}” og dets {count} svar permanent? Dette kan ikke angres. | other Slette “{title}” og alle {count} svar permanent? Dette kan ikke angres.',
+  'forms.abandoned':
+    'plural:one {count} tomt utkast ble påbegynt for over et døgn siden og fikk aldri noe svar | other {count} tomme utkast ble påbegynt for over et døgn siden og fikk aldri noe svar',
+  'forms.confirmAbandoned':
+    'plural:one Flytte det tomme utkastet til papirkurven? Det sto ingenting i det, og du kan gjenopprette det derfra. | other Flytte de {count} tomme utkastene til papirkurven? Det sto ingenting i dem, og du kan gjenopprette dem derfra.',
 
   'share.title': 'Del',
   'share.with': 'plural:one Delt med {count} person | other Delt med {count} personer',

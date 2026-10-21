@@ -7,8 +7,11 @@ import {
   MAC_OUTLOOK_SCRIPT,
   WINDOWS_OUTLOOK_SCRIPT,
   createMailProgramProvider,
+  runScript,
+  type ScriptResult,
   type ScriptRunner,
 } from './outlook.js';
+import { UnknownOutcome } from '../jobs/worker.js';
 
 const scratch = await mkdtemp(join(tmpdir(), 'loppa-outlook-'));
 afterAll(async () => {
@@ -38,7 +41,7 @@ interface Call {
 }
 
 /** Records the call, and reads what the script would read, before the folder is removed. */
-function recorder(result = { code: 0, stdout: '', stderr: '' }) {
+function recorder(result: ScriptResult = { code: 0, stdout: '', stderr: '' }) {
   const calls: Call[] = [];
   const run: ScriptRunner = async (command, args, env) => {
     const files: Record<string, string> = {};
@@ -143,6 +146,29 @@ describe('sending through the mail program on this computer', () => {
     await expect(provider.send(hostile)).rejects.toThrow(
       /new Outlook for Windows cannot be automated/,
     );
+  });
+
+  it('does not say "not sent" when the script timed out: Outlook may still send it', async () => {
+    for (const platform of ['win32', 'darwin'] as const) {
+      const provider = createMailProgramProvider({
+        program: 'outlook',
+        platform,
+        scratchDir: scratch,
+        run: recorder({ code: 1, stdout: '', stderr: 'timed out', timedOut: true }).run,
+      });
+      const failure = await provider.send(hostile).catch((error: unknown) => error);
+      expect(failure).toBeInstanceOf(UnknownOutcome);
+      expect((failure as Error).message).toMatch(/unknown outcome — check .*Outlook/);
+    }
+    expect((await readdir(scratch)).filter((name) => name.startsWith('mail-'))).toEqual([]);
+  });
+
+  it('the real runner reports a script it had to stop, apart from one that failed', async () => {
+    const stuck = await runScript(300)(process.execPath, ['-e', 'setTimeout(() => {}, 60000)'], {});
+    expect(stuck.timedOut).toBe(true);
+    const failed = await runScript(10_000)(process.execPath, ['-e', 'process.exit(1)'], {});
+    expect(failed.timedOut).toBeUndefined();
+    expect(failed.code).toBe(1);
   });
 
   it('refuses a combination that cannot work, at configuration rather than at the first send', () => {

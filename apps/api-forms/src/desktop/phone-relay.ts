@@ -72,6 +72,7 @@ export function createPhoneRelay(options: {
   let server: Server | null = null;
   let origin: string | null = null;
   let idle: NodeJS.Timeout | null = null;
+  let opening: Promise<string | null> | null = null;
 
   async function handle(request: IncomingMessage, response: ServerResponse) {
     const method = request.method ?? 'GET';
@@ -128,6 +129,8 @@ export function createPhoneRelay(options: {
   }
 
   async function close() {
+    // An open in flight finishes first, so the listener it is making is the one that is closed.
+    await opening?.catch(() => undefined);
     if (idle) clearInterval(idle);
     idle = null;
     const closing = server;
@@ -136,29 +139,38 @@ export function createPhoneRelay(options: {
     if (closing) await new Promise<void>((resolve) => closing.close(() => resolve()));
   }
 
+  async function start(): Promise<string | null> {
+    const address = (options.address ?? lanAddress)();
+    if (!address) return null;
+    const listening = createServer((request, response) => {
+      handle(request, response).catch(() => {
+        if (!response.headersSent) response.writeHead(500).end();
+      });
+    });
+    await new Promise<void>((resolve, reject) => {
+      listening.once('error', reject);
+      // The LAN address only, not every interface: a VPN or a public adapter gets nothing.
+      listening.listen(options.port ?? 0, address, () => resolve());
+    });
+    const port = (listening.address() as { port: number }).port;
+    server = listening;
+    origin = `http://${address}:${port}`;
+    idle = setInterval(() => {
+      if (options.active() === 0) void close();
+    }, IDLE_CHECK_MS);
+    idle.unref();
+    return origin;
+  }
+
   return {
-    async open() {
-      if (origin) return origin;
-      const address = (options.address ?? lanAddress)();
-      if (!address) return null;
-      const listening = createServer((request, response) => {
-        handle(request, response).catch(() => {
-          if (!response.headersSent) response.writeHead(500).end();
-        });
+    // One start at a time: two presses before the first listener is up would otherwise open two
+    // on the LAN, the first reachable by nothing that could close it.
+    open() {
+      if (origin) return Promise.resolve(origin);
+      opening ??= start().finally(() => {
+        opening = null;
       });
-      await new Promise<void>((resolve, reject) => {
-        listening.once('error', reject);
-        // The LAN address only, not every interface: a VPN or a public adapter gets nothing.
-        listening.listen(options.port ?? 0, address, () => resolve());
-      });
-      const port = (listening.address() as { port: number }).port;
-      server = listening;
-      origin = `http://${address}:${port}`;
-      idle = setInterval(() => {
-        if (options.active() === 0) void close();
-      }, IDLE_CHECK_MS);
-      idle.unref();
-      return origin;
+      return opening;
     },
     close,
   };

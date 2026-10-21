@@ -112,6 +112,10 @@ export const fiFI: Record<MessageKey, string> = {
     'Siirretäänkö “{title}” roskakoriin? Se lakkaa ottamasta vastaan vastauksia, ja voit palauttaa sen myöhemmin.',
   'forms.confirmDelete':
     'plural:one Poistetaanko “{title}” ja sen {count} vastaus pysyvästi? Tätä ei voi perua. | other Poistetaanko “{title}” ja kaikki {count} vastausta pysyvästi? Tätä ei voi perua.',
+  'forms.abandoned':
+    'plural:one {count} tyhjä luonnos aloitettiin yli vuorokausi sitten, eikä siihen vastattu | other {count} tyhjää luonnosta aloitettiin yli vuorokausi sitten, eikä niihin vastattu',
+  'forms.confirmAbandoned':
+    'plural:one Siirretäänkö tyhjä luonnos roskakoriin? Siihen ei ollut kirjoitettu mitään, ja sen voi palauttaa sieltä. | other Siirretäänkö nämä {count} tyhjää luonnosta roskakoriin? Niihin ei ollut kirjoitettu mitään, ja ne voi palauttaa sieltä.',
 
   'share.title': 'Jaa',
   'share.with': 'plural:one Jaettu {count} henkilön kanssa | other Jaettu {count} henkilön kanssa',

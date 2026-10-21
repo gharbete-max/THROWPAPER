@@ -622,6 +622,8 @@ export const client = {
   formTemplates: () => request<{ templates: FormTemplate[] }>('/v1/form-templates'),
 
   createForm: (input: {
+    /** Chosen by the caller: the guided builder's address exists before the form does. */
+    id?: string;
     slug: string;
     title: Record<string, string>;
     eventId?: string | null;

@@ -116,6 +116,10 @@ export const enGB = {
     'Move “{title}” to the bin? It stops accepting responses, and you can restore it later.',
   'forms.confirmDelete':
     'plural:one Permanently delete “{title}” and its {count} response? This cannot be undone. | other Permanently delete “{title}” and all {count} responses? This cannot be undone.',
+  'forms.abandoned':
+    'plural:one {count} empty draft was started more than a day ago and never answered | other {count} empty drafts were started more than a day ago and never answered',
+  'forms.confirmAbandoned':
+    'plural:one Move this empty draft to the bin? Nothing was written in it, and you can restore it from the bin. | other Move these {count} empty drafts to the bin? Nothing was written in them, and you can restore them from the bin.',
 
   'share.title': 'Share',
   'share.with': 'plural:one Shared with {count} person | other Shared with {count} people',

@@ -114,6 +114,10 @@ export const deDE: Record<MessageKey, string> = {
     '„{title}“ in den Papierkorb verschieben? Es nimmt keine Antworten mehr an und lässt sich später wiederherstellen.',
   'forms.confirmDelete':
     'plural:one „{title}“ und die {count} Antwort endgültig löschen? Das lässt sich nicht rückgängig machen. | other „{title}“ und alle {count} Antworten endgültig löschen? Das lässt sich nicht rückgängig machen.',
+  'forms.abandoned':
+    'plural:one {count} leerer Entwurf wurde vor mehr als einem Tag begonnen und nie beantwortet | other {count} leere Entwürfe wurden vor mehr als einem Tag begonnen und nie beantwortet',
+  'forms.confirmAbandoned':
+    'plural:one Den leeren Entwurf in den Papierkorb legen? Es stand nichts darin; aus dem Papierkorb lässt er sich wiederherstellen. | other Diese {count} leeren Entwürfe in den Papierkorb legen? Es stand nichts darin; aus dem Papierkorb lassen sie sich wiederherstellen.',
 
   'share.title': 'Freigeben',
   'share.with':

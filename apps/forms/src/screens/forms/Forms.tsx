@@ -15,6 +15,7 @@ import { ScopeTabs } from '../../components/ScopeTabs.js';
 import { ShareDialog } from '../../components/ShareDialog.js';
 import { Banner } from '../../components/Banner.js';
 import { Doors } from './builder/guided/Doors.js';
+import { abandonedDrafts } from '../../lib/abandoned-drafts.js';
 
 /**
  * A person's workspace.
@@ -97,6 +98,13 @@ export function Forms() {
    */
   async function openBlank(door: 'questions' | 'paper') {
     setError(null);
+    if (door === 'questions') {
+      // No form yet: the conversation makes it with the first answer (`GuidedBuilder`), so a start
+      // that goes nowhere leaves nothing in the list.
+      setCreating(null);
+      navigate(`/forms/${crypto.randomUUID()}/guided`, { state: { fresh: true } });
+      return;
+    }
     setOpening(true);
     try {
       const stamp = Date.now().toString(36);
@@ -105,7 +113,7 @@ export function Forms() {
         title: { [locales.default]: t('forms.untitled') },
       });
       setCreating(null);
-      navigate(`/forms/${created.id}/${door === 'questions' ? 'guided' : 'import'}`);
+      navigate(`/forms/${created.id}/import`);
     } catch (cause) {
       setError(cause instanceof ApiError ? cause.message : String(cause));
     } finally {
@@ -134,6 +142,19 @@ export function Forms() {
     const name = pickText(locales, form.title, locale).value || form.slug;
     if (!(await confirm(t('forms.confirmTrash', { title: name })))) return;
     await client.trashForm(form.id);
+    load();
+  }
+
+  /** Starts that went nowhere, moved to the bin together after one question (reversible). */
+  async function clearAbandoned(list: readonly FormResponse[]) {
+    if (
+      !(await confirm(t('forms.confirmAbandoned', { count: list.length }), {
+        confirmLabel: t('forms.trash'),
+      }))
+    ) {
+      return;
+    }
+    for (const form of list) await client.trashForm(form.id);
     load();
   }
 
@@ -280,6 +301,22 @@ export function Forms() {
           </button>
         </form>
       )}
+
+      {scope === 'mine' &&
+        forms &&
+        user &&
+        abandonedDrafts(forms, user.id, Date.now()).length > 0 && (
+          <p className="row small muted" role="status">
+            {t('forms.abandoned', { count: abandonedDrafts(forms, user.id, Date.now()).length })}
+            <button
+              type="button"
+              className="button button--bare small"
+              onClick={() => void clearAbandoned(abandonedDrafts(forms, user.id, Date.now()))}
+            >
+              {t('forms.trash')}
+            </button>
+          </p>
+        )}
 
       {failed && <LoadFailed onRetry={load} />}
       {!failed && forms === null && <Loading />}

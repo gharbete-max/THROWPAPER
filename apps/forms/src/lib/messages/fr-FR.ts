@@ -113,6 +113,10 @@ export const frFR: Record<MessageKey, string> = {
     'Mettre « {title} » à la corbeille ? Il cesse d’accepter des réponses, et vous pourrez le restaurer plus tard.',
   'forms.confirmDelete':
     'plural:one Supprimer définitivement « {title} » et sa {count} réponse ? Cette action est irréversible. | other Supprimer définitivement « {title} » et ses {count} réponses ? Cette action est irréversible.',
+  'forms.abandoned':
+    'plural:one {count} brouillon vide a été commencé il y a plus d’un jour et n’a jamais reçu de réponse | other {count} brouillons vides ont été commencés il y a plus d’un jour et n’ont jamais reçu de réponse',
+  'forms.confirmAbandoned':
+    'plural:one Mettre le brouillon vide à la corbeille ? Rien n’y était écrit, et vous pourrez le restaurer depuis la corbeille. | other Mettre ces {count} brouillons vides à la corbeille ? Rien n’y était écrit, et vous pourrez les restaurer depuis la corbeille.',
 
   'share.title': 'Partager',
   'share.with': 'plural:one Partagé avec {count} personne | other Partagé avec {count} personnes',

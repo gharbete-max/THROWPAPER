@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import { BUILDER_GRAPH, type Conversation } from '@tp/shared/builder';
-import type { FormTemplate } from '@tp/shared/forms';
+import { emptyDefinition, type FormTemplate } from '@tp/shared/forms';
 import {
   BUILTIN_ALIASES,
   type AliasRefusalReason,
@@ -33,12 +33,21 @@ export function GuidedBuilder() {
   const { id } = useParams();
   const t = useT();
   const navigate = useNavigate();
+  /**
+   * "Start from questions" opens here at an address of its own before any form exists (the page
+   * says so in the router's state): an abandoned start then leaves no draft behind. The form is
+   * made, under that address, with the first answer.
+   */
+  const fresh = (useLocation().state as { fresh?: boolean } | null)?.fresh === true;
   const edition = useEdition();
   const { locale, locales, contentLocale, organisation, user } = useSession();
   const { refresh: repaint } = useBrand();
   /** Only an administrator may change the organisation's colours (owner question 8). */
   const canChangeBrand = user?.role === 'admin';
 
+  /** Read when a blank start begins; a catalogue arriving later must not restart the conversation. */
+  const untitled = useRef('');
+  untitled.current = t('forms.untitled');
   const [started, setStarted] = useState<Started | null>(null);
   /**
    * The organisation's brand kit: whether it has one of its own, and its logo, for the preview; and
@@ -65,9 +74,14 @@ export function GuidedBuilder() {
     setFailed(false);
     setStarted(null);
     setConversation(null);
+    // A start that has not been answered has no form yet: not found is then the blank beginning.
+    const existing = client.getForm(id).catch((error: unknown) => {
+      if (fresh && error instanceof ApiError && error.status === 404) return null;
+      throw error;
+    });
     Promise.all([
-      client.getForm(id),
-      client.builderSession(id),
+      existing,
+      existing.then((form) => (form ? client.builderSession(id) : { version: 0, session: null })),
       client.brandKit().catch(() => null),
       // Without them the built-in aliases still read everything they did: never a reason to fail.
       client.learnedAliases().catch(() => ({ aliases: [] })),
@@ -75,9 +89,13 @@ export function GuidedBuilder() {
       // on a template is then refused and says so (S11).
       client.formTemplates().catch(() => ({ templates: [] })),
     ])
-      .then(([form, stored, brand, known, catalogue]) => {
+      .then(([found, stored, brand, known, catalogue]) => {
         setLearned(known.aliases);
         setTemplates(catalogue.templates);
+        const form = found ?? {
+          draftDefinition: emptyDefinition,
+          title: { [locales.default]: untitled.current },
+        };
         const begun = startConversation({
           graph: BUILDER_GRAPH,
           definition: form.draftDefinition,
@@ -92,6 +110,20 @@ export function GuidedBuilder() {
           id,
           { version: stored.version, draft: form.draftDefinition, title: form.title },
           setStatus,
+          found
+            ? null
+            : async () => {
+                try {
+                  await client.createForm({
+                    id,
+                    slug: `form-${Date.now().toString(36)}`,
+                    title: form.title,
+                  });
+                } catch (error) {
+                  // Made already by an earlier press whose answer was lost: it is there.
+                  if (!(error instanceof ApiError && error.code === 'id-taken')) throw error;
+                }
+              },
         );
         setStatus('saved');
         setKit({
@@ -103,7 +135,7 @@ export function GuidedBuilder() {
         setConversation(begun.conversation);
       })
       .catch(() => setFailed(true));
-  }, [id, canChangeBrand]);
+  }, [id, canChangeBrand, fresh, locales.default]);
 
   /**
    * "Use these colours", pressed: the preset over the organisation's kit — its logo kept — or, with
@@ -153,6 +185,8 @@ export function GuidedBuilder() {
   async function openEditor() {
     const current = saver.current;
     if (current) {
+      // The editor opens a form that exists: an unanswered start is made now, as it stands.
+      if (current.unmade && conversation) await current.save(conversation);
       await current.settled();
       if (current.status === 'failed') await current.retry();
       // Leaving now would open the editor on a draft without the last steps: stay, and say so.
