@@ -305,7 +305,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
          * No inline scripts anywhere: the shipped HTML loads two modules by src and nothing else.
          *
          * `wasm-unsafe-eval` is the one addition, for the OCR engine in the builder
-         * (`screens/builder/paper/ocr.ts`): Chromium refuses to instantiate WebAssembly under a
+         * (`screens/forms/builder/paper/ocr.ts`): Chromium refuses to instantiate WebAssembly under a
          * bare `'self'`. It permits WebAssembly compilation and nothing else — no `eval`, no
          * `Function`, no inline handlers — which is why it is not `unsafe-eval`.
          */

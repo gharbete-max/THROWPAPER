@@ -42,7 +42,7 @@ import {
   tessLangs,
   type RecognisedWords,
   type TesseractPage,
-} from '../../apps/forms/src/screens/builder/paper/ocr-words.js';
+} from '../../apps/forms/src/screens/forms/builder/paper/ocr-words.js';
 import '../ocr-assets.js';
 import { scanSources } from './sources.js';
 

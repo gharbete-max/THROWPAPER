@@ -28,12 +28,10 @@ describe('the reply helper keeps what it holds on this computer', () => {
       /lazy\(\(\) => import\('\.\/ReplyPanel\.js'\)\)/,
     );
     const offenders = sourceFiles(ROOT)
-      .filter(
-        (path) => !path.includes(join('screens', 'send') + '\\') && !path.includes('screens/send/'),
-      )
-      .filter((path) => /send\/Reply(Help|Panel)/.test(readFileSync(path, 'utf8')))
+      .filter((path) => !/[\\/]Reply(Help|Panel)\.tsx$/.test(path))
+      .filter((path) => /(\.|send)\/Reply(Help|Panel)\.js/.test(readFileSync(path, 'utf8')))
       .map((path) => path.slice(ROOT.length).replaceAll('\\', '/'));
-    expect(offenders.sort()).toEqual(['screens/Send.tsx', 'screens/SendCampaign.tsx']);
+    expect(offenders.sort()).toEqual(['screens/send/Send.tsx', 'screens/send/SendCampaign.tsx']);
   });
 
   it('never sends: it imports no sending call and queues nothing', () => {

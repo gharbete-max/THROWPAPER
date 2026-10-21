@@ -34,7 +34,7 @@ describe('Reveal inside a list', () => {
   });
 
   it('never puts a wrapper between the Responses list and its rows', () => {
-    const source = readFileSync(new URL('../screens/Inbox.tsx', import.meta.url), 'utf8');
+    const source = readFileSync(new URL('../screens/earlier/Inbox.tsx', import.meta.url), 'utf8');
     // `<Reveal>` followed by `<li` is the shape that was wrong.
     expect(source).not.toMatch(/<Reveal[^>]*>\s*<li\b/);
     expect(source).toMatch(/<Reveal[^>]*\bas="li"/);

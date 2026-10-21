@@ -1,4 +1,4 @@
-import { zipBytes } from '../../apps/forms/src/screens/builder/paper/docx.fixture.js';
+import { zipBytes } from '../../apps/forms/src/screens/forms/builder/paper/docx.fixture.js';
 
 /**
  * A small Word writer for the corpus's sources (`scripts/corpus/documents.ts`): paragraphs and

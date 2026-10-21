@@ -304,7 +304,7 @@ packages/shared/src/                     (@tp/shared — the forms core already 
     paste.ts          pasted text as a layout document — a string, not bytes          (built, S6)
     layout/ segment/ classify/ overlay/  pipeline.ts                                  (S7, S9, S12)
   forms/wording.ts    the regulated-word list shared by templates and example chips   (built, S1)
-apps/forms/src/screens/builder/
+apps/forms/src/screens/forms/builder/
   paper/              extract.ts, ocr.ts (exist) + docx.ts import.worker.ts            (S7)
   guided/             Shell, NodeView (Cards, Quantity, MultiCards, TextEntry),
                       Trail, Doors, conversation, keyboard, saver                      (built, S4)
@@ -318,7 +318,7 @@ fixtures/             numbering/ (29, built)  ir/ (3 samples, built)
                       documents/ (the corpus)  sessions/ (recorded conversations)  ladder/
 ```
 
-Rules: `builder/`, `interpret/`, `import/` are **framework-free and side-effect-free** — enforced by an ESLint block; the UI imports them, never the reverse. Every stage of the pipeline is callable on its own with a plain object in and a plain object out. Bytes are touched only in `apps/forms/src/screens/builder/paper/`.
+Rules: `builder/`, `interpret/`, `import/` are **framework-free and side-effect-free** — enforced by an ESLint block; the UI imports them, never the reverse. Every stage of the pipeline is callable on its own with a plain object in and a plain object out. Bytes are touched only in `apps/forms/src/screens/forms/builder/paper/`.
 
 ---
 

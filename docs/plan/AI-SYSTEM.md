@@ -84,7 +84,7 @@ picture (PNG or JPEG, at most 1 million pixels normally, 2 million on the second
 `llama-server` under a JSON grammar (`MODEL_PAGE_SCHEMA`); `pageFromModel` turns the answer into a
 `StructuredPage` (a table is asked for as `rows`, lists of cell texts, which halved the writing time: `VISION-TUNING.md`; boxes are not asked for and are `null`; a cut-off answer keeps its finished blocks
 and is `uncertain`; an answer that is not the shape is a `failed` page). The window draws and sends
-one page at a time (`apps/forms/src/screens/read-ai/`), compares each page with the PDF's own text
+one page at a time (`apps/forms/src/screens/ai/read-ai/`), compares each page with the PDF's own text
 layer (`crossCheck`: word overlap both ways and the numbers; a photograph has no layer and is not
 compared, Tesseract is not run alongside), numbers it into the document and lists any page it
 could not read. The coordinator keeps a read page under `cacheKey` (file hash, page, pipeline

@@ -16,8 +16,8 @@ import { useT } from './lib/i18n.js';
 import { OUTGOING_CHANGED, useEdition } from './lib/edition.js';
 import { client } from './lib/api.js';
 import { modelBridge } from './lib/model-bridge.js';
-import { Login } from './screens/Login.js';
-import { Callback } from './screens/Callback.js';
+import { Login } from './screens/shell/Login.js';
+import { Callback } from './screens/shell/Callback.js';
 
 /**
  * The signed-in application, split out of the entry chunk.
@@ -32,47 +32,65 @@ import { Callback } from './screens/Callback.js';
  * it is the first thing a returning operator needs, and a spinner in front of a password box to
  * save a few kilobytes is a poor trade.
  */
-const Events = lazy(() => import('./screens/Events.js').then((m) => ({ default: m.Events })));
-const EventForm = lazy(() =>
-  import('./screens/EventForm.js').then((m) => ({ default: m.EventForm })),
+const Events = lazy(() =>
+  import('./screens/earlier/Events.js').then((m) => ({ default: m.Events })),
 );
-const Forms = lazy(() => import('./screens/Forms.js').then((m) => ({ default: m.Forms })));
-const BrandKit = lazy(() => import('./screens/BrandKit.js').then((m) => ({ default: m.BrandKit })));
+const EventForm = lazy(() =>
+  import('./screens/earlier/EventForm.js').then((m) => ({ default: m.EventForm })),
+);
+const Forms = lazy(() => import('./screens/forms/Forms.js').then((m) => ({ default: m.Forms })));
+const BrandKit = lazy(() =>
+  import('./screens/earlier/BrandKit.js').then((m) => ({ default: m.BrandKit })),
+);
 const FormBuilder = lazy(() =>
-  import('./screens/builder/FormBuilder.js').then((m) => ({ default: m.FormBuilder })),
+  import('./screens/forms/builder/FormBuilder.js').then((m) => ({ default: m.FormBuilder })),
 );
 const GuidedBuilder = lazy(() =>
-  import('./screens/builder/guided/GuidedBuilder.js').then((m) => ({ default: m.GuidedBuilder })),
+  import('./screens/forms/builder/guided/GuidedBuilder.js').then((m) => ({
+    default: m.GuidedBuilder,
+  })),
 );
 const ReviewScreen = lazy(() =>
-  import('./screens/builder/review/ReviewScreen.js').then((m) => ({ default: m.ReviewScreen })),
+  import('./screens/forms/builder/review/ReviewScreen.js').then((m) => ({
+    default: m.ReviewScreen,
+  })),
 );
 const LearnedPhrases = lazy(() =>
-  import('./screens/builder/guided/LearnedPhrases.js').then((m) => ({
+  import('./screens/forms/builder/guided/LearnedPhrases.js').then((m) => ({
     default: m.LearnedPhrases,
   })),
 );
 const EventReport = lazy(() =>
-  import('./screens/EventReport.js').then((m) => ({ default: m.EventReport })),
+  import('./screens/earlier/EventReport.js').then((m) => ({ default: m.EventReport })),
 );
 const FormResponses = lazy(() =>
-  import('./screens/FormResponses.js').then((m) => ({ default: m.FormResponses })),
+  import('./screens/forms/FormResponses.js').then((m) => ({ default: m.FormResponses })),
 );
-const Inbox = lazy(() => import('./screens/Inbox.js').then((m) => ({ default: m.Inbox })));
-const Users = lazy(() => import('./screens/Users.js').then((m) => ({ default: m.Users })));
-const Invoices = lazy(() => import('./screens/Invoices.js').then((m) => ({ default: m.Invoices })));
-const FillForm = lazy(() => import('./screens/FillIn.js').then((m) => ({ default: m.FillForm })));
-const FillPdf = lazy(() => import('./screens/FillIn.js').then((m) => ({ default: m.FillPdf })));
-const Scan = lazy(() => import('./screens/Scan.js').then((m) => ({ default: m.Scan })));
-const Summary = lazy(() => import('./screens/Summary.js').then((m) => ({ default: m.Summary })));
-const AiSetup = lazy(() => import('./screens/AiSetup.js').then((m) => ({ default: m.AiSetup })));
-const Signing = lazy(() => import('./screens/Signing.js').then((m) => ({ default: m.Signing })));
-const Outgoing = lazy(() => import('./screens/Outgoing.js').then((m) => ({ default: m.Outgoing })));
-const Send = lazy(() => import('./screens/Send.js').then((m) => ({ default: m.Send })));
+const Inbox = lazy(() => import('./screens/earlier/Inbox.js').then((m) => ({ default: m.Inbox })));
+const Users = lazy(() => import('./screens/earlier/Users.js').then((m) => ({ default: m.Users })));
+const Invoices = lazy(() =>
+  import('./screens/scan/Invoices.js').then((m) => ({ default: m.Invoices })),
+);
+const FillForm = lazy(() =>
+  import('./screens/forms/FillIn.js').then((m) => ({ default: m.FillForm })),
+);
+const FillPdf = lazy(() =>
+  import('./screens/forms/FillIn.js').then((m) => ({ default: m.FillPdf })),
+);
+const Scan = lazy(() => import('./screens/scan/Scan.js').then((m) => ({ default: m.Scan })));
+const Summary = lazy(() => import('./screens/ai/Summary.js').then((m) => ({ default: m.Summary })));
+const AiSetup = lazy(() => import('./screens/ai/AiSetup.js').then((m) => ({ default: m.AiSetup })));
+const Signing = lazy(() =>
+  import('./screens/sign/Signing.js').then((m) => ({ default: m.Signing })),
+);
+const Outgoing = lazy(() =>
+  import('./screens/send/Outgoing.js').then((m) => ({ default: m.Outgoing })),
+);
+const Send = lazy(() => import('./screens/send/Send.js').then((m) => ({ default: m.Send })));
 /** The room is where a signed-in person arrives (ADR 0022); the rail's screens follow it. */
-const Room = lazy(() => import('./screens/Room.js').then((m) => ({ default: m.Room })));
+const Room = lazy(() => import('./screens/room/Room.js').then((m) => ({ default: m.Room })));
 const UserWorkspace = lazy(() =>
-  import('./screens/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
+  import('./screens/earlier/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
 );
 import { Loading } from './components/Loading.js';
 import { foldOnPress } from './lib/fold.js';
@@ -82,13 +100,13 @@ import './styles/app.css';
  * Code-split: the public form is loaded by anonymous visitors who will never see the app shell,
  * and the shell's bundle should not follow them.
  */
-const PublicForm = lazy(() => import('./screens/PublicForm.js'));
+const PublicForm = lazy(() => import('./screens/forms/PublicForm.js'));
 
 /** Code-split: only the door needs a QR decoder, and it is not small. */
-const CheckIn = lazy(() => import('./screens/CheckIn.js'));
+const CheckIn = lazy(() => import('./screens/earlier/CheckIn.js'));
 
 /** Code-split: a phone scanning for a computer needs the camera and nothing of the shell. */
-const PhoneScanPage = lazy(() => import('./screens/PhoneScanPage.js'));
+const PhoneScanPage = lazy(() => import('./screens/scan/PhoneScanPage.js'));
 
 export function App() {
   /*

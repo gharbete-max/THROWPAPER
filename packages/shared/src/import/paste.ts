@@ -8,7 +8,7 @@ import { textHints } from './layout/hints.js';
  * synthetic and says only what the paste said: order, indentation and paragraph breaks.
  *
  * A string is not a file's bytes, so this is pure and lives in the core rather than in
- * `apps/forms/src/screens/builder/paper/`: the ladder's T6 reads a pasted list through it and the
+ * `apps/forms/src/screens/forms/builder/paper/`: the ladder's T6 reads a pasted list through it and the
  * list-number detector, exactly as the importer reads a pasted document (`INTENT-LADDER.md`).
  * There is no stage 2 to run: with synthetic geometry there are no columns to find, no soft wraps
  * and no hyphenation to repair, so the document is built already reassembled.

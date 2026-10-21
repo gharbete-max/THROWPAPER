@@ -21,7 +21,7 @@ import { describe, expect, it } from 'vitest';
 const read = (path: string) => readFileSync(new URL(path, import.meta.url), 'utf8');
 
 const CSS = read('./styles.css');
-const PUBLIC_FORM = read('./screens/PublicForm.tsx');
+const PUBLIC_FORM = read('./screens/forms/PublicForm.tsx');
 const FOLD = read('./lib/fold.ts');
 
 describe('the paper language', () => {

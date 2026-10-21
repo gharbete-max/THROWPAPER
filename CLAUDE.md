@@ -18,7 +18,8 @@ whichever app you are working on. Do not paste specs into this file.
 ```
 apps/forms      The Documents catcher's screens (forms, scan, sign, send, invoices, the AI centre) and the
                 room (/room). Earlier events/door/ledger screens stay in place, out of the room — never
-                deleted unasked
+                deleted unasked. `src/screens/` has one folder per part: room, scan, send, sign, forms,
+                ai, plus `earlier/` (the old events screens) and `shell/` (login)
 apps/api-forms  Forms' backend: forms, submissions and their PDFs, the PDF routes (`src/pdf/`,
                 `routes/pdf*.ts`; page work keeps nothing), send/campaign/mail, invoicing, phone scan, the
                 guided builder's saved conversations
@@ -124,7 +125,7 @@ creates a field"; ADR 0004 still governs the editor's classic paper import (boxe
 - **The purity boundary.** `packages/shared/src/{builder,interpret,import}/` import no React, no
   DOM, no `node:*`, and call no `Date.now`, `Math.random`, `Math.exp`, `Math.log` or `Math.pow` in a
   decision: integers, per mille, millinats, committed tables. Bytes are touched only in
-  `apps/forms/src/screens/builder/paper/`.
+  `apps/forms/src/screens/forms/builder/paper/`.
 - **i18n.** Every graph string is a `guided.*` key in all twelve catalogues in
   `apps/forms/src/lib/messages/` — never a literal. `pnpm builder:validate` fails on a missing one.
 - **Data formats: JSON or typed TS, never YAML** (ADR 0021). No YAML parser as a dependency, ever.

@@ -13,7 +13,7 @@ import { syncThemeColour } from './theme.js';
  * unstyled flash looks broken, a brief flash of the default palette only looks like a load.
  *
  * The public form does **not** use this — it has no session, and its brand arrives with the form
- * itself in one request. See `screens/PublicForm.tsx`.
+ * itself in one request. See `screens/forms/PublicForm.tsx`.
  */
 interface BrandValue {
   tokens: TokenSet;

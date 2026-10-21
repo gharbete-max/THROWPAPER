@@ -1,4 +1,4 @@
-import type { RecognisedWords } from '../screens/builder/paper/ocr-words.js';
+import type { RecognisedWords } from '../screens/forms/builder/paper/ocr-words.js';
 
 /**
  * Opening a form's paper import with a page already read — the digital copy's "A form" button.

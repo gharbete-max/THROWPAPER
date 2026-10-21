@@ -117,10 +117,10 @@ where it marked one. **Status** is only whether engineering can start: every row
 "should be fixed before launch", so none of them blocks launch on its own — §1 is the list that
 does.
 
-| Sev | Owner | Status                         | What                                                                                                                                                                                                                 | Where                                            |
-| --- | ----- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| P1  | Owner | Blocked — the wording is yours | The not-found verdict now echoes what was refused; the one sentence that tells the operator what to do next (a typo, or the wrong queue) is yours to word                                                            | `screens/CheckIn.tsx` `Verdict`                  |
-| P1  | Owner | Blocked — product decision     | No in-product remedy after "not found": no name lookup, no manual admit; "Leave the door" lands on a report with no search — a product decision (does a name lookup live inside the door?) beside the sentence above | `screens/CheckIn.tsx`, `screens/EventReport.tsx` |
+| Sev | Owner | Status                         | What                                                                                                                                                                                                                 | Where                                                            |
+| --- | ----- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| P1  | Owner | Blocked — the wording is yours | The not-found verdict now echoes what was refused; the one sentence that tells the operator what to do next (a typo, or the wrong queue) is yours to word                                                            | `screens/earlier/CheckIn.tsx` `Verdict`                          |
+| P1  | Owner | Blocked — product decision     | No in-product remedy after "not found": no name lookup, no manual admit; "Leave the door" lands on a report with no search — a product decision (does a name lookup live inside the door?) beside the sentence above | `screens/earlier/CheckIn.tsx`, `screens/earlier/EventReport.tsx` |
 
 ### 2.4 Open findings from the site critique on the Loppa palette (2026-09-22, 23/32)
 

@@ -160,7 +160,7 @@ Both are job-lease reclaim. 1780 of 1782 tests pass; these two do not.
 
 ```
 apps/forms/src/components/LanguagePicker.tsx     91:6  warning  missing dependency: 'optionId'
-apps/forms/src/screens/builder/FormBuilder.tsx  129:6  warning  missing dependency: 'history'
+apps/forms/src/screens/forms/builder/FormBuilder.tsx  129:6  warning  missing dependency: 'history'
 ```
 
 ### E-2 — ~~`pnpm test:e2e` cannot run on this machine as configured~~ · **WITHDRAWN, this was wrong**
@@ -300,7 +300,7 @@ moved.
 | `apps/api-forms/src/documents/client-identity.ts`, `link-preview.ts` | 264 | — |
 | `apps/api-forms/src/documents/paper.ts` | 316 | **shared with Capture** — see §6 |
 | `apps/api-forms/src/routes/documents.ts` | 325 | the HTTP surface |
-| `apps/forms/src/screens/EventReport.tsx` | 204 | the screen |
+| `apps/forms/src/screens/earlier/EventReport.tsx` | 204 | the screen |
 | `packages/tokens/src/compile-pdf.ts`, `pdf.ts` | 178 | print CSS / PDF tokens |
 
 **15 source files, 2,769 LOC, 6 test files (≈110 tests).**
@@ -346,12 +346,12 @@ ADR**.
 
 ```
 $ git ls-files | grep -iE "paper|ocr|scan|capture|extract|crop"
-apps/forms/src/screens/builder/paper/CropPhoto.tsx
-apps/forms/src/screens/builder/paper/ImportPaper.tsx
-apps/forms/src/screens/builder/paper/PaperCanvas.tsx
-apps/forms/src/screens/builder/paper/extract.ts        + extract.test.ts
-apps/forms/src/screens/builder/paper/ocr.ts            + ocr.test.ts
-apps/forms/src/screens/builder/paper/warp.ts    (200)  + warp.test.ts (117)
+apps/forms/src/screens/forms/builder/paper/CropPhoto.tsx
+apps/forms/src/screens/forms/builder/paper/ImportPaper.tsx
+apps/forms/src/screens/forms/builder/paper/PaperCanvas.tsx
+apps/forms/src/screens/forms/builder/paper/extract.ts        + extract.test.ts
+apps/forms/src/screens/forms/builder/paper/ocr.ts            + ocr.test.ts
+apps/forms/src/screens/forms/builder/paper/warp.ts    (200)  + warp.test.ts (117)
 apps/api-forms/src/documents/paper.ts           (316)  + paper.test.ts
 apps/api-forms/src/routes/paper.test.ts, paper-fill.test.ts
 packages/shared/src/invoicing/ocr.ts                   + ocr.test.ts
@@ -366,7 +366,7 @@ genuinely a gap.
 
 `docs/adr/0004-old-forms-on-paper.md` is **`accepted 2026-09-16`**. It already decides the thing
 the brief proposes to re-open: *OCR never creates a field.* From
-`apps/forms/src/screens/builder/paper/ocr.ts`:
+`apps/forms/src/screens/forms/builder/paper/ocr.ts`:
 
 > `docs/adr/0004-old-forms-on-paper.md` rules out guessing questions from a scan […] So OCR here
 > never creates a field. The author draws a box; this offers the words next to it, verbatim.
