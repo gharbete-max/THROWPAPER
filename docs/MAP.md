@@ -117,8 +117,8 @@ Merge `origin/main` in (never rebase or force-push a PR branch that Auto-fix wat
 
 **Published**: the AI pack is a public release, `ai-pack-qwen2.5-vl-7b-instruct-q4_k_m` (5 files, 6.89 GB, hashes
 verified from GitHub's side); the app's Get button downloads tiers from Hugging Face, the pack opens from a folder.
-**Not done**: one word per step across the catalogues and a hardware-based default model (SIMPLIFY 8 and 9); the
-graphics card on macOS (Metal); SmolVLM2 tiers marked not-working-yet.
+**Not done**: the graphics card on macOS (Metal); SmolVLM2 tiers marked not-working-yet. SIMPLIFY 8 (one word per
+step) is decided against until a native reader can check it; SIMPLIFY 9 is done (`recommendModel` by memory).
 **Unverified**: macOS, 8-12 GB laptops, CPUs without AVX2, other graphics drivers, screen readers, native-speaker
 quality (strings for a native read are listed in docs/reviews/2026-10-forms-ui.md).
 Web bundle total is at its cap (1 249 of 1 250 KB): a new feature must cut elsewhere or raise the cap with a reason.
