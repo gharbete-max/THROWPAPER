@@ -27,9 +27,19 @@ export function identityProvidersFromEnv(
   const chosen = env['EID_PROVIDER']?.trim();
   if (!chosen) return [];
   if (chosen === 'console') {
-    if (env['NODE_ENV'] === 'production') {
+    // Not "anything but production": a staging server, or one started without NODE_ENV behind a
+    // public address, is as real to its signers as production. Only a development run qualifies.
+    const mode = env['NODE_ENV'];
+    const developing =
+      mode === undefined || mode === '' || mode === 'development' || mode === 'test';
+    const loopback = ['SIGN_PUBLIC_URL', 'API_SIGN_PUBLIC_URL'].every((name) => {
+      const url = env[name];
+      return !url || ['localhost', '127.0.0.1', '[::1]'].includes(new URL(url).hostname);
+    });
+    if (!developing || !loopback) {
       throw new Error(
-        'EID_PROVIDER=console is the development identity provider and cannot run in production.',
+        'EID_PROVIDER=console is the development identity provider and cannot run in production, ' +
+          'or anywhere that is not a development run on this computer.',
       );
     }
     return [createConsoleIdentityProvider(log)];

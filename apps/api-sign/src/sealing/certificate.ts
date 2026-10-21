@@ -150,6 +150,15 @@ export function readableCertificate(certPem: string): boolean {
   }
 }
 
+/**
+ * Whether a stored seal certificate should keep sealing: readable, and not within a month of its
+ * end. A validator reads a seal made under an expired certificate as made by a stranger.
+ */
+export function usableCertificate(certPem: string, now = new Date()): boolean {
+  if (!readableCertificate(certPem)) return false;
+  return new Date(new X509Certificate(certPem).validTo).getTime() > now.getTime() + 30 * 86_400_000;
+}
+
 function pem(label: string, der: Uint8Array): string {
   const body = Buffer.from(der)
     .toString('base64')
