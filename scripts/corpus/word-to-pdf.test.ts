@@ -5,7 +5,7 @@ import type { WordBlock, WordPdfRequest } from '../../packages/shared/src/api/wo
 import { WordPdfRequest as Schema } from '../../packages/shared/src/api/word-pdf.js';
 import { createPdfRenderer, type PdfRenderer } from '../../apps/api-forms/src/documents/render.js';
 import { wordToPdf } from '../../apps/api-forms/src/pdf/word.js';
-import { readWordBlocks } from '../../apps/forms/src/screens/builder/paper/docx-blocks.js';
+import { readWordBlocks } from '../../apps/forms/src/screens/forms/builder/paper/docx-blocks.js';
 import {
   abstractList,
   docxBytes,
@@ -14,7 +14,7 @@ import {
   numberingXml,
   paragraph,
   stylesXml,
-} from '../../apps/forms/src/screens/builder/paper/docx.fixture.js';
+} from '../../apps/forms/src/screens/forms/builder/paper/docx.fixture.js';
 
 /**
  * Phase 1c, end to end: a Word file read by the browser's reader, sent through the request

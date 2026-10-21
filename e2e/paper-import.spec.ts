@@ -8,7 +8,7 @@ import {
   numberingXml,
   paragraph,
   zipBytes,
-} from '../apps/forms/src/screens/builder/paper/docx.fixture.js';
+} from '../apps/forms/src/screens/forms/builder/paper/docx.fixture.js';
 import { db, plantLoginToken } from './support.js';
 import { tinyPdf } from './pdf.js';
 

@@ -1667,7 +1667,7 @@ throughout at 375; 176 at 1280. No horizontal overflow at 375 in either scheme.
 are keyed by card, not registration (a member and their guest share a `submissionId`). The count's
 sentence (`checkin.counts`) moved from an `aria-label` on the `<p>` — not reliably exposed — to
 hidden text inside it, with the two visual fragments `aria-hidden`, so the number is read once as
-a sentence. No new key. `screens/door-names.test.ts` (source, the field-test pattern) was `4
+a sentence. No new key. `screens/earlier/door-names.test.ts` (source, the field-test pattern) was `4
 failed`; the e2e `each undo is named after its arrival` finds
 `getByRole('button', { name: /Ångra.*Göran Häggkvist/ })` and the sentence `n av m incheckade`.
 `EventForm.tsx`, named in the row, needed nothing: its `role="alert"` landed in L7.
@@ -1677,7 +1677,7 @@ the camera path too, and on a phone that is the keyboard, over the viewfinder be
 rule, in one place: `refocus()` focuses the field only when `controlsRef.current` is null — while
 the camera runs, the camera is the input; otherwise typing is, and the field takes focus back
 after a check-in, an undo, or a camera that failed to start. A keyboard-wedge scanner on a laptop
-is unchanged. `screens/door-focus.test.ts` holds it (exactly one `inputRef.current?.focus()`,
+is unchanged. `screens/earlier/door-focus.test.ts` holds it (exactly one `inputRef.current?.focus()`,
 gated; both `finally` blocks call `refocus()`): `2 failed` before. The e2e typed path now asserts
 `toBeFocused()` on the field after a check-in. No device sniffing.
 
@@ -1692,7 +1692,7 @@ to {email}.") and `public.confirmationWithCard` ("… with your admission card �
 owner's review — they claim nothing the job does not do. The owner chose this server-backed shape
 over leaving the row open. `public-forms.test.ts` (api) committed red: `confirmationTo` and
 `admissionCard: true` for the event-bound form, `false` without an event, `null` without an email
-field. `screens/public-form-confirmation.test.ts` was red on the title gate; the e2e public-form
+field. `screens/forms/public-form-confirmation.test.ts` was red on the title gate; the e2e public-form
 run asserts the heading "Vårmötet" and the sentence with the typed address. In the demo at 375:
 h1 "Anmälan till Vårmötet", h2 "Tack för din anmälan! Vi ses snart.", then the reference and "En
 bekräftelse med ditt inträdeskort är på väg till bjorn@example.com."
@@ -1718,7 +1718,7 @@ body. `lib/api-bodiless.test.ts` stubs `fetch` and reads the headers (`expected
 asks the database for zero `check_ins` rows — with the fix stashed, "Incheckning ångrad" never
 appears; restored, `1 passed`. Not a §2.3 row; recorded here because it was found by the pass.
 
-**Critique, re-run on the shell.** `/impeccable critique apps/forms/src/screens/CheckIn.tsx`,
+**Critique, re-run on the shell.** `/impeccable critique apps/forms/src/screens/earlier/CheckIn.tsx`,
 dual-agent (A: design review; B: detector + browser, 1280/375 × light/dark, overlay injected in
 the built-in browser), assessed at `91d90d1` — the six rows closed, the undo fix not yet made.
 Snapshot `.impeccable/critique/2026-09-22T02-29-37Z__apps-forms-src-screens-checkin-tsx.md`.
@@ -1904,7 +1904,7 @@ S3's "bulk-generate from the Submissions screen" needs that screen to exist firs
 **Ran.** `pnpm verify` exit 0 — **139 files / 1782 tests**, both builds, lint 0 errors;
 `pnpm contract:check` passed; `pnpm test:e2e` **19 passed (1.9m)**, zero 429s in the run.
 
-**Critique, re-run on the shell.** `/impeccable critique apps/forms/src/screens/CheckIn.tsx`,
+**Critique, re-run on the shell.** `/impeccable critique apps/forms/src/screens/earlier/CheckIn.tsx`,
 dual-agent (A: design review; B: detector + browser, 1280/375 × light/dark, overlay injected in
 the built-in browser), at `61ea7bf`. Snapshot
 `.impeccable/critique/2026-09-22T08-02-59Z__apps-forms-src-screens-checkin-tsx.md`.
@@ -1949,7 +1949,7 @@ document routes it drives. With the secret supplied in the environment the suite
 0 is doc-only.
 
 **Capture is not missing.** The brief's premise was that it does not exist. It does: 9 source
-files, 1,998 LOC, 40 tests across `screens/builder/paper/`, `documents/paper.ts`,
+files, 1,998 LOC, 40 tests across `screens/forms/builder/paper/`, `documents/paper.ts`,
 `packages/shared/src/invoicing/ocr.ts` and `scripts/ocr-assets.ts` — and `docs/adr/0004` is
 **accepted**, not open. It already rules that OCR never creates a field, and the shipped engine is
 `tesseract.js` self-hosted under a `'self'` CSP, recognising in a browser worker so the photograph
@@ -3220,7 +3220,7 @@ instance needs sticky routing, or a shared store, before this works there.
 
 ## The page's corners found for you, and pages from a scanner · done
 
-- **Edge detection** (`screens/builder/paper/detect.ts`, no library): a photo is shrunk to 320 px,
+- **Edge detection** (`screens/forms/builder/paper/detect.ts`, no library): a photo is shrunk to 320 px,
   split light from dark (Otsu), and the light region at the middle is taken as the page; its
   corners are its extreme points. The handles start there instead of on the picture's corners —
   camera, phone and imported photos alike — and the person still moves them. It answers "no

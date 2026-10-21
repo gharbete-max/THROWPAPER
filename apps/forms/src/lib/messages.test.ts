@@ -12,7 +12,7 @@ import { LOCALE_CODES } from '@tp/i18n';
 import { TRANSLATED_LOCALES } from './messages/index.js';
 import { messages } from './messages/all.js';
 import type { MessageKey } from './messages/en-GB.js';
-import { PALETTE_GROUPS } from '../screens/builder/field-defaults.js';
+import { PALETTE_GROUPS } from '../screens/forms/builder/field-defaults.js';
 
 /**
  * A missing key renders as the key itself — `fieldType.image` appeared in the palette exactly like

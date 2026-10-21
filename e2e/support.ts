@@ -198,7 +198,7 @@ export function zipEntryCount(archive: Buffer): number {
  * Decoding in Node would mean rasterising the page there, and `pdfjs-dist` has no canvas backend
  * installed; adding one is a native dependency carried forever for one assertion. Chromium is
  * already here and already has a canvas. `pdfjs-dist` and `@zxing/library` are already
- * dependencies of `apps/forms` — zxing is what `screens/CheckIn.tsx` drives the camera with — so
+ * dependencies of `apps/forms` — zxing is what `screens/earlier/CheckIn.tsx` drives the camera with — so
  * both are served to the page from `node_modules` off a routed URL rather than installed anew.
  *
  * pdfjs 6 ships ESM only, so it arrives by dynamic `import()` — the legacy build, as the app's own

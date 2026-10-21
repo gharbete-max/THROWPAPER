@@ -81,7 +81,7 @@ anything loads it. Nothing in Phases 0 to 6 needs the model; only Phase 7 does.
 ### 1a. Page basics — one primitive — built (2026-10-12)
 
 Built as designed: `apps/api-forms/src/pdf/arrange.ts`, `routes/pdf.ts` (`POST /v1/pdf/arrange`),
-the screen `apps/forms/src/screens/Scan.tsx` at `/scan` (reached from the room's Scan part), its
+the screen `apps/forms/src/screens/scan/Scan.tsx` at `/scan` (reached from the room's Scan part), its
 list logic `scan-plan.ts`, `e2e/arrange-pages.spec.ts`. Differences from the design below: reorder
 is by earlier/later buttons, not drag; PDFs only when first built (photos, the camera and phone
 scans were added after, #160); `pagesToPdf` has not moved (it is still in `apps/api-forms/src/signing/scan.ts`). Encrypted PDFs are caught by their `/Encrypt` marker before the guard
@@ -104,7 +104,7 @@ list of (source file, page, rotation)*. Build that one thing.
   (a confirmation, rule 7).
 - **Implementation.** `pdf-lib` `copyPages` + `setRotation`; `paper.ts` already uses `copyPages`.
   Limits: total pages and bytes capped; the numbers are decided with a test, not guessed.
-- **Screen.** One Scan screen under `apps/forms/src/screens/builder/paper/` (`bundle-split.test.ts`
+- **Screen.** One Scan screen under `apps/forms/src/screens/forms/builder/paper/` (`bundle-split.test.ts`
   and CAVEATS #43 hold the reading code there), page thumbnails from the existing `pdfjs-dist`
   chunk, drag to reorder with `@dnd-kit` (already a dependency), buttons to rotate and delete.
   Camera, phone scan and drop come from the existing `CameraScan` / `PhoneScan` components.
@@ -116,7 +116,7 @@ list of (source file, page, rotation)*. Build that one thing.
 ### 1b. PDF text (add, cover, replace, redact) - built (2026-10-13)
 
 Built: `POST /v1/pdf/edit` and `POST /v1/pdf/redact` (`apps/api-forms/src/pdf/edit.ts`,
-`text-fonts.ts`, `routes/pdf-edit.ts`); the screen is `apps/forms/src/screens/scan-edit/ScanEdit.tsx`
+`text-fonts.ts`, `routes/pdf-edit.ts`); the screen is `apps/forms/src/screens/scan/edit/ScanEdit.tsx`
 (a lazy chunk), opened by a button on each page of Scan, which first makes the arranged PDF and then
 replaces the list with the edited one. Fonts, measured: Helvetica (not embedded) prints every letter
 of da de en es fi fr is nb sv; Inter's Cyrillic subset (already a dependency, 10 KB) prints ru, with
@@ -146,7 +146,7 @@ with a plain message). The bundle total went from about 1001.4 to 1011.2 KB (bud
 
 ### 1c. Word to PDF (rough) - built (2026-10-13, #162)
 
-- Reader exists: `readDocx` in `apps/forms/src/screens/builder/paper/docx.ts:627`, returning a
+- Reader exists: `readDocx` in `apps/forms/src/screens/forms/builder/paper/docx.ts:627`, returning a
   `RawDocument`. It runs in the browser, and `apps/api-forms` may not import from `apps/forms`
   (rule 1). So the client reads the `.docx` and sends the parsed document to a route that renders
   it with the existing PDF renderers (`documents/render.ts`, Playwright on a server, Electron's

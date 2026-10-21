@@ -130,7 +130,7 @@ nine-word rule, which is for questions):
 
 ## Components
 
-New, in `apps/forms/src/screens/builder/guided/` unless noted, each with no decision logic of its
+New, in `apps/forms/src/screens/forms/builder/guided/` unless noted, each with no decision logic of its
 own (the machine decides; these render):
 
 | Component | Is |

@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { db, plantLoginToken, scanStep } from './support.js';
-import { docxBytes, paragraph } from '../apps/forms/src/screens/builder/paper/docx.fixture.js';
+import {
+  docxBytes,
+  paragraph,
+} from '../apps/forms/src/screens/forms/builder/paper/docx.fixture.js';
 
 /**
  * Rough Word to PDF — phase 1c of `docs/plan/NEXT.md`. A Word file with a footer becomes a page in

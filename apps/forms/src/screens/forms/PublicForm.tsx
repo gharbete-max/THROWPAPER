@@ -1,0 +1,810 @@
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router';
+import { pickText, resolveLocale, type LocaleConfig } from '@tp/i18n';
+import { defaultTokens, toCssBlock } from '@tp/tokens';
+import {
+  isVisible,
+  pagesOf,
+  widthOf,
+  validateSubmission,
+  type AnswerValue,
+  type GroupEntry,
+  type PublicFormResponse,
+  type SubmissionValues,
+  type ValidationIssue,
+} from '@tp/shared/forms';
+import { useTranslator } from '../../lib/i18n.js';
+import { TRANSLATED_LOCALES } from '../../lib/messages/index.js';
+import { LanguagePicker } from '../../components/LanguagePicker.js';
+import { EmptyState } from '../../components/EmptyState.js';
+import { useAnnounceLocale } from '../../lib/demo.js';
+import { FieldInput } from '../../components/FieldInput.js';
+import { RepeatingGroup, groupLabels } from '../../components/RepeatingGroup.js';
+import { Icon } from '../../components/Icon.js';
+import { Meter } from '../../components/Meter.js';
+import { Signed } from '../../components/Signed.js';
+import { PoweredBy } from '../../components/Logo.js';
+import { Masthead, MastheadFoot, mastheadPageClass } from '../../components/Masthead.js';
+import {
+  FinishedDocument,
+  type FinishedDocumentHandle,
+} from '../../components/FinishedDocument.js';
+import { IdentityStep } from '../../components/IdentityStep.js';
+import { finishedState, readFinished } from '../../lib/finished-state.js';
+import { opensOnlyHere, useEdition } from '../../lib/edition.js';
+import '../../styles/builder.css';
+
+type Phase = 'loading' | 'filling' | 'done' | 'closed' | 'missing' | 'failed';
+
+/**
+ * The public form. No authentication, no session — the only screen anonymous people reach.
+ *
+ * It carries its own locale state rather than the signed-in session's, because the visitor's
+ * language has nothing to do with whoever built the form. Switching language must never lose
+ * entered answers: `values` lives above the locale, so re-rendering in another language re-labels
+ * the same state (START-HERE explicitly lists this as an acceptance criterion).
+ */
+export default function PublicForm() {
+  const { slug } = useParams();
+  const [params] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  /** The history entry's state as the page arrived — where a sent form's confirmation rides. */
+  const arrivedWith = useRef<unknown>(location.state);
+
+  const [form, setForm] = useState<PublicFormResponse | null>(null);
+  const [phase, setPhase] = useState<Phase>('loading');
+  const [locale, setLocale] = useState<string>(navigator.language);
+  const [values, setValues] = useState<SubmissionValues>({});
+  const [page, setPage] = useState(0);
+  const [issues, setIssues] = useState<ValidationIssue[]>([]);
+  const [reference, setReference] = useState('');
+  const [confirmation, setConfirmation] = useState('');
+  /** What the server queued on submit, so the screen promises only what is actually coming. */
+  const [coming, setComing] = useState<{ email: string; card: boolean } | null>(null);
+  /** The finished document the server offered, and the credential to fetch it. */
+  const [finished, setFinished] = useState<FinishedDocumentHandle | null>(null);
+  /** The optional e-ID step as offered on submit; null when the form does not offer it. */
+  const [identityOffer, setIdentityOffer] = useState<{ available: boolean; test: boolean } | null>(
+    null,
+  );
+  /** Bumped when the finished document changes (an e-ID confirmation), so it is fetched again. */
+  const [documentRevision, setDocumentRevision] = useState(0);
+  /**
+   * Focus lands on the thank-you when the form is sent. The card is new to the page, and a live
+   * region that did not exist a moment ago is not something every screen reader announces;
+   * focus on its heading is read by all of them, and it is where the next question — is a card
+   * coming? — is answered.
+   */
+  const doneHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (phase === 'done') doneHeading.current?.focus();
+  }, [phase]);
+  const [rejected, setRejected] = useState<string | null>(null);
+  const [resumeToken, setResumeToken] = useState<string | null>(params.get('resume'));
+  const [resumeLink, setResumeLink] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  /*
+   * Without a form there is no author's language list, so the page speaks whatever the visitor's
+   * browser asks for, from everything the app has. It was pinned to Swedish, which made "Form not
+   * found" the one sentence on the public surface a Finnish member with a stale link could not
+   * read — and a stale link is the normal case for a product whose links live on printed paper.
+   */
+  const locales: LocaleConfig = useMemo(
+    () =>
+      form
+        ? { supported: form.supportedLocales, default: form.defaultLocale }
+        : { supported: TRANSLATED_LOCALES, default: 'sv-SE' },
+    [form],
+  );
+  const resolved = resolveLocale(locales, locale);
+  const t = useTranslator(locales, resolved);
+  // Filled in on the desktop: the link opens only on this computer.
+  const edition = useEdition();
+
+  // The banner lives above the router and would otherwise stay in the session's language.
+  useAnnounceLocale(resolved);
+
+  /**
+   * The public page is not inside the app shell, so it applies the brand itself.
+   *
+   * ## Why it now checks before painting
+   *
+   * This used to put the defaults up immediately and replace them when the form arrived, on the
+   * reasoning that "the worst case is a brief flash of the wrong palette rather than of no
+   * palette". That was the right call between those two, and it is no longer the choice being
+   * made: the server inlines the organisation's own compiled palette into the head of a published
+   * form, so the correct colours are in the bytes before any of this runs.
+   *
+   * Painting the defaults anyway would therefore *create* the flash it was written to soften —
+   * a page that arrives in the organisation's colours, blinks to ours, and blinks back. So when
+   * the server has already painted, this waits for the real kit and adds nothing in between.
+   *
+   * The fallback stays for every case where it has not: the dev server, which serves `index.html`
+   * without rendering it, and any deployment serving the shell unrewritten. There the old
+   * reasoning still applies exactly as written.
+   */
+  useEffect(() => {
+    const serverPainted = document.querySelector('style[data-tp-brand="server"]') !== null;
+    if (!form?.brand && serverPainted) return;
+
+    const style = document.createElement('style');
+    style.textContent = toCssBlock(form?.brand ?? defaultTokens);
+    // After the server's block, so the organisation's kit wins once it has actually arrived.
+    document.head.appendChild(style);
+    return () => style.remove();
+  }, [form?.brand]);
+
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    if (!slug) return;
+    setPhase('loading');
+    fetch(`/api/public/forms/${slug}`)
+      .then((response) => (response.ok ? (response.json() as Promise<PublicFormResponse>) : null))
+      .then((loaded) => {
+        if (!loaded) {
+          setPhase('missing');
+          return;
+        }
+        setForm(loaded);
+        /*
+         * Sent already, from this history entry: show the confirmation again, not an empty form.
+         *
+         * A refresh on the thank-you screen used to put a blank form under the person — who then
+         * wonders whether it went, and sends it again. What comes back is only what the screen
+         * showed (`finished-state.ts`), in the language it showed it in. A new visit to the link
+         * has no such state and gets the form. Resuming a saved draft is a deliberate return to
+         * filling in, so it wins.
+         */
+        const remembered = params.get('resume') ? null : readFinished(arrivedWith.current);
+        if (remembered) {
+          if (remembered.locale) setLocale(remembered.locale);
+          setReference(remembered.reference);
+          setConfirmation(remembered.confirmation);
+          setComing(remembered.coming);
+          setFinished(remembered.document);
+          setIdentityOffer(remembered.identity);
+          setPhase('done');
+        } else {
+          setPhase(loaded.open ? 'filling' : 'closed');
+        }
+        setValues((current) => ({ ...prefilledFrom(loaded, params), ...current }));
+      })
+      /*
+       * A connection that dropped is not a form that does not exist. This mapped every failure to
+       * `'missing'`, which told somebody on venue wifi that the form had been withdrawn — the same
+       * false statement the submit path below stopped making. A 404 arrives as `null` above; what
+       * lands here never reached the server.
+       */
+      .catch(() => setPhase('failed'));
+  }, [slug, params, attempt]);
+
+  // Resuming replaces the answers, and the locale the draft was saved in.
+  useEffect(() => {
+    const token = params.get('resume');
+    if (!slug || !token) return;
+    fetch(`/api/public/forms/${slug}/resume/${token}`)
+      .then((response) => (response.ok ? response.json() : null))
+      .then((draft: { locale: string; values: SubmissionValues } | null) => {
+        if (!draft) return;
+        setValues(draft.values);
+        setLocale(draft.locale);
+        setResumeToken(token);
+      })
+      .catch(() => undefined);
+  }, [slug, params]);
+
+  const pages = useMemo(() => (form ? pagesOf(form.definition) : []), [form]);
+
+  /**
+   * The builder lets an operator write their own submit label per locale. Falling back to the
+   * generic string only when they have not — before this, the setting was collected and ignored.
+   */
+  const submitLabel = form
+    ? pickText(locales, form.definition.settings.submitLabel, resolved).value ||
+      t('public.complete')
+    : t('public.complete');
+  /**
+   * The page, with conditionally hidden fields removed.
+   *
+   * Filtered here rather than inside the loop that renders it, so `validatePage` and the renderer
+   * agree on exactly one list. Two lists is how you get an error under a field that is not there.
+   */
+  const currentPage = useMemo(
+    () => (pages[page] ?? []).filter((field) => isVisible(field, values)),
+    [pages, page, values],
+  );
+
+  /**
+   * The next page in a direction that still has something on it.
+   *
+   * A page whose every field is conditionally hidden must be stepped over, not shown as a blank
+   * screen with a Next button — that reads as a broken form, and it is the first thing anybody
+   * hits when they put a whole section behind one condition. Returns `null` when there is nothing
+   * further that way, which is what turns Next into Complete.
+   */
+  const nextPageWithContent = useCallback(
+    (from: number, direction: 1 | -1): number | null => {
+      for (let at = from + direction; at >= 0 && at < pages.length; at += direction) {
+        const fields = pages[at] ?? [];
+        if (fields.some((field) => isVisible(field, values))) return at;
+      }
+      return null;
+    },
+    [pages, values],
+  );
+
+  const forwardPage = nextPageWithContent(page, 1);
+  const backPage = nextPageWithContent(page, -1);
+
+  /**
+   * Which step this is, out of the steps that actually exist for these answers.
+   *
+   * Pages hidden by conditions are not counted, so the bar reaches the end rather than stopping
+   * at four fifths on a form that skipped a section.
+   */
+  const reachable = pages
+    .map((fields, at) => ({ at, live: fields.some((field) => isVisible(field, values)) }))
+    .filter((entry) => entry.live);
+  const totalSteps = Math.max(1, reachable.length);
+  const stepNumber = Math.max(1, reachable.findIndex((entry) => entry.at === page) + 1);
+
+  const setValue = useCallback((key: string, value: AnswerValue) => {
+    setValues((current) => ({ ...current, [key]: value }));
+    setIssues((current) => current.filter((issue) => issue.key !== key));
+  }, []);
+
+  function issueFor(key: string) {
+    const issue = issues.find((candidate) => candidate.key === key);
+    return issue ? t(issue.code, issue.params) : null;
+  }
+
+  /** Validate only the page in front of the visitor, so page 1 does not complain about page 2. */
+  function validatePage(): boolean {
+    if (!form) return false;
+    const keys = new Set(currentPage.map((field) => field.key));
+    const result = validateSubmission(form.definition, values);
+    const pageIssues = result.issues.filter((issue) => keys.has(issue.key));
+    setIssues(pageIssues);
+    return pageIssues.length === 0;
+  }
+
+  async function saveDraft() {
+    if (!slug || !form) return;
+    setBusy(true);
+    setRejected(null);
+    try {
+      const response = await fetch(`/api/public/forms/${slug}/draft`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ locale: resolved, values, resumeToken: resumeToken ?? undefined }),
+      });
+      /**
+       * A failed save has to say so.
+       *
+       * It returned silently before: the button finished, no link appeared, and somebody who had
+       * asked to come back later walked away believing their answers were kept. The link is the
+       * only copy — there is nothing else to return to.
+       */
+      if (!response.ok) {
+        setRejected('error');
+        return;
+      }
+      const saved = (await response.json()) as { resumeToken: string };
+      setResumeToken(saved.resumeToken);
+      setResumeLink(`${window.location.origin}/f/${slug}?resume=${saved.resumeToken}`);
+    } catch {
+      setRejected('offline');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /**
+   * "Fill in again": a fresh copy of the same form, for the next person at the same screen — a
+   * reception desk, a family registering one by one. Clears the confirmation from this history
+   * entry; the sent submission is untouched. Hidden fields keep their values from the link, as on first load.
+   */
+  function startAgain() {
+    if (!slug || !form) return;
+    navigate(
+      { pathname: location.pathname, search: location.search },
+      { replace: true, state: null },
+    );
+    setValues(prefilledFrom(form, params));
+    setIssues([]);
+    setRejected(null);
+    setPage(0);
+    setFinished(null);
+    setIdentityOffer(null);
+    setResumeToken(null);
+    setResumeLink(null);
+    setPhase(form.open ? 'filling' : 'closed');
+    window.scrollTo({ top: 0 });
+  }
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (!slug || !form || !validatePage()) return;
+
+    setBusy(true);
+    setRejected(null);
+    try {
+      const response = await fetch(`/api/public/forms/${slug}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          locale: resolved,
+          values,
+          resumeToken: resumeToken ?? undefined,
+          // Honeypot: left empty by anyone who can see the page.
+          website: '',
+        }),
+      });
+      /**
+       * A body that will not parse is not a reason to lose the answers.
+       *
+       * A gateway timing out in front of the API answers with an HTML error page, and `json()`
+       * throws on it. That threw out of the whole function, so the one status code most likely to
+       * appear under load produced no message at all.
+       */
+      const body = await response.json().catch(() => ({}) as Record<string, unknown>);
+
+      if (response.status === 201) {
+        const sent = {
+          reference: String(body.reference),
+          confirmation: String(body.confirmationMessage ?? ''),
+          coming: body.confirmationTo
+            ? { email: String(body.confirmationTo), card: Boolean(body.admissionCard) }
+            : null,
+          document: (body.document as FinishedDocumentHandle | null | undefined) ?? null,
+          identity:
+            (body.identity as { available: boolean; test: boolean } | null | undefined) ?? null,
+        };
+        setReference(sent.reference);
+        setConfirmation(sent.confirmation);
+        setComing(sent.coming);
+        setFinished(sent.document);
+        setIdentityOffer(sent.identity);
+        // On the history entry, so a refresh or Back shows this again (`finished-state.ts`).
+        navigate(
+          { pathname: location.pathname, search: location.search },
+          { replace: true, state: finishedState({ ...sent, locale: resolved }) },
+        );
+        setPhase('done');
+
+        /**
+         * A form can send people somewhere of its own instead of the thank-you screen.
+         *
+         * The reference goes with them: an event registration whose reference is lost at the
+         * redirect cannot be checked in at the door, which would make the feature a trap.
+         *
+         * The URL is `http`/`https` by schema — `javascript:` in an author-supplied string would
+         * be script execution against every visitor. `assign`, not `replace`, so the browser's
+         * Back button still returns to the confirmation rather than resubmitting the form.
+         */
+        const destination = form.definition.settings.redirectUrl;
+        if (destination) {
+          const target = new URL(destination);
+          if (body.reference) target.searchParams.set('reference', String(body.reference));
+          window.location.assign(target.toString());
+        }
+        return;
+      }
+      if (response.status === 422) {
+        setIssues(body.issues ?? []);
+        // Send the visitor back to the first page that has a problem.
+        const firstBad = pages.findIndex((fields) =>
+          fields.some((field) =>
+            body.issues?.some((issue: ValidationIssue) => issue.key === field.key),
+          ),
+        );
+        if (firstBad >= 0) setPage(firstBad);
+        return;
+      }
+      /**
+       * A fault at our end is not a closed form.
+       *
+       * Anything unrecognised used to fall through to `'closed'`, so a 500 told the visitor "The
+       * form closed while you were filling this in." That is a false statement, and it is the kind
+       * that makes somebody give up rather than press the button again — which is exactly what
+       * would have worked.
+       */
+      if (response.status >= 500 || response.status === 429) {
+        // 429 is our rate limit refusing, not a form that closed — the same false statement
+        // by another route. The answers are still here, and a moment later it works.
+        setRejected('error');
+        return;
+      }
+      setRejected(String(body.reason ?? 'closed'));
+    } catch {
+      /**
+       * The connection went, not the answers.
+       *
+       * This is a phone on a venue's wifi at the end of a long form. Nothing here clears `values`,
+       * so everything typed is still on the page and pressing the button again is a real fix —
+       * but only if somebody is told that. Before, the promise rejected into nothing: the button
+       * un-greyed itself and the page said absolutely nothing.
+       */
+      setRejected('offline');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /**
+   * The title in whichever language this reader has chosen, falling back the way every other
+   * string on this page does.
+   */
+  const formTitle = form ? pickText(locales, form.title, resolved).value : '';
+
+  /**
+   * The tab, too.
+   *
+   * The server sends a per-form `<title>` for crawlers; a browser that has already loaded the app
+   * and navigated within it never asks the server again, so without this the tab says "Loppa"
+   * for every form somebody has open at once.
+   *
+   * Above the early returns, with the other hooks. It sat below them at first, so the loading
+   * render called one fewer hook than the loaded one — "rendered more hooks than during the
+   * previous render", and the page stopped rendering at all. A screen with four exits is exactly
+   * where that mistake hides.
+   */
+  useEffect(() => {
+    if (!formTitle) return;
+    const previous = document.title;
+    document.title = `${formTitle} — ${form?.organisationName ?? ''}`.trim();
+    return () => {
+      document.title = previous;
+    };
+  }, [formTitle, form?.organisationName]);
+
+  if (phase === 'loading') return <main className="shell shell--narrow" />;
+
+  if (phase === 'failed') {
+    return (
+      <main className="shell shell--narrow stack">
+        <EmptyState
+          icon="warning"
+          title={t('public.loadFailed')}
+          hint={t('public.rejected.offline')}
+          level="h1"
+          action={
+            <button
+              className="button"
+              type="button"
+              onClick={() => setAttempt((value) => value + 1)}
+            >
+              {t('public.retry')}
+            </button>
+          }
+        />
+      </main>
+    );
+  }
+
+  if (phase === 'missing') {
+    /*
+     * The empty-state treatment, not a line of grey: a mark, the sentence at full contrast, and
+     * what to do about it. There is no organiser to name and nowhere to go back to — the person
+     * arrived from a brochure — so the way out is the hint, and the language control is the one
+     * thing on the page that helps them read it.
+     */
+    return (
+      <main className="shell shell--narrow stack">
+        <header className="row row--between">
+          <span />
+          <LanguagePicker
+            locales={TRANSLATED_LOCALES}
+            current={resolved}
+            onChange={setLocale}
+            t={t}
+            variant="corner"
+          />
+        </header>
+        <EmptyState
+          icon="search"
+          title={t('public.notFound')}
+          hint={t('public.notFoundHint')}
+          level="h1"
+        />
+      </main>
+    );
+  }
+
+  const slot = form?.definition.settings.layout?.logoSlot;
+
+  return (
+    <main className={`shell shell--narrow stack${mastheadPageClass(slot)}`}>
+      {/*
+        Whose this is, and what it is, laid out by the form's logo slot — with no slot, exactly
+        the header forms always had (`components/Masthead.tsx`).
+
+        The title is an `h1`, not a caption. The page had no heading: the organisation's name, then
+        a first question. Somebody who followed a link from a chat window saw a card naming the
+        form, opened it, and arrived somewhere that did not name it — which is the moment a careful
+        person closes the tab. On a page whose whole purpose is one document, the document's name
+        is the heading, and a screen reader jumping by heading should land on it. Kept on the
+        confirmation too: it used to vanish the moment the form was sent, so the one screen
+        somebody might photograph did not say what they had registered for.
+      */}
+      <Masthead
+        slot={slot}
+        logo={form?.brand.logoLight ?? null}
+        organisationName={form?.organisationName ?? ''}
+        title={formTitle}
+        corner={
+          /**
+           * The form's own language switcher, separate from the site's.
+           *
+           * The site is in one language at a time and that is a personal setting. A *form* is a
+           * document, and a Swedish association with English-speaking members publishes one form
+           * that reads in both — so the reader flips between them here, with a flag in the
+           * corner, without anything about their account changing.
+           *
+           * Which languages appear is the author's choice (`settings.locales`), not the whole
+           * organisation's list: offering a switcher to ten versions nobody translated is worse
+           * than offering none. `LanguagePicker` renders nothing below two, so a single-language
+           * form simply has no corner control.
+           *
+           * Switching re-renders labels from the same `values` state, so changing language
+           * mid-flow cannot lose what has already been typed.
+           */
+          <LanguagePicker
+            locales={form?.supportedLocales ?? []}
+            current={resolved}
+            onChange={setLocale}
+            // The form's translator, not the session's — the switcher belongs to this document.
+            t={t}
+            variant="corner"
+          />
+        }
+      />
+
+      {phase === 'closed' && (
+        <div className="card">
+          <p>{t(`public.closed.${form?.closedReason ?? 'closed'}`)}</p>
+        </div>
+      )}
+
+      {phase === 'done' && (
+        <div className="card stack done">
+          {/* Drawn rather than already there: a mark appearing *now* is what says it worked,
+              which is the thing people are unsure about on a confirmation screen. */}
+          <Signed />
+          <h2 ref={doneHeading} tabIndex={-1}>
+            {confirmation || t('public.thanks')}
+          </h2>
+          <p className="public__reference">{t('public.reference', { reference })}</p>
+          {/* Only what the server said it queued: a mail to the address given, the card with it
+              when the form is bound to an event. Nothing is promised that is not on its way. */}
+          {coming && (
+            <p>
+              {t(coming.card ? 'public.confirmationWithCard' : 'public.confirmation', {
+                email: coming.email,
+              })}
+            </p>
+          )}
+          {form && (
+            <p className="muted">
+              {t('public.finished.sent', { organisation: form.organisationName })}
+            </p>
+          )}
+          {finished && slug && identityOffer && (
+            <IdentityStep
+              slug={slug}
+              token={finished.token}
+              offer={identityOffer}
+              t={t}
+              onConfirmed={() => setDocumentRevision((value) => value + 1)}
+            />
+          )}
+          {finished && slug && (
+            <FinishedDocument
+              key={documentRevision}
+              slug={slug}
+              handle={finished}
+              title={formTitle}
+              reference={reference}
+              t={t}
+            />
+          )}
+          <div className="row">
+            <button type="button" className="button button--bare" onClick={startAgain}>
+              <Icon name="undo" />
+              {t('public.again')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {phase === 'filling' && form && (
+        <form className="stack" onSubmit={submit}>
+          {/**
+           * Progress, counted over the pages that are actually reachable.
+           *
+           * Counting every page break would say "step 2 of 5" on a form where conditions have
+           * hidden three of them — a bar that never fills, which is worse than none.
+           */}
+          {pages.length > 1 && form.definition.settings.showProgress && (
+            <div className="stack stack--tight">
+              <p className="small muted">
+                {t('public.progress', { n: stepNumber, total: totalSteps })}
+              </p>
+              <Meter
+                value={stepNumber}
+                max={totalSteps}
+                label={t('public.progress', { n: stepNumber, total: totalSteps })}
+              />
+            </div>
+          )}
+
+          {/*
+            A grid rather than a stack, so a field can say it wants half a row and get it. Every
+            width collapses to full below 600px — a two-column form on a phone is two cramped
+            columns, not a clever layout.
+          */}
+          <div className="form-grid">
+            {currentPage.map((field) => (
+              <div className={`form-grid__cell form-grid__cell--${widthOf(field)}`} key={field.id}>
+                {field.type === 'repeating_group' ? (
+                  <RepeatingGroup
+                    field={field}
+                    slug={slug}
+                    locale={resolved}
+                    locales={locales}
+                    entries={
+                      Array.isArray(values[field.key]) ? (values[field.key] as GroupEntry[]) : []
+                    }
+                    labels={groupLabels(t, field.max)}
+                    chooseLabel={t('public.choose')}
+                    yesLabel={t('public.yes')}
+                    noLabel={t('public.no')}
+                    issueFor={issueFor}
+                    onChange={setValue}
+                  />
+                ) : (
+                  <FieldInput
+                    field={field}
+                    slug={slug}
+                    locale={resolved}
+                    locales={locales}
+                    value={values[field.key]}
+                    error={issueFor(field.key)}
+                    chooseLabel={t('public.choose')}
+                    yesLabel={t('public.yes')}
+                    noLabel={t('public.no')}
+                    onChange={setValue}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/*
+            `alert`, because this appears in response to pressing the button rather than as part of
+            the page. Without it a screen reader announces nothing at all: focus stays on a button
+            whose label has gone back to "Complete", which reads as though the form simply refused.
+          */}
+          {rejected && (
+            <p className="status-down" role="alert">
+              {t(`public.rejected.${rejected}`)}
+            </p>
+          )}
+
+          {resumeLink && (
+            <div className="card stack">
+              <strong>{t('public.savedTitle')}</strong>
+              <p className="small muted">{t('public.savedBody')}</p>
+              {opensOnlyHere(resumeLink, edition) && (
+                <p className="small muted">{t('links.localOnly')}</p>
+              )}
+              <input readOnly value={resumeLink} onFocus={(event) => event.target.select()} />
+              <button
+                type="button"
+                className="button button--quiet"
+                onClick={() => {
+                  navigator.clipboard?.writeText(resumeLink).then(
+                    () => setCopied(true),
+                    () => undefined,
+                  );
+                }}
+              >
+                {copied ? t('public.copied') : t('public.copy')}
+              </button>
+            </div>
+          )}
+
+          {/*
+            Back on the left, forward on the right, the way every multi-step form works — the
+            previous layout put all three actions in a left-aligned row, so "Next" sat between
+            "Back" and "Save", which is the last place anybody looks for it.
+
+            On the final page the forward action is the submit, and it says so: "Complete" rather
+            than a second "Next" that happens to end the form.
+          */}
+          <div className="row row--between form-actions">
+            <div className="row">
+              {backPage !== null && (
+                <button
+                  type="button"
+                  className="button button--quiet"
+                  onClick={() => setPage(backPage)}
+                >
+                  <Icon name="arrow-left" />
+                  {t('public.back')}
+                </button>
+              )}
+
+              {form.definition.settings.allowSaveAndResume && (
+                <button
+                  type="button"
+                  className="button button--quiet"
+                  onClick={saveDraft}
+                  disabled={busy}
+                >
+                  <Icon name="save" />
+                  {busy ? t('public.saving') : t('public.save')}
+                </button>
+              )}
+            </div>
+
+            {/*
+              Two buttons, not one button whose `type` changes.
+
+              Keyed apart on purpose. Without the keys React patched the same DOM node from
+              `type="button"` to `type="submit"` *during* the click that moved to the last page,
+              and the browser then ran the click's default action on that node as it now was — a
+              form submit — so the final page opened with its required question already marked
+              wrong before anybody had touched it. The critique saw the symptom; this is the cause.
+            */}
+            {forwardPage !== null ? (
+              <button
+                key="forward"
+                type="button"
+                className="button form-actions__forward"
+                onClick={() => {
+                  if (validatePage()) setPage(forwardPage);
+                }}
+              >
+                {t('public.next')}
+                <Icon name="arrow-right" />
+              </button>
+            ) : (
+              <button
+                key="submit"
+                type="submit"
+                className="button form-actions__forward"
+                disabled={busy}
+              >
+                <Icon name="check" />
+                {busy ? t('public.submitting') : submitLabel}
+              </button>
+            )}
+          </div>
+        </form>
+      )}
+      <MastheadFoot
+        slot={slot}
+        logo={form?.brand.logoLight ?? null}
+        organisationName={form?.organisationName ?? ''}
+      />
+      {form && <PoweredBy tokens={form.brand} />}
+    </main>
+  );
+}
+
+/** Hidden fields prefill from the query string — SPEC-forms.md §3. */
+function prefilledFrom(form: PublicFormResponse, params: URLSearchParams): SubmissionValues {
+  const prefilled: SubmissionValues = {};
+  for (const field of form.definition.fields) {
+    if (field.type === 'hidden') {
+      const fromQuery = field.fromParameter ? params.get(field.fromParameter) : null;
+      prefilled[field.key] = fromQuery ?? field.defaultValue ?? null;
+    }
+  }
+  return prefilled;
+}

@@ -24,7 +24,10 @@ import { describe, expect, it } from 'vitest';
  * the session's locale changes underneath, and a DOM test of the good case cannot see that.
  */
 const DEMO = readFileSync(new URL('./demo.tsx', import.meta.url), 'utf8');
-const PUBLIC_FORM = readFileSync(new URL('../screens/PublicForm.tsx', import.meta.url), 'utf8');
+const PUBLIC_FORM = readFileSync(
+  new URL('../screens/forms/PublicForm.tsx', import.meta.url),
+  'utf8',
+);
 
 describe('a screen that does not follow the session locale', () => {
   it('sets the document language where it announces itself', () => {

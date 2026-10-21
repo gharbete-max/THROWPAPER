@@ -3,7 +3,10 @@ import { expect, test, type Page } from '@playwright/test';
 import { db, scanStep, signInAs } from './support.js';
 import { linesPdf, tinyPdf } from './pdf.js';
 import { fakeBridge } from './fake-model.js';
-import { docxBytes, paragraph } from '../apps/forms/src/screens/builder/paper/docx.fixture.js';
+import {
+  docxBytes,
+  paragraph,
+} from '../apps/forms/src/screens/forms/builder/paper/docx.fixture.js';
 
 /**
  * Documents as one tool (`docs/plan/DOCUMENTS.md` section 2, flow track): a file dropped anywhere in

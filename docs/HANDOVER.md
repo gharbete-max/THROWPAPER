@@ -55,7 +55,7 @@ failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS)
 
 - **Phase 0:** done, except the owner's acceptance of ADR 0011 (`docs/plan/NEXT.md`).
 - **Phase 1a (arrange pages):** built and tested end to end: `POST /v1/pdf/arrange`,
-  `apps/forms/src/screens/Scan.tsx` at `/scan`. PDFs only, reordering by buttons. Next in Phase 1:
+  `apps/forms/src/screens/scan/Scan.tsx` at `/scan`. PDFs only, reordering by buttons. Next in Phase 1:
   photos and the camera into the same screen, then 1b (PDF text) and 1c (Word to PDF).
 - **Forms (phase 2 of the order below, built 2026-10-13):** a form's draft is a PDF with no
   submission and no published version (`POST /v1/forms/:id/draft.pdf`, blank or with the author's
@@ -71,7 +71,7 @@ failure. Desktop installer sizes (211.5 MB zipped on Windows, 440.5 MB on macOS)
   `packages/shared/src/api/send.ts`, `e2e/send-documents.spec.ts`. Bundle total 1 046.4 to 1 070.9 KB
   (budget 1 080).
 - **Invoice scan (phase 4, built 2026-10-13):** a button on Scan opens
-  `apps/forms/src/screens/invoice-scan/` (lazy): a photo, scan, camera shot or PDF is read in the
+  `apps/forms/src/screens/scan/invoice/` (lazy): a photo, scan, camera shot or PDF is read in the
   browser (a PDF's text layer if it has one, else Tesseract through the import's `openPageReader`),
   then the rules in `packages/shared/src/payable` (`@tp/shared/payable`, pure, no model) pick the
   total (bigint minor units; separators by rule, asked when `1.234` is ambiguous), currency, due date,

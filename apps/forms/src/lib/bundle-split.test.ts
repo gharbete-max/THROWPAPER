@@ -45,7 +45,7 @@ describe('the language catalogues', () => {
  * The PDF reader is a megabyte and the OCR engine is another; each exists for one button in
  * the builder.
  *
- * `screens/builder/paper/extract.ts` and `ocr.ts` load them with `import()`. A static import
+ * `screens/forms/builder/paper/extract.ts` and `ocr.ts` load them with `import()`. A static import
  * anywhere else would put them in the entry chunk for every member of the public opening a form
  * on a phone — and, as with the catalogues, nothing else would notice.
  */
@@ -72,8 +72,8 @@ describe('the PDF reader and the OCR engine', () => {
  * the draft, saved by `ReviewScreen`.
  */
 describe('the document readers', () => {
-  const PAPER = join('screens', 'builder', 'paper');
-  const REVIEW = join('screens', 'builder', 'review');
+  const PAPER = join('screens', 'forms', 'builder', 'paper');
+  const REVIEW = join('screens', 'forms', 'builder', 'review');
   const READERS = [
     'docx.js',
     'zip.js',
@@ -137,10 +137,10 @@ describe('the document readers', () => {
  */
 describe('the summary centre', () => {
   const HOLDS_TEXT = [
-    'screens/Summary.tsx',
-    'screens/summary/ModelsPanel.tsx',
-    'screens/summary/job.ts',
-    'screens/summary/text.ts',
+    'screens/ai/Summary.tsx',
+    'screens/ai/summary/ModelsPanel.tsx',
+    'screens/ai/summary/job.ts',
+    'screens/ai/summary/text.ts',
     'lib/model-bridge.ts',
   ];
 
@@ -153,11 +153,13 @@ describe('the summary centre', () => {
 
   it('is only loaded on demand, and only Summary.tsx reaches into its folder', () => {
     const app = readFileSync(join(ROOT, 'App.tsx'), 'utf8');
-    expect(app).toMatch(/lazy\(\(\) => import\('\.\/screens\/Summary\.js'\)/);
-    expect(app).not.toMatch(/^import .*screens\/Summary/m);
+    expect(app).toMatch(/lazy\(\(\) => import\('\.\/screens\/ai\/Summary\.js'\)/);
+    expect(app).not.toMatch(/^import .*screens\/ai\/Summary/m);
     const offenders = sourceFiles(ROOT)
-      .filter((path) => !path.includes(join('screens', 'summary')) && !path.endsWith('Summary.tsx'))
-      .filter((path) => /screens\/summary\//.test(readFileSync(path, 'utf8')))
+      .filter(
+        (path) => !path.includes(join('screens', 'ai', 'summary')) && !path.endsWith('Summary.tsx'),
+      )
+      .filter((path) => /screens\/ai\/summary\//.test(readFileSync(path, 'utf8')))
       .map((path) => path.slice(ROOT.length));
     expect(offenders).toEqual([]);
   });

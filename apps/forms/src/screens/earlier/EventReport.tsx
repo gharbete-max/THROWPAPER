@@ -1,0 +1,204 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link, useParams } from 'react-router';
+import { toCsv, type ExportColumn } from '@tp/shared/forms';
+import { client } from '../../lib/api.js';
+import { useSession } from '../../lib/session.js';
+import { formatDateTime, useT } from '../../lib/i18n.js';
+import { Stat, Stats } from '../../components/Stat.js';
+import { useConfirm } from '../../components/Confirm.js';
+import { Loading } from '../../components/Loading.js';
+
+interface Attendee {
+  submissionId: string;
+  reference: string;
+  name: string;
+  email: string | null;
+  locale: string;
+  revoked: boolean;
+  checkedInAt: string | null;
+}
+
+interface Attendance {
+  registered: number;
+  checkedIn: number;
+  noShow: number;
+  revoked: number;
+  byHour: Array<{ hour: string; count: number }>;
+  attendees: Attendee[];
+}
+
+/**
+ * The attendee list and the no-show list.
+ *
+ * Not the report builder — `SPEC-forms.md` §5 is A9. These are the two lists the door and the
+ * organiser actually need, and the no-show one is what somebody wants at 10am the next day.
+ */
+export function EventReport() {
+  const t = useT();
+  const confirm = useConfirm();
+  const { id: eventId } = useParams();
+  const { locale, user } = useSession();
+  /**
+   * Three states, because `null` was doing the work of two.
+   *
+   * It meant "not loaded yet" *and* "the load failed" — the catch set the state to exactly the
+   * value it already held — so `if (!attendance) return <Loading />` rendered the loading
+   * indicator forever. Following a link to an event that has been deleted, or mistyping an id,
+   * left somebody watching a spinner that was never going to resolve.
+   */
+  const [attendance, setAttendance] = useState<Attendance | 'failed' | null>(null);
+  const [onlyNoShow, setOnlyNoShow] = useState(false);
+
+  const load = useCallback(() => {
+    if (!eventId) return;
+    client
+      .attendance(eventId)
+      .then(setAttendance)
+      .catch(() => setAttendance('failed'));
+  }, [eventId]);
+
+  useEffect(load, [load]);
+
+  const rows = useMemo(() => {
+    const all = attendance === 'failed' ? [] : (attendance?.attendees ?? []);
+    return onlyNoShow ? all.filter((a) => !a.checkedInAt && !a.revoked) : all;
+  }, [attendance, onlyNoShow]);
+
+  function statusOf(attendee: Attendee): string {
+    if (attendee.revoked) return t('attendance.status.revoked');
+    return attendee.checkedInAt ? t('attendance.status.arrived') : t('attendance.status.expected');
+  }
+
+  /** Reuses 3c's CSV writer, so the BOM and the formula guard come along unchanged. */
+  function exportCsv() {
+    const columns: ExportColumn[] = [
+      { key: 'reference', header: t('attendance.column.reference'), type: 'text' },
+      { key: 'name', header: t('attendance.column.name'), type: 'text' },
+      { key: 'email', header: t('attendance.column.email'), type: 'text' },
+      { key: 'status', header: t('attendance.column.status'), type: 'text' },
+      { key: 'checkedInAt', header: t('attendance.column.checkedInAt'), type: 'date' },
+    ];
+
+    const csv = toCsv(
+      columns,
+      rows.map((attendee) => ({ ...attendee, status: statusOf(attendee) })),
+    );
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = onlyNoShow ? 'no-shows.csv' : 'attendees.csv';
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function revoke(attendee: Attendee) {
+    // The hook, not the global `confirm`, which shows nothing and returns false in an embedded
+    // browser — this button was dead there. And its own wording: it withdraws one person's
+    // registration, not the event, which is what the borrowed `events.archiveConfirm` said.
+    if (!(await confirm(t('attendance.revokeConfirm', { name: attendee.name }), { danger: true })))
+      return;
+    await client.revokeSubmission(attendee.submissionId);
+    load();
+  }
+
+  /*
+   * A failure says so, and offers the one thing that might work.
+   *
+   * `load` rather than a page reload: the event may simply have been slow, and reloading would
+   * throw away a filter somebody had already set.
+   */
+  if (attendance === 'failed') {
+    return (
+      <div className="stack">
+        <p className="status-down">{t('attendance.loadFailed')}</p>
+        <div>
+          <button type="button" className="button button--quiet" onClick={load}>
+            {t('attendance.retry')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!attendance) return <Loading />;
+
+  return (
+    <section className="stack">
+      <header className="row row--between">
+        <h1>{t('attendance.title')}</h1>
+        <div className="row">
+          <Link className="button" to={`/events/${eventId}/check-in`}>
+            {t('attendance.openCheckIn')}
+          </Link>
+          <button className="button button--quiet" onClick={exportCsv}>
+            {t('attendance.exportCsv')}
+          </button>
+        </div>
+      </header>
+
+      <Stats>
+        <Stat label={t('attendance.registered')} value={attendance.registered} />
+        <Stat label={t('attendance.checkedIn')} value={attendance.checkedIn} />
+        <Stat label={t('attendance.noShow')} value={attendance.noShow} />
+        {attendance.revoked > 0 && (
+          <Stat label={t('attendance.revoked')} value={attendance.revoked} />
+        )}
+      </Stats>
+
+      <div className="row">
+        <button
+          className={onlyNoShow ? 'button button--quiet small' : 'button small'}
+          onClick={() => setOnlyNoShow(false)}
+        >
+          {t('attendance.all')}
+        </button>
+        <button
+          className={onlyNoShow ? 'button small' : 'button button--quiet small'}
+          onClick={() => setOnlyNoShow(true)}
+        >
+          {t('attendance.onlyNoShow')}
+        </button>
+      </div>
+
+      <div className="table-scroll">
+        <table className="grid">
+          <thead>
+            <tr>
+              <th>{t('attendance.column.reference')}</th>
+              <th>{t('attendance.column.name')}</th>
+              <th>{t('attendance.column.email')}</th>
+              <th>{t('attendance.column.status')}</th>
+              <th>{t('attendance.column.checkedInAt')}</th>
+              {user?.role === 'admin' && <th />}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((attendee) => (
+              <tr key={attendee.submissionId}>
+                <td>{attendee.reference}</td>
+                <td>{attendee.name}</td>
+                <td>{attendee.email ?? ''}</td>
+                <td>{statusOf(attendee)}</td>
+                <td>{attendee.checkedInAt ? formatDateTime(locale, attendee.checkedInAt) : ''}</td>
+                {user?.role === 'admin' && (
+                  <td>
+                    {!attendee.revoked && (
+                      <button
+                        className="button button--quiet small"
+                        onClick={() => revoke(attendee)}
+                      >
+                        {t('events.archive')}
+                      </button>
+                    )}
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
