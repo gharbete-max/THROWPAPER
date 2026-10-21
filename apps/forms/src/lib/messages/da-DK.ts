@@ -6,6 +6,7 @@ export const daDK: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Drevet af Loppa',
   'app.signOut': 'Log ud',
+  'app.skipToContent': 'Gå til indholdet',
   'app.language': 'Sprog',
   'app.loading': 'Indlæser…',
   'app.loadFailed': 'Det kunne ikke indlæses. Tjek forbindelsen, og prøv igen.',

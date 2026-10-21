@@ -6,6 +6,7 @@ export const isIS: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Knúið af Loppa',
   'app.signOut': 'Skrá út',
+  'app.skipToContent': 'Fara í efnið',
   'app.language': 'Tungumál',
   'app.loading': 'Hleð…',
   'app.loadFailed': 'Ekki tókst að hlaða þessu. Athugaðu tenginguna og reyndu aftur.',

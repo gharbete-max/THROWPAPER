@@ -11,6 +11,7 @@ export const jaJP: Record<MessageKey, string> = {
   'app.name': 'Loppa',
   'app.poweredBy': 'Loppa 提供',
   'app.signOut': 'ログアウト',
+  'app.skipToContent': '本文へ移動',
   'app.language': '言語',
   'app.loading': '読み込み中…',
   'app.loadFailed': '読み込めませんでした。接続を確認して、もう一度お試しください。',

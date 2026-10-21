@@ -12,7 +12,7 @@ import type {
 import { ApiError, client } from '../../../lib/api.js';
 import { saveBlob } from '../../../lib/email-handoff.js';
 import { sendWith } from '../../../lib/send-handoff.js';
-import { useT } from '../../../lib/i18n.js';
+import { formatDateTime, useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
 import { useConfirm } from '../../../components/Confirm.js';
 import { FieldCanvas } from './FieldCanvas.js';
@@ -42,7 +42,7 @@ function clampWidth(width: number): number {
 export function FormBuilder() {
   const t = useT();
   const confirm = useConfirm();
-  const { contentLocale: locale, locales } = useSession();
+  const { contentLocale: locale, locale: interfaceLocale, locales } = useSession();
   const { id } = useParams();
   /**
    * `?paper`: arrived through the "Start from paper" door, so the paper import opens by itself.
@@ -605,6 +605,9 @@ export function FormBuilder() {
           role="separator"
           aria-orientation="vertical"
           aria-label={t('builder.resize')}
+          aria-valuenow={previewWidth}
+          aria-valuemin={260}
+          aria-valuemax={720}
           tabIndex={0}
           onPointerDown={startResize}
           onKeyDown={(event) => {
@@ -613,7 +616,7 @@ export function FormBuilder() {
           }}
         />
 
-        <aside className="card stack builder__panel">
+        <div className="card stack builder__panel">
           <strong className="small row">
             <Icon name="preview" />
             {t('builder.viewPreview')}
@@ -624,7 +627,7 @@ export function FormBuilder() {
             locales={locales}
             selectedId={selectedId}
           />
-        </aside>
+        </div>
       </div>
 
       {/* The table itself moved to `/forms/:id/submissions`. What belongs at the foot of the
@@ -651,7 +654,9 @@ export function FormBuilder() {
           <div className="row row--between" key={version.id}>
             <span className="small">
               {t('forms.version', { n: version.version })}
-              {version.publishedAt ? ` · ${new Date(version.publishedAt).toLocaleString()}` : ''}
+              {version.publishedAt
+                ? ` · ${formatDateTime(interfaceLocale, version.publishedAt)}`
+                : ''}
             </span>
             <button className="button button--quiet small" onClick={() => restore(version.version)}>
               {t('builder.restore')}
