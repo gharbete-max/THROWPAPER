@@ -5,7 +5,11 @@ import { accountBalance, isPostable, lineProblems, reversalOf, trialBalance } fr
 import type { LedgerLine } from '@tp/calc';
 import type { AuthGuardDeps } from '../auth/plugin.js';
 import { requireAuth } from '../auth/plugin.js';
-import type { JournalEntryWithLines, Repositories } from '../db/repositories/index.js';
+import {
+  AlreadyReversed,
+  type JournalEntryWithLines,
+  type Repositories,
+} from '../db/repositories/index.js';
 import { recordAudit } from '../audit.js';
 
 /**
@@ -307,21 +311,32 @@ export function registerLedgerRoutes(
         });
       }
 
-      const entry = await deps.repos.ledger.post({
-        organisationId: auth.organisation.id,
-        reference: await deps.repos.ledger.nextReference(auth.organisation.id),
-        description: body.reason,
-        occurredOn: body.occurredOn ?? new Date().toISOString().slice(0, 10),
-        postedByUserId: auth.user.id,
-        currency: original.currency,
-        reversesEntryId: original.id,
-        lines: lines.map((line) => ({
-          accountId: line.accountId,
-          debitMinor: line.debitMinor,
-          creditMinor: line.creditMinor,
-          memo: line.memo ?? null,
-        })),
-      });
+      let entry;
+      try {
+        entry = await deps.repos.ledger.post({
+          organisationId: auth.organisation.id,
+          reference: await deps.repos.ledger.nextReference(auth.organisation.id),
+          description: body.reason,
+          occurredOn: body.occurredOn ?? new Date().toISOString().slice(0, 10),
+          postedByUserId: auth.user.id,
+          currency: original.currency,
+          reversesEntryId: original.id,
+          lines: lines.map((line) => ({
+            accountId: line.accountId,
+            debitMinor: line.debitMinor,
+            creditMinor: line.creditMinor,
+            memo: line.memo ?? null,
+          })),
+        });
+      } catch (error) {
+        // Two requests passed the check above together; the write is where only one can win.
+        if (error instanceof AlreadyReversed) {
+          return reply.code(409).send({
+            error: { code: 'already-reversed', message: 'That entry has already been reversed' },
+          });
+        }
+        throw error;
+      }
 
       await recordAudit(deps.repos, request, {
         action: 'ledger.entry_reversed',

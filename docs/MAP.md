@@ -44,6 +44,7 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Photographs (twelve: empty states and screen heads, never the room) | `apps/forms/public/media/`, `EmptyState`'s `media` prop | `docs/brand/MEDIA.md` (source, licence, hash per file; `scripts/media.test.ts`) |
 | What the app shows a user (words, flows) | `apps/forms/src/lib/messages/en-GB.ts` | `docs/USER-GUIDE.md` (keep it in step with the screens) |
 | Structure, simplification | `docs/plan/SIMPLIFY.md` | its ranked table and order |
+| Reviews (coverage map, findings, residual risks) | `docs/reviews/` (`2026-10-backend-and-shared.md`: backend and shared packages; fuzz tests are `*/fuzz*.test.ts`, seeded, `FUZZ_SEED=<n>` replays) | `docs/SECURITY-REVIEW-2026-10.md` |
 | Which decision says what | `docs/adr/README.md` | one line per ADR with its status |
 | Contract / API | `docs/CONTRACT.md`, `packages/shared/src/contract`, `pnpm contract:check` | |
 

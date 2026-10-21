@@ -126,7 +126,9 @@ const SPACES = new RegExp(`[\\s${String.fromCharCode(0xa0, 0x202f)}]`, 'g');
  * order (`1.234,50`, `1,234.50`). No sign: a credit is not something to guess at.
  */
 export function parseMinor(text: string): bigint | null {
-  if (/^\s*[-−]/.test(text)) return null;
+  // A minus (or a dash standing for one) anywhere is a credit, never "12 kr -5" read as 5. The
+  // Swedish whole-krona marks `:-` and `,-` are the one place a hyphen is not a sign.
+  if (/[-‐-―−]/.test(text.replace(/[:,]-/g, ''))) return null;
   const s = text.replace(SPACES, '').replace(/^[^\d.,]+|[^\d.,]+$/g, '');
   const m = /^(\d+|\d{1,3}(?:[.,]\d{3})+)(?:([.,])(\d{1,2}))?$/.exec(s);
   if (!m) return null;

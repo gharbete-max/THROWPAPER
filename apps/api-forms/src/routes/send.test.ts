@@ -124,6 +124,18 @@ describe('send this document', () => {
     expect(harness.mail.sent).toHaveLength(2);
   });
 
+  it('a confirmation used again for other words or other people is refused, not answered with the old jobs', async () => {
+    await sendDocument(good);
+    const edited = await sendDocument({ ...good, subject: 'Ett annat ärende' });
+    expect(edited.statusCode).toBe(409);
+    expect(edited.json().error.code).toBe('key-reused');
+    const others = await sendDocument({ ...good, to: JSON.stringify(['cia@example.com']) });
+    expect(others.statusCode).toBe(409);
+    expect(jobs()).toHaveLength(2);
+    await drain();
+    expect(harness.mail.sent.map((mail) => mail.subject)).toEqual(['Avtalet', 'Avtalet']);
+  });
+
   it('sends a Word file as it was brought in', async () => {
     const response = await sendDocument(
       { ...good, to: JSON.stringify(['bo@example.com']) },
@@ -274,6 +286,14 @@ describe('send a batch', () => {
     // 0,10 + 25 % = 0,025 → 0,03 and a total of 0,13: exact even where a float would drift.
     expect(html).toMatch(/0,03/);
     expect(html).toMatch(/0,13/);
+  });
+
+  it('the same confirmation with another list is refused, not answered with the old jobs', async () => {
+    await post('/v1/send/batch', batch());
+    const other = await post('/v1/send/batch', batch({ rows: [rows[2], rows[1], rows[0]] }));
+    expect(other.statusCode).toBe(409);
+    expect(other.json().error.code).toBe('key-reused');
+    expect(jobs()).toHaveLength(3);
   });
 
   it('a double press does not double send', async () => {

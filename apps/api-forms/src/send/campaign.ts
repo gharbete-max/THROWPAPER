@@ -3,7 +3,7 @@ import type { Repositories } from '../db/repositories/index.js';
 import type { JobHandler } from '../jobs/worker.js';
 import type { MailProvider } from '../mail/provider.js';
 import { senderFor } from '../signing/invitations.js';
-import { TEST_MARK } from './service.js';
+import { KeyReused, sameMessage, TEST_MARK } from './service.js';
 import { signUnsubscribeToken, unsubscribeHeaders } from './unsubscribe.js';
 
 /**
@@ -96,6 +96,8 @@ export async function queueCampaign(
       progressTotal: 1,
       maxAttempts: 3,
     });
+    // The key names the address, not the words: the same press again is the same message.
+    if (!sameMessage(job.payload, payload)) throw new KeyReused();
     items.push({ index, to: payload.to, id: job.id });
   }
   return { items, skipped };

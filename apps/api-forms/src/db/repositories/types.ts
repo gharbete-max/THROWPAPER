@@ -151,7 +151,8 @@ export interface TokenRepository {
     expiresAt: Date;
   }): Promise<RefreshTokenRecord>;
   findRefreshTokenByHash(tokenHash: string): Promise<RefreshTokenRecord | null>;
-  revokeRefreshToken(id: string, at: Date): Promise<void>;
+  /** Whether this call revoked it: false when it already was, which is how a lost race shows. */
+  revokeRefreshToken(id: string, at: Date): Promise<boolean>;
   /** Used when a rotated token is presented again: the chain is compromised, kill all of it. */
   revokeFamily(familyId: string, at: Date): Promise<void>;
 }
