@@ -35,6 +35,9 @@ export { pxValue, px, spacing, typeScale } from './units.js';
 /** The room's fixed colours: a dark grey, and Loppa's own colours made stronger (ADR 0022). */
 export { ROOM, ROOM_HUES, roomCssVariables, type RoomHue } from './room.js';
 
+/** Text over a photograph: the scrim and the chip, held to 4.5:1 by `media-contrast.test.ts`. */
+export { IMAGE_CHIP_ALPHA, IMAGE_DIM, IMAGE_SCRIM, IMAGE_TEXT } from './media.js';
+
 /** Ready-made looks, every one of which passes the contrast check — see `presets.test.ts`. */
 export { THEME_PRESETS, THEME_PRESET_IDS, type ThemePreset } from './presets.js';
 

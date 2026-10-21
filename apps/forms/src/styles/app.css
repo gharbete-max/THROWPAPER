@@ -1936,3 +1936,10 @@ a.room__centre:focus-visible {
 .skeleton__line--short {
   inline-size: 55%;
 }
+
+/* A link that stands by itself is at least a 24 px target (WCAG 2.5.8). */
+.link--target {
+  display: inline-block;
+  min-block-size: 24px;
+  line-height: 24px;
+}

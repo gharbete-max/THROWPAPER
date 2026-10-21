@@ -1472,11 +1472,6 @@ export const frFR: Record<MessageKey, string> = {
   'ai.models.state.damaged': 'Endommagé',
   'ai.models.state.busy': 'En cours d’utilisation',
   'ai.models.state.evaluation-only': 'Pour évaluation seulement',
-  'ai.models.unavailable': 'Pas encore disponible',
-  'ai.models.unavailableWhy':
-    'Loppa ne peut pas encore exécuter ce modèle. Les fichiers que vous placez ici sont conservés et vérifiés, mais rien ne les utilise.',
-  'ai.models.unverifiedLicence':
-    'Licence de recherche, non vérifiée pour un usage dans un produit. Elle sert uniquement à l’évaluation et n’est jamais proposée au téléchargement.',
   'ai.models.size': 'Taille : {size} Go',
   'ai.models.licence': 'Licence : {licence}',
   'ai.models.file': '{name} : {where}',
@@ -1487,8 +1482,6 @@ export const frFR: Record<MessageKey, string> = {
   'ai.models.source.remembered': 'ouvert depuis le disque',
   'ai.models.source.user-data': 'dans le dossier des modèles de Loppa',
   'ai.models.source.ai-pack': 'trouvé dans le pack d’IA à côté de Loppa',
-  'ai.models.needs':
-    'Nécessite un ordinateur avec au moins 12 Go de mémoire, dont environ 10 Go libres pendant son fonctionnement. Sur un ordinateur plus petit, il ne démarrera pas.',
   'ai.models.hash.verified': 'vérifié',
   'ai.models.hash.unchecked': 'pas encore vérifié (il est vérifié avant la première utilisation)',
   'ai.models.hash.unpinned': 'pas de somme de contrôle pour le vérifier',
@@ -1702,7 +1695,6 @@ export const frFR: Record<MessageKey, string> = {
   'read.checked.no': 'non cochée',
   'read.figure': 'Illustration',
   'read.summarise': 'Résumer',
-  'read.proofread': 'Relire',
   'read.noModel':
     'Le modèle n’est pas installé sur cet ordinateur : les pages ne peuvent pas être lues avec l’IA.',
   'read.noModelLink': 'Ouvrir la liste des modèles',
@@ -2199,8 +2191,6 @@ export const frFR: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': 'Photo',
   'docs.summarise': 'Résumer ce PDF',
-  'docs.reading': 'Lecture du texte…',
-  'docs.noText': 'Aucun texte n’a pu être lu dans ce PDF.',
   'docs.keep.heading': 'Conserver ce PDF',
   'docs.keep.name': 'Nom du fichier',
   'docs.keep.size': 'Taille',

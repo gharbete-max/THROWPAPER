@@ -72,13 +72,13 @@ Full e2e at the end: 174 of 175 passed; `sign-handoff-cancel` "a cancelled reque
 
 Open, by severity:
 
-- M3 (design) Abandoned guided starts leave empty "Untitled form" drafts.
-- M6 (assets, low on desktop) `mark-loop-256.webp` is 1.09 MB and is fetched by the Intro and by every `Loading` spinner, so a web user downloads it on the first screen (twice at once on Summary). A smaller loop or the 24 KB still with a CSS spin would remove it. Not changed: it is a brand asset.
+- M3 (design) Abandoned guided starts leave empty "Untitled form" drafts. **Fixed** in `claude/carryover-fixes` (the form is made with the first answer; old ones are offered for the bin): `2026-10-sign-and-carryover.md` B-3.
+- M6 (assets, low on desktop) `mark-loop-256.webp` is 1.09 MB and is fetched by the Intro and by every `Loading` spinner, so a web user downloads it on the first screen (twice at once on Summary). A smaller loop or the 24 KB still with a CSS spin would remove it. **Fixed** in `claude/carryover-fixes`: `Loading` draws the 1.4 KB vector spinner; the loop stays for the intro (B-4).
 - L4 Send's first paint shifts once (CLS 0.085, below 0.1).
 - L5 Scan fetches the Word, camera and OCR helper chunks on entry; they could wait until used.
-- L6 Standalone inline links of 20 px height at 360 px (AI setup, Summary).
+- L6 Standalone inline links of 20 px height at 360 px (AI setup, Summary). **Fixed** (B-6).
 - L7 The guided screen's "Build it myself" and "Show all options" are offset from the answer column in German at 360 px.
-- Outside this scope, for the owners: `buttonSurface` labels in `packages/tokens` are checked only by their own preset tests; no test samples text over the page gradient or over photographs, so the scrim and chip contrast the brief asked to extend is held by the pixel measurement above and not by a test. In a full `pnpm test` run on this machine under load, two `apps/desktop` tests failed (`ai/coordinator.test.ts` priority order, `ai/graphics.test.ts` consent record); neither touches files in this PR.
+- Outside this scope, for the owners: `buttonSurface` labels in `packages/tokens` are checked only by their own preset tests; no test samples text over the page gradient or over photographs, so the scrim and chip contrast the brief asked to extend was held by the pixel measurement above and not by a test (now `packages/tokens/src/media-contrast.test.ts`, B-5). In a full `pnpm test` run on this machine under load, two `apps/desktop` tests failed (`ai/coordinator.test.ts` priority order, `ai/graphics.test.ts` consent record); neither touches files in this PR.
 
 ## Residual risks
 

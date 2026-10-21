@@ -1,5 +1,4 @@
 import { useReducedMotion } from '../lib/motion.js';
-import { Mark } from './Mark.js';
 import { useT } from '../lib/i18n.js';
 
 /**
@@ -30,7 +29,20 @@ export function Loading({ label }: { label?: string }) {
   return (
     <p className={reduced ? 'loading loading--still' : 'loading'} role="status">
       {/* Still under reduced motion: a spinner that does not spin is better than nausea. */}
-      <Mark motion={!reduced} className="loading__mark" />
+      {/*
+        The brand bundle's vector spinner (1.4 KB, `docs/brand/css/loppa-spinner.svg`), not the
+        animated mark: that loop is 1.1 MB, was fetched by every web page that ever waited, and is
+        drawn at 40 pixels here. The file stops its own animation under reduced motion.
+      */}
+      <img
+        className="mark loading__mark"
+        src="/loppa-spinner.svg"
+        width={256}
+        height={256}
+        alt=""
+        aria-hidden="true"
+        decoding="async"
+      />
       <span className="muted">{text}</span>
     </p>
   );

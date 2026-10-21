@@ -1471,11 +1471,6 @@ export const ruRU: Record<MessageKey, string> = {
   'ai.models.state.damaged': 'Повреждена',
   'ai.models.state.busy': 'Используется',
   'ai.models.state.evaluation-only': 'Только для оценки',
-  'ai.models.unavailable': 'Пока недоступна',
-  'ai.models.unavailableWhy':
-    'Loppa пока не может запускать эту модель. Файлы, которые вы сюда положите, сохраняются и проверяются, но ничто их не использует.',
-  'ai.models.unverifiedLicence':
-    'Исследовательская лицензия, не проверенная для использования в продукте. Только для оценки; её никогда не предлагают для скачивания.',
   'ai.models.size': 'Размер: {size} ГБ',
   'ai.models.licence': 'Лицензия: {licence}',
   'ai.models.file': '{name}: {where}',
@@ -1486,8 +1481,6 @@ export const ruRU: Record<MessageKey, string> = {
   'ai.models.source.remembered': 'открыт с диска',
   'ai.models.source.user-data': 'в папке моделей Loppa',
   'ai.models.source.ai-pack': 'найдено в ИИ-пакете рядом с Loppa',
-  'ai.models.needs':
-    'Нужен компьютер как минимум с 12 ГБ памяти, из них около 10 ГБ свободно во время работы. На менее мощном компьютере модель не запустится.',
   'ai.models.hash.verified': 'проверен',
   'ai.models.hash.unchecked': 'ещё не проверен (проверяется перед первым использованием)',
   'ai.models.hash.unpinned': 'нет контрольной суммы для сверки',
@@ -1700,7 +1693,6 @@ export const ruRU: Record<MessageKey, string> = {
   'read.checked.no': 'не отмечено',
   'read.figure': 'Рисунок',
   'read.summarise': 'Кратко изложить',
-  'read.proofread': 'Проверить текст',
   'read.noModel':
     'Модель не установлена на этом компьютере, поэтому страницы нельзя читать с помощью ИИ.',
   'read.noModelLink': 'Открыть список моделей',
@@ -2191,8 +2183,6 @@ export const ruRU: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': 'Фото',
   'docs.summarise': 'Кратко изложить этот PDF',
-  'docs.reading': 'Чтение текста…',
-  'docs.noText': 'Не удалось прочитать текст из этого PDF.',
   'docs.keep.heading': 'Сохранить этот PDF',
   'docs.keep.name': 'Имя файла',
   'docs.keep.size': 'Размер',

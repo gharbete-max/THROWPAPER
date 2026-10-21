@@ -1434,11 +1434,6 @@ export const jaJP: Record<MessageKey, string> = {
   'ai.models.state.damaged': '破損',
   'ai.models.state.busy': '使用中',
   'ai.models.state.evaluation-only': '評価専用',
-  'ai.models.unavailable': 'まだ利用できません',
-  'ai.models.unavailableWhy':
-    'Loppaはこのモデルをまだ実行できません。ここに置いたファイルは保管され確認されますが、何も使用しません。',
-  'ai.models.unverifiedLicence':
-    '研究用ライセンスで、製品での使用は確認されていません。評価専用で、ダウンロードとして提供されることはありません。',
   'ai.models.size': 'サイズ: {size} GB',
   'ai.models.licence': 'ライセンス: {licence}',
   'ai.models.file': '{name}: {where}',
@@ -1449,8 +1444,6 @@ export const jaJP: Record<MessageKey, string> = {
   'ai.models.source.remembered': 'ディスクから開きました',
   'ai.models.source.user-data': 'Loppaのモデルフォルダー内',
   'ai.models.source.ai-pack': 'Loppaの隣にあるAIパックで見つかりました',
-  'ai.models.needs':
-    '少なくとも12 GBのメモリを搭載したコンピューターが必要で、実行中は約10 GBの空きが必要です。これより小さいコンピューターでは起動しません。',
   'ai.models.hash.verified': '確認済み',
   'ai.models.hash.unchecked': 'まだ確認していません（初回使用の前に確認されます）',
   'ai.models.hash.unpinned': '照合するチェックサムがありません',
@@ -1661,7 +1654,6 @@ export const jaJP: Record<MessageKey, string> = {
   'read.checked.no': 'チェックなし',
   'read.figure': '図',
   'read.summarise': '要約する',
-  'read.proofread': '校正する',
   'read.noModel':
     'モデルがこのコンピューターにインストールされていないため、AIでページを読み取れません。',
   'read.noModelLink': 'モデル一覧を開く',
@@ -2140,8 +2132,6 @@ export const jaJP: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': '写真',
   'docs.summarise': 'このPDFを要約',
-  'docs.reading': 'テキストを読み取り中…',
-  'docs.noText': 'このPDFからテキストを読み取れませんでした。',
   'docs.keep.heading': 'このPDFを保存',
   'docs.keep.name': 'ファイル名',
   'docs.keep.size': 'サイズ',

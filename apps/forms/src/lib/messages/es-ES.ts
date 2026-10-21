@@ -1454,11 +1454,6 @@ export const esES: Record<MessageKey, string> = {
   'ai.models.state.damaged': 'Dañado',
   'ai.models.state.busy': 'En uso',
   'ai.models.state.evaluation-only': 'Solo para evaluación',
-  'ai.models.unavailable': 'Aún no disponible',
-  'ai.models.unavailableWhy':
-    'Loppa todavía no puede ejecutar este modelo. Los archivos que pongas aquí se conservan y se comprueban, pero nada los usa.',
-  'ai.models.unverifiedLicence':
-    'Licencia de investigación, no comprobada para su uso en un producto. Es solo para evaluación y nunca se ofrece para descargar.',
   'ai.models.size': 'Tamaño: {size} GB',
   'ai.models.licence': 'Licencia: {licence}',
   'ai.models.file': '{name}: {where}',
@@ -1469,8 +1464,6 @@ export const esES: Record<MessageKey, string> = {
   'ai.models.source.remembered': 'abierto desde el disco',
   'ai.models.source.user-data': 'en la carpeta de modelos de Loppa',
   'ai.models.source.ai-pack': 'encontrado en el paquete de IA junto a Loppa',
-  'ai.models.needs':
-    'Necesita un ordenador con al menos 12 GB de memoria y unos 10 GB libres mientras funciona. En un ordenador más pequeño no se iniciará.',
   'ai.models.hash.verified': 'comprobado',
   'ai.models.hash.unchecked': 'aún sin comprobar (se comprueba antes del primer uso)',
   'ai.models.hash.unpinned': 'sin suma de comprobación con la que compararlo',
@@ -1685,7 +1678,6 @@ export const esES: Record<MessageKey, string> = {
   'read.checked.no': 'sin marcar',
   'read.figure': 'Figura',
   'read.summarise': 'Resumir',
-  'read.proofread': 'Corregir',
   'read.noModel':
     'El modelo no está instalado en este ordenador, así que no se pueden leer páginas con IA.',
   'read.noModelLink': 'Abrir la lista de modelos',
@@ -2176,8 +2168,6 @@ export const esES: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': 'Foto',
   'docs.summarise': 'Resumir este PDF',
-  'docs.reading': 'Leyendo el texto…',
-  'docs.noText': 'No se pudo leer texto de este PDF.',
   'docs.keep.heading': 'Guardar este PDF',
   'docs.keep.name': 'Nombre del archivo',
   'docs.keep.size': 'Tamaño',

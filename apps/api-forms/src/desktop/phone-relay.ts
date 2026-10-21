@@ -25,7 +25,10 @@ const ALLOWED: { method: string; path: RegExp }[] = [
   { method: 'POST', path: new RegExp(`^/api/v1/phone-scan/${TOKEN}/pages$`) },
   // The built app: hashed bundles, the icons and the manifest. Public files, no data.
   { method: 'GET', path: /^\/assets\/[\w.-]+$/ },
-  { method: 'GET', path: /^\/(favicon\.svg|manifest\.webmanifest|icon-\d+\.png)$/ },
+  {
+    method: 'GET',
+    path: /^\/(favicon\.svg|loppa-spinner\.svg|manifest\.webmanifest|icon-\d+\.png)$/,
+  },
   { method: 'GET', path: /^\/mark-[\w-]+\.(png|webp)$/ },
 ];
 const MAX_BODY = 9 * 1024 * 1024;

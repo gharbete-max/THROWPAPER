@@ -1434,11 +1434,6 @@ export const svSE: Record<MessageKey, string> = {
   'ai.models.state.damaged': 'Skadad',
   'ai.models.state.busy': 'Används',
   'ai.models.state.evaluation-only': 'Endast för utvärdering',
-  'ai.models.unavailable': 'Inte tillgänglig ännu',
-  'ai.models.unavailableWhy':
-    'Loppa kan inte köra den här modellen ännu. Filer du lägger här sparas och kontrolleras, men inget använder dem.',
-  'ai.models.unverifiedLicence':
-    'Forskningslicens, inte kontrollerad för användning i en produkt. Den är bara för utvärdering och erbjuds aldrig för nedladdning.',
   'ai.models.size': 'Storlek: {size} GB',
   'ai.models.licence': 'Licens: {licence}',
   'ai.models.file': '{name}: {where}',
@@ -1449,8 +1444,6 @@ export const svSE: Record<MessageKey, string> = {
   'ai.models.source.remembered': 'öppnad från disken',
   'ai.models.source.user-data': 'i Loppas modellmapp',
   'ai.models.source.ai-pack': 'hittad i AI-paketet bredvid Loppa',
-  'ai.models.needs':
-    'Kräver en dator med minst 12 GB minne och cirka 10 GB ledigt medan den körs. På en mindre dator startar den inte.',
   'ai.models.hash.verified': 'kontrollerad',
   'ai.models.hash.unchecked': 'inte kontrollerad ännu (den kontrolleras före första användningen)',
   'ai.models.hash.unpinned': 'ingen kontrollsumma att jämföra med',
@@ -1665,7 +1658,6 @@ export const svSE: Record<MessageKey, string> = {
   'read.checked.no': 'inte ikryssad',
   'read.figure': 'Bild',
   'read.summarise': 'Sammanfatta',
-  'read.proofread': 'Korrekturläs',
   'read.noModel': 'Modellen är inte installerad på den här datorn, så sidor kan inte läsas med AI.',
   'read.noModelLink': 'Öppna modelllistan',
   'read.noRuntime': 'Programmet som kör modellen saknas. Öppna modelllistan för att hämta det.',
@@ -2150,8 +2142,6 @@ export const svSE: Record<MessageKey, string> = {
   'docs.k.word': 'Word',
   'docs.k.photo': 'Foto',
   'docs.summarise': 'Sammanfatta den här PDF:en',
-  'docs.reading': 'Läser texten…',
-  'docs.noText': 'Ingen text kunde läsas ur den här PDF:en.',
   'docs.keep.heading': 'Spara den här PDF:en',
   'docs.keep.name': 'Filnamn',
   'docs.keep.size': 'Storlek',

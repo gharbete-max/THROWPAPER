@@ -11,6 +11,8 @@ describe('what the LAN relay lets through', () => {
     expect(isRelayed('POST', `/api/v1/phone-scan/${TOKEN}/pages`)).toBe(true);
     expect(isRelayed('GET', '/assets/index-abc123.js')).toBe(true);
     expect(isRelayed('GET', '/favicon.svg')).toBe(true);
+    // The waiting indicator the phone page shows while it loads.
+    expect(isRelayed('GET', '/loppa-spinner.svg')).toBe(true);
   });
 
   it('refuses everything else', () => {

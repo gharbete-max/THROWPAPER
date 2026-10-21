@@ -1,0 +1,182 @@
+{
+  "ai-streaks.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [255, 226, 168],
+        "darkest": [0, 0, 0]
+      },
+      "whole": {
+        "brightest": [255, 255, 255],
+        "darkest": [0, 0, 0]
+      }
+    },
+    "height": 600,
+    "sha256": "b31ecce19aafd98540d9e9be0666f946de8acbcb295edc72d1790c770a60b728",
+    "width": 1600
+  },
+  "forms-hand.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [231, 233, 237],
+        "darkest": [7, 9, 10]
+      },
+      "whole": {
+        "brightest": [248, 249, 255],
+        "darkest": [4, 6, 8]
+      }
+    },
+    "height": 400,
+    "sha256": "92d490acce6820e84ba851b890e49d20b499f701db049f12f9f78a423e0a90a1",
+    "width": 1120
+  },
+  "gallery-foil.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [255, 255, 234],
+        "darkest": [0, 0, 0]
+      },
+      "whole": {
+        "brightest": [255, 255, 238],
+        "darkest": [0, 0, 0]
+      }
+    },
+    "height": 600,
+    "sha256": "482e05f816e02a5fd3d8503353bcf6b5d30eef99cd1c54833dc4fb18b77a698c",
+    "width": 1600
+  },
+  "keep-plane.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [240, 244, 247],
+        "darkest": [0, 0, 2]
+      },
+      "whole": {
+        "brightest": [240, 244, 247],
+        "darkest": [0, 0, 0]
+      }
+    },
+    "height": 600,
+    "sha256": "323bf1932d25ad015fe9ecd4273238ddaad0950491ca39f6f25e00b915181c37",
+    "width": 1600
+  },
+  "models-blur.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [229, 190, 107],
+        "darkest": [32, 24, 4]
+      },
+      "whole": {
+        "brightest": [233, 195, 112],
+        "darkest": [32, 24, 4]
+      }
+    },
+    "height": 240,
+    "sha256": "43f4f05193ff640cb66970de0323a9ccdb7e5e9236ffabfe66d9ef6c4f81ec2f",
+    "width": 1600
+  },
+  "scan-crane.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [241, 245, 249],
+        "darkest": [71, 72, 76]
+      },
+      "whole": {
+        "brightest": [244, 245, 252],
+        "darkest": [71, 72, 76]
+      }
+    },
+    "height": 400,
+    "sha256": "ccbb7a407bae593e98d9390fd2ec5ac4cd8940186f2cbcc6e5a2d624a4f49639",
+    "width": 1120
+  },
+  "send-fortune.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [224, 228, 233],
+        "darkest": [138, 141, 147]
+      },
+      "whole": {
+        "brightest": [226, 230, 235],
+        "darkest": [85, 89, 95]
+      }
+    },
+    "height": 600,
+    "sha256": "09e263ce071d8c26c0b6675520fd0a77cbdba8951d439051ae62bcbb21898cf1",
+    "width": 1600
+  },
+  "send-waves.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [244, 247, 253],
+        "darkest": [2, 4, 8]
+      },
+      "whole": {
+        "brightest": [244, 248, 251],
+        "darkest": [2, 4, 8]
+      }
+    },
+    "height": 400,
+    "sha256": "0b57d05af1c647a9cba4566ca56093ddb759ecc1292cfceaf1a3c5fdc0e427c0",
+    "width": 1120
+  },
+  "sign-crane.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [230, 233, 239],
+        "darkest": [2, 4, 8]
+      },
+      "whole": {
+        "brightest": [231, 234, 240],
+        "darkest": [1, 2, 6]
+      }
+    },
+    "height": 400,
+    "sha256": "e8bdd8f186fba47f3618739bcef5544f45b41dc912dbeddc9996acb13f147e23",
+    "width": 1120
+  },
+  "sign-desk.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [249, 251, 252],
+        "darkest": [0, 2, 3]
+      },
+      "whole": {
+        "brightest": [249, 251, 252],
+        "darkest": [0, 0, 3]
+      }
+    },
+    "height": 600,
+    "sha256": "b08879a35403d7d0d6fba29b27714f46de854cfaa4be1caef95cca5443926c42",
+    "width": 1600
+  },
+  "summary-dark.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [253, 255, 255],
+        "darkest": [0, 0, 0]
+      },
+      "whole": {
+        "brightest": [253, 255, 255],
+        "darkest": [0, 0, 0]
+      }
+    },
+    "height": 600,
+    "sha256": "e0be9c2960b0d2bd94e8d44af4cde9f085ecb215d2bb8bd8fd171215a3f654d6",
+    "width": 1600
+  },
+  "summary-light.webp": {
+    "bands": {
+      "bottom": {
+        "brightest": [248, 249, 253],
+        "darkest": [0, 0, 3]
+      },
+      "whole": {
+        "brightest": [248, 252, 255],
+        "darkest": [0, 0, 0]
+      }
+    },
+    "height": 600,
+    "sha256": "b91868183984944a426a356d0472f6623d078b28e0d77f6966cdadfd792c63a5",
+    "width": 1600
+  }
+}
