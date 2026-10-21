@@ -902,21 +902,6 @@
   gap: calc(var(--tp-spacing-unit) * 2);
 }
 
-.conversation__node--on {
-  animation: conversation-on var(--tp-motion-preview) var(--tp-ease-unfurl);
-}
-
-.conversation__node--back {
-  animation: conversation-back var(--tp-motion-preview) var(--tp-ease-unfurl);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .conversation__node--on,
-  .conversation__node--back {
-    animation: none;
-  }
-}
-
 /*
  * Huge, one sentence, and never truncated in any language (`CAVEATS.md` #36). `break-word` was not
  * enough: a flex item is never narrower than its longest word, so German's "Wie viele
@@ -1775,18 +1760,4 @@
   gap: var(--tp-spacing-unit);
   padding-block: var(--tp-spacing-unit);
   background: var(--tp-colour-background);
-}
-
-@keyframes conversation-on {
-  from {
-    opacity: 0;
-    transform: translateX(calc(24px * var(--conversation-onward)));
-  }
-}
-
-@keyframes conversation-back {
-  from {
-    opacity: 0;
-    transform: translateX(calc(-24px * var(--conversation-onward)));
-  }
 }

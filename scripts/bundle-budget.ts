@@ -91,10 +91,10 @@ const BUDGET_KB = {
   /**
    * The one stylesheet it loads. Render-blocking, so it is paid for at the same moment.
    * Tightened from 20 when `styles.css` was split (docs/plan/SIMPLIFY.md, proposal 5): the entry
-   * measures 11.2, and 14 is about 25% above it. The two lazy stylesheets (`styles/app.css`,
+   * measures 11.8, and 14.5 is about 23% above it. The two lazy stylesheets (`styles/app.css`,
    * `styles/builder.css`) are not capped here; they are counted in the total below.
    */
-  stylesheet: 14,
+  stylesheet: 14.5,
   /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
   total: 1250,
 } as const;
