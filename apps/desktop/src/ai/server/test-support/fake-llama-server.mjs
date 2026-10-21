@@ -3,6 +3,7 @@
 // Behaviour comes from FAKE_LLAMA (comma-separated): no-avx2, crash-on-start, oom, die-mid-stream,
 // slow-load, slow-stream, hang-prompt (accepts the request and never answers, as a long prompt does),
 // stall-stream (one token, then nothing), truncate-stream (one token, then the stream ends without [DONE]),
+// reset-stream (one token, then the socket is destroyed),
 // and for the Vulkan build (started with --device): card-oom, card-crash-start,
 // card-crash-request, card-empty. It prints what it was asked to do on stdout as `fake:` lines.
 import { createServer } from 'node:http';
@@ -88,6 +89,7 @@ if (modes.includes('no-avx2')) {
       if (modes.includes('slow-stream')) await sleep(150);
       if (index === 1 && modes.includes('stall-stream')) await new Promise(() => undefined);
       if (index === 1 && modes.includes('truncate-stream')) return void res.end();
+      if (index === 1 && modes.includes('reset-stream')) return void res.socket.destroy();
       if (res.destroyed) return;
       res.write(`data: ${JSON.stringify({ choices: [{ delta: { content: piece } }] })}\n\n`);
       console.log(`fake: piece ${index}`);

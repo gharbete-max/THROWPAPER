@@ -335,13 +335,21 @@ describe('the child process dies', () => {
     expect(r.spawned).toHaveLength(2);
   });
 
-  it('a stream that stops without its end marker is a failure, never a finished answer', async () => {
-    const r = await rig({ modes: 'truncate-stream' });
-    await r.run('one', TEXT_TASK);
-    const verdict = await r.settled('one');
-    expect(verdict.kind).toBe('error');
-    expect(r.of('one')).not.toContain('done');
-  });
+  it.each(['truncate-stream', 'reset-stream'])(
+    'a stream that stops short (%s) while the process lives is never a finished answer: the server is let go and the next task starts afresh',
+    async (mode) => {
+      const r = await rig({ modes: mode });
+      await r.run('one', TEXT_TASK);
+      await expect(r.settled('one')).resolves.toMatchObject({ problem: 'cannot-start' });
+      expect(r.of('one')).not.toContain('done');
+      expect(r.coordinator.state().resident).toBeNull();
+      expect(r.aliveCount()).toBe(0);
+      r.state.modes = '';
+      await r.run('two', TEXT_TASK);
+      await expect(r.settled('two')).resolves.toMatchObject({ kind: 'done' });
+      expect(r.spawned).toHaveLength(2);
+    },
+  );
 
   it('a start that crashes leaves no process, and a later start works', async () => {
     const r = await rig({ modes: 'crash-on-start' });

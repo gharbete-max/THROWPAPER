@@ -6,6 +6,7 @@ import type { BrowserWindow as ElectronBrowserWindow, Session } from 'electron';
 import { defaultTokens, type TokenSet } from '@tp/tokens';
 import { printMargins, toPdfFooterTemplate, toPdfHeaderTemplate } from '@tp/tokens/pdf';
 import type { PdfRenderer } from '@tp/api-forms/desktop';
+import { createLimit } from './lifecycle.js';
 
 /**
  * PDFs from the Chromium that Electron already is (ADR 0016).
@@ -31,6 +32,10 @@ export interface ElectronPdfDeps {
    * being printed is cancelled — see `renderRequestAllowed`. Absent only in tests.
    */
   session?: Session;
+  /** Hidden windows at once; each is a browser page of tens of megabytes. Default 2. */
+  parallel?: number;
+  /** A page that has not loaded and printed by then is given up on and its window destroyed. Default 60 s. */
+  timeoutMs?: number;
 }
 
 /**
@@ -59,39 +64,63 @@ export function createElectronPdfRenderer(deps: ElectronPdfDeps): PdfRenderer {
   const tokens = deps.tokens ?? defaultTokens;
   /** The page files currently being printed, as URLs — the only files the window may load. */
   const pages = new Set<string>();
+  const limited = createLimit(deps.parallel ?? 2);
   deps.session?.webRequest.onBeforeRequest((details, callback) => {
     callback({ cancel: !renderRequestAllowed(details.url, pages) });
   });
 
-  async function withPage<T>(
+  /**
+   * One page, printed in a hidden window. At most `parallel` windows at once (a batch of two
+   * hundred admission cards must not open two hundred browsers), and a page that does not finish in
+   * `timeoutMs` is given up on, so a script that never ends cannot hold a window, and the request
+   * that waits on it, for ever. Whatever happens the window is destroyed and the file removed.
+   */
+  function withPage<T>(
     html: string,
     use: (window: ElectronBrowserWindow) => Promise<T>,
   ): Promise<T> {
-    await mkdir(deps.scratchDir, { recursive: true });
-    const file = join(deps.scratchDir, `render-${randomUUID()}.html`);
-    await writeFile(file, html, { encoding: 'utf8', mode: 0o600 });
-    const page = pathToFileURL(file).href;
-    pages.add(page);
-    const window = new deps.BrowserWindow({
-      show: false,
-      webPreferences: {
-        sandbox: true,
-        contextIsolation: true,
-        nodeIntegration: false,
-        ...(deps.session ? { session: deps.session } : {}),
-      },
+    return limited(async () => {
+      await mkdir(deps.scratchDir, { recursive: true });
+      const file = join(deps.scratchDir, `render-${randomUUID()}.html`);
+      await writeFile(file, html, { encoding: 'utf8', mode: 0o600 });
+      const page = pathToFileURL(file).href;
+      pages.add(page);
+      let window: ElectronBrowserWindow | undefined;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      try {
+        const opened = new deps.BrowserWindow({
+          show: false,
+          webPreferences: {
+            sandbox: true,
+            contextIsolation: true,
+            nodeIntegration: false,
+            ...(deps.session ? { session: deps.session } : {}),
+          },
+        });
+        window = opened;
+        const work = (async () => {
+          await opened.loadFile(file);
+          // The same wait `render.ts` makes: without it the embedded font may not have applied yet
+          // and å ä ö fall back to a system face.
+          await opened.webContents.executeJavaScript('document.fonts.ready.then(() => true)');
+          return use(opened);
+        })();
+        // After a timeout the destroyed window fails the work: that is not news.
+        work.catch(() => undefined);
+        const timeout = new Promise<never>((_resolve, reject) => {
+          timer = setTimeout(
+            () => reject(new Error('the page took too long to print')),
+            deps.timeoutMs ?? 60_000,
+          );
+        });
+        return await Promise.race([work, timeout]);
+      } finally {
+        clearTimeout(timer);
+        window?.destroy();
+        pages.delete(page);
+        await rm(file, { force: true });
+      }
     });
-    try {
-      await window.loadFile(file);
-      // The same wait `render.ts` makes: without it the embedded font may not have applied yet
-      // and å ä ö fall back to a system face.
-      await window.webContents.executeJavaScript('document.fonts.ready.then(() => true)');
-      return await use(window);
-    } finally {
-      window.destroy();
-      pages.delete(page);
-      await rm(file, { force: true });
-    }
   }
 
   return {

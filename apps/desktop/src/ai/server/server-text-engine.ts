@@ -43,6 +43,30 @@ export function estimateTokens(text: string): number {
   return Math.ceil(tokens * 1.1);
 }
 
+/** The stream ended without its end marker: the server died or the connection was cut. */
+export class StreamCut extends Error {
+  constructor() {
+    super('llama-server closed the stream before the answer was complete');
+    this.name = 'StreamCut';
+  }
+}
+
+/**
+ * Whether a request failed because the connection to the server was lost (the process was killed,
+ * crashed, or dropped the socket), as opposed to the server answering badly. A server that dropped
+ * a connection in the middle of a task is not one to go on with: it is ended and the next task
+ * starts a fresh one. Waiting for its exit to be reported is no test of this: on Windows a killed
+ * process holding 6 GB takes seconds to be reaped, long after its sockets were reset.
+ */
+export function isConnectionLost(error: unknown): boolean {
+  if (error instanceof StreamCut) return true;
+  if (!(error instanceof TypeError)) return false;
+  const code = String((error.cause as { code?: unknown } | undefined)?.code ?? '');
+  return (
+    /^(UND_ERR|ECONN|EPIPE|ETIMEDOUT)/.test(code) || /fetch failed|terminated/i.test(error.message)
+  );
+}
+
 /** The server answered, but not with a completion. */
 export class ServerHttpError extends Error {
   constructor(
@@ -103,7 +127,7 @@ export async function streamChat(
     }
     // The server always ends a stream with [DONE]. A stream that just stops is a process that died
     // (or a connection that was cut) and the text so far is not an answer: it must not pass for one.
-    throw new Error('llama-server closed the stream before the answer was complete');
+    throw new StreamCut();
   } catch (error) {
     if (signal.aborted) return text;
     throw error;

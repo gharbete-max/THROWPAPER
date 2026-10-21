@@ -159,16 +159,43 @@ export async function joinFile(
   options: { signal?: AbortSignal; onProgress?: OnProgress } = {},
 ): Promise<string> {
   const target = join(destDir, file.name);
-  const pieces = (await Promise.all(file.parts.map((p) => exists(join(folder, p.name))))).every(
-    Boolean,
-  )
+  type Piece = { bytes: number; name: string; sha256?: string | undefined };
+  /**
+   * The pieces `make-ai-pack.ts` cuts, `<name>.part1`, `.part2`, ...: found by that naming rule and
+   * never from `PACK.json`. They carry no hash of their own here (the app knows the whole file's),
+   * so only the joined file is held to the manifest, and it is the one that becomes a model.
+   */
+  const numbered = async (): Promise<Piece[] | null> => {
+    const found: Piece[] = [];
+    for (let index = 1; index <= 64; index += 1) {
+      const name = `${file.name}.part${index}`;
+      const info = await stat(join(folder, name)).catch(() => null);
+      if (!info?.isFile()) break;
+      found.push({ bytes: info.size, name });
+    }
+    return found.length > 0 ? found : null;
+  };
+  const pieces: Piece[] | null = (
+    await Promise.all(file.parts.map((p) => exists(join(folder, p.name))))
+  ).every(Boolean)
     ? file.parts
     : (await exists(join(folder, file.name)))
       ? [{ bytes: file.bytes, name: file.name, sha256: file.sha256 }]
-      : null;
+      : await numbered();
   if (!pieces) {
     const missing = file.parts.find((p) => !existsSync(join(folder, p.name)));
     throw new PackError('missing', `${missing?.name ?? file.name} is not in the folder`);
+  }
+  const total = pieces.reduce((sum, piece) => sum + piece.bytes, 0);
+  if (total < file.bytes) {
+    // A numbered run that stops short: a part was never copied.
+    const next =
+      file.parts.find((p) => !existsSync(join(folder, p.name)))?.name ??
+      `${file.name}.part${pieces.length + 1}`;
+    throw new PackError(
+      'missing',
+      `${next} is not in the folder (${file.name} has ${total} of its ${file.bytes} bytes there)`,
+    );
   }
   await mkdir(destDir, { recursive: true });
   const joining = `${target}.joining`;
@@ -195,7 +222,7 @@ export async function joinFile(
         });
         yield chunk as Buffer;
       }
-      if (sha256Hex(hash) !== piece.sha256) {
+      if (piece.sha256 !== undefined && sha256Hex(hash) !== piece.sha256) {
         throw new PackError('hash', `${piece.name} is not the file in the manifest`);
       }
     }

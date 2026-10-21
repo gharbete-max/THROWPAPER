@@ -45,20 +45,17 @@ for (const file of manifest.files) {
   const want = TEXT_MODEL.files.find((f) => f.name === file.name);
   const parts = file.parts.map((p) => `${p.name} ${p.bytes} ${p.sha256}`).join('\n    ');
   const hashOk = want?.sha256 === file.sha256;
-  const partsOk =
-    want !== undefined &&
-    want.parts.length === file.parts.length &&
-    want.parts.every(
-      (p, i) => p.sha256 === file.parts[i]?.sha256 && p.name === file.parts[i]?.name,
-    );
-  same &&= hashOk && partsOk;
+  // The app checks the joined file against the manifest's whole-file hash. The pieces need not be
+  // the ones the manifest lists (it lists each file whole, as Hugging Face holds it): the app finds
+  // `<name>.part1`, `.part2`, ... by that naming rule and holds only the joined file to its hash.
+  same &&= hashOk;
   console.log(
     `${file.name}: ${file.bytes} bytes, whole hash ${hashOk ? 'matches' : 'DIFFERS from'} the manifest\n    ${parts}`,
   );
 }
 console.log(
   same
-    ? 'every file and part matches the manifest in packages/shared/src/ai/models.'
-    : 'NOT the files the manifest names (a different split or different weights): the app would refuse them.',
+    ? 'every file joins to the hash in packages/shared/src/ai/models.'
+    : 'NOT the files the manifest names (different weights): the app would refuse them.',
 );
 process.exit(same ? 0 : 1);

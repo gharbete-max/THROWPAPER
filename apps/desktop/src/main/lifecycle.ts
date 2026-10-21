@@ -14,11 +14,26 @@
 export type Exclusive = <T>(job: () => Promise<T>) => Promise<T>;
 
 export function createLock(): Exclusive {
-  let tail: Promise<unknown> = Promise.resolve();
-  return (job) => {
-    const run = tail.then(job, job);
-    tail = run.catch(() => undefined);
-    return run;
+  return createLimit(1);
+}
+
+/**
+ * At most n jobs at a time, the rest waiting in the order they came. A finished job hands its
+ * place to the next waiter directly, so the count never goes over n in between.
+ */
+export function createLimit(n: number): Exclusive {
+  let active = 0;
+  const waiting: Array<() => void> = [];
+  return async (job) => {
+    if (active >= n) await new Promise<void>((resolve) => waiting.push(resolve));
+    else active += 1;
+    try {
+      return await job();
+    } finally {
+      const next = waiting.shift();
+      if (next) next();
+      else active -= 1;
+    }
   };
 }
 

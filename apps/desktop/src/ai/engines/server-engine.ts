@@ -15,7 +15,7 @@ import {
   type SpawnFn,
 } from '../server/llama-server.js';
 import { MIN_FREE_MIB, listDevices, type GpuDevice } from '../server/gpu.js';
-import { createServerTextEngine } from '../server/server-text-engine.js';
+import { createServerTextEngine, isConnectionLost } from '../server/server-text-engine.js';
 import { runTextTask } from '../text/run-text-task.js';
 import { readPage } from '../vision/read-page.js';
 import type { TextEngine } from '../text/text-engine.js';
@@ -215,9 +215,14 @@ export class ServerEngine implements Engine {
         ? await runTextTask(this.text, task, onEvent, signal)
         : await readPage(server.connection, task, onEvent, signal);
     } catch (error) {
-      // A server that is gone cannot answer: the coordinator drops an engine that cannot carry on.
-      if (!(error instanceof AiError) && !signal.aborted && (await server.exitedWithin(500))) {
-        throw new AiError('cannot-start', 'llama-server ended');
+      // A server that is gone, or that dropped the connection, cannot be trusted with the next
+      // task: the coordinator drops an engine that cannot carry on, which ends the process.
+      if (
+        !(error instanceof AiError) &&
+        !signal.aborted &&
+        (isConnectionLost(error) || (await server.exitedWithin(500)))
+      ) {
+        throw new AiError('cannot-start', 'llama-server ended or dropped the connection');
       }
       throw error;
     }
