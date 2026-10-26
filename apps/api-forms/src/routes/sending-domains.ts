@@ -7,7 +7,7 @@ import type { Repositories } from '../db/repositories/index.js';
 import { recordAudit } from '../audit.js';
 import { domainOf, verifyDomain, type TxtResolver } from '../mail/domain-verification.js';
 
-const IdParam = z.object({ id: z.string().uuid() });
+const IdParam = z.object({ id: z.guid() });
 
 const errorResponses = {
   401: api.ErrorResponse,
@@ -24,7 +24,7 @@ const RecordCheckResponse = z.object({
 });
 
 const SendingDomainResponse = z.object({
-  id: z.string().uuid(),
+  id: z.guid(),
   domain: z.string(),
   fromAddress: z.string(),
   dkimSelectors: z.array(z.string()),

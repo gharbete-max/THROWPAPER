@@ -45,7 +45,7 @@ export function registerLedgerRoutes(
     422: api.ErrorResponse,
   } as const;
 
-  const IdParam = z.object({ id: z.string().uuid() });
+  const IdParam = z.object({ id: z.guid() });
 
   app.get('/v1/ledger/accounts', {
     preHandler: authenticated,

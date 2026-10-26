@@ -1,11 +1,8 @@
 import Fastify, { type FastifyError, type FastifyInstance } from 'fastify';
 import rateLimit from '@fastify/rate-limit';
 import { RATE_LIMITS, ipFlood, rateLimitKey } from './rate-limit.js';
-import {
-  serializerCompiler,
-  validatorCompiler,
-  type ZodTypeProvider,
-} from 'fastify-type-provider-zod';
+import { serializerCompiler } from './zod-serializer.js';
+import { validatorCompiler, type ZodTypeProvider } from 'fastify-type-provider-zod';
 import { CONTRACT_VERSION } from '@tp/shared';
 import type { Db } from './db/client.js';
 import { registerEnvelopeRoutes } from './routes/envelopes.js';

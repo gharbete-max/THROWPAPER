@@ -207,7 +207,7 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
     onRequest: authenticate,
     schema: {
       tags: ['envelopes'],
-      params: z.object({ id: z.string().uuid() }),
+      params: z.object({ id: z.guid() }),
       response: { 200: EnvelopeStatusResponse, ...errors },
     },
     handler: async (request, reply) => {
@@ -246,7 +246,7 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
     onRequest: authenticate,
     schema: {
       tags: ['envelopes'],
-      params: z.object({ id: z.string().uuid() }),
+      params: z.object({ id: z.guid() }),
       response: { 200: EnvelopeStatusResponse, 409: api.ErrorResponse, ...errors },
     },
     handler: async (request, reply) => {
@@ -346,7 +346,7 @@ export function registerEnvelopeRoutes(app: FastifyInstance, deps: Deps): void {
     onRequest: authenticate,
     schema: {
       tags: ['envelopes'],
-      params: z.object({ id: z.string().uuid() }),
+      params: z.object({ id: z.guid() }),
       response: { 200: SealedDocumentResponse, 409: api.ErrorResponse, ...errors },
     },
     handler: async (request, reply) => {

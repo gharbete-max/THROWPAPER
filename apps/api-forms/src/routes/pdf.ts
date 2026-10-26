@@ -20,7 +20,7 @@ const Plan = z.array(
 );
 
 /** A PDF's own fields: field name to text, or to a tick. */
-const FieldValues = z.record(z.union([z.string(), z.boolean()]));
+const FieldValues = z.record(z.string(), z.union([z.string(), z.boolean()]));
 
 /** What a screen can show, by refusal. A file the plan could not use is a 400; a signed one a 409. */
 const STATUS: Record<ArrangeRefusalCode, 400 | 409> = {

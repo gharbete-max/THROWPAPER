@@ -42,7 +42,7 @@ export const PublicFormResponse = z.object({
 export const ValidationIssueResponse = z.object({
   key: z.string(),
   code: z.string(),
-  params: z.record(z.union([z.string(), z.number()])).optional(),
+  params: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
 });
 
 const ScalarAnswer = z.union([z.string(), z.number(), z.boolean(), z.array(z.string()), z.null()]);
@@ -58,13 +58,13 @@ const ScalarAnswer = z.union([z.string(), z.number(), z.boolean(), z.array(z.str
  * produces a message a respondent can act on; this one exists so a request with ten thousand
  * entries is refused before anything walks it.
  */
-const GroupAnswer = z.array(z.record(ScalarAnswer)).max(MAX_GROUP_ENTRIES);
+const GroupAnswer = z.array(z.record(z.string(), ScalarAnswer)).max(MAX_GROUP_ENTRIES);
 
 const AnswerValue = z.union([ScalarAnswer, GroupAnswer]);
 
 export const SubmitRequest = z.object({
   locale: Locale,
-  values: z.record(AnswerValue),
+  values: z.record(z.string(), AnswerValue),
   /** Continues an existing draft rather than starting a new submission. */
   resumeToken: z.string().min(16).max(512).optional(),
   /**
@@ -176,7 +176,7 @@ export const SubmitRejected = z.object({
 
 export const SaveDraftRequest = z.object({
   locale: Locale,
-  values: z.record(AnswerValue),
+  values: z.record(z.string(), AnswerValue),
   resumeToken: z.string().min(16).max(512).optional(),
   /**
    * The same honeypot the submit route has, for the same reason.
@@ -197,7 +197,7 @@ export const SaveDraftResponse = z.object({
 
 export const ResumeResponse = z.object({
   locale: Locale,
-  values: z.record(AnswerValue),
+  values: z.record(z.string(), AnswerValue),
   formVersion: z.number().int().positive(),
 });
 

@@ -48,7 +48,7 @@ export function registerAdminRoutes(
   /** The two ways a well-formed request about a real person can still be refused. */
   const writeErrorResponses = { ...errorResponses, 409: api.ErrorResponse } as const;
 
-  const UserParam = z.object({ id: z.string().uuid() });
+  const UserParam = z.object({ id: z.guid() });
 
   /**
    * A person, in the shape the list already uses.

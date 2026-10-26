@@ -21,7 +21,7 @@ import { createHash } from 'node:crypto';
 import { PageTooLarge, pagesToPdf } from '../signing/scan.js';
 import { queueInvitations, queueSignedCopies } from '../signing/invitations.js';
 
-const IdParam = z.object({ id: z.string().uuid() });
+const IdParam = z.object({ id: z.guid() });
 const errors = {
   401: api.ErrorResponse,
   403: api.ErrorResponse,

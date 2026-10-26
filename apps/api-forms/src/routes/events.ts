@@ -7,7 +7,7 @@ import type { EventRecord, Repositories } from '../db/repositories/index.js';
 import { localeConfigFor, toEventResponse } from '../events/service.js';
 import { recordAudit } from '../audit.js';
 
-const IdParam = z.object({ id: z.string().uuid() });
+const IdParam = z.object({ id: z.guid() });
 
 type EventPatchRecord = Partial<Omit<EventRecord, 'id' | 'organisationId' | 'createdAt'>>;
 

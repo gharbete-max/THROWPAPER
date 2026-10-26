@@ -18,7 +18,7 @@ import type { OutgoingStore } from '../mail/queue.js';
  * cannot be driven, the page uses a `mailto:` link and offers the attachment to save, and tells
  * this API it was opened.
  */
-const IdParam = z.object({ id: z.string().uuid() });
+const IdParam = z.object({ id: z.guid() });
 const AttachmentParam = IdParam.extend({ index: z.coerce.number().int().min(0).max(50) });
 
 const errorResponses = {

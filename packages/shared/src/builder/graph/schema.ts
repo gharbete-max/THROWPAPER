@@ -241,7 +241,7 @@ export const JsonSchema: z.ZodType<Json> = z.lazy(() =>
     z.number(),
     z.string(),
     z.array(JsonSchema),
-    z.record(JsonSchema),
+    z.record(z.string(), JsonSchema),
   ]),
 );
 const json = JsonSchema;
@@ -273,7 +273,7 @@ const option = z
     detail: key.optional(),
     icon: z.string().optional(),
     patch: z.array(op),
-    score: z.record(z.number()).optional(),
+    score: z.record(z.string(), z.number()).optional(),
     next: next.optional(),
   })
   .strict();

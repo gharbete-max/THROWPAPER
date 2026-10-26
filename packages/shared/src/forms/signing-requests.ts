@@ -36,7 +36,7 @@ export const CreateSigningRequest = z.discriminatedUnion('source', [
   }),
   z.object({
     source: z.literal('paper'),
-    submissionId: z.string().uuid(),
+    submissionId: z.guid(),
     ...Common,
   }),
   /**
@@ -62,11 +62,11 @@ export const CreateSigningRequest = z.discriminatedUnion('source', [
 export type CreateSigningRequest = z.input<typeof CreateSigningRequest>;
 
 export const SigningRequestView = z.object({
-  id: z.string().uuid(),
+  id: z.guid(),
   envelopeId: z.string(),
   documentName: z.string(),
   source: z.enum(['upload', 'paper', 'scan']),
-  submissionId: z.string().uuid().nullable(),
+  submissionId: z.guid().nullable(),
   environment: z.enum(['test', 'production']),
   status: z.string(),
   parties: z.array(

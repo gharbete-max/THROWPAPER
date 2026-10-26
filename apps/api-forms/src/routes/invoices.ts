@@ -8,7 +8,7 @@ import type { InvoiceRecord, Repositories } from '../db/repositories/index.js';
 import type { PdfRenderer } from '../documents/render.js';
 import { invoiceDocument } from './public-invoices.js';
 
-const IdParam = z.object({ id: z.string().uuid() });
+const IdParam = z.object({ id: z.guid() });
 const LangQuery = z.object({ lang: z.string().max(16).optional() });
 
 /**

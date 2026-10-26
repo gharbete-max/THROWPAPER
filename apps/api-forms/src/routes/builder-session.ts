@@ -24,7 +24,7 @@ import { resolveFormAccess as resolve } from '../forms/access.js';
  * draft's: it fires on every answer and would bury the entries that matter.
  */
 
-const IdParam = z.object({ id: z.string().uuid() });
+const IdParam = z.object({ id: z.guid() });
 
 const errorResponses = {
   401: api.ErrorResponse,

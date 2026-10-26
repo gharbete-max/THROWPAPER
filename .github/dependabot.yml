@@ -35,14 +35,8 @@ updates:
       # 6.x changes default types/module resolution; every tsconfig in the workspace needs the migration.
       - dependency-name: 'typescript'
         update-types: ['version-update:semver-major']
-      # 7.x requires Zod 4; packages/shared is Zod 3 throughout.
-      - dependency-name: 'fastify-type-provider-zod'
-        update-types: ['version-update:semver-major']
       # 7.x turns on the React Compiler rules: ten effect refactors, each needing its own test.
       - dependency-name: 'eslint-plugin-react-hooks'
-        update-types: ['version-update:semver-major']
-      # 4.x rewrites every schema in packages/shared, contract first — a planned migration (ADR 0005 §#99).
-      - dependency-name: 'zod'
         update-types: ['version-update:semver-major']
       # 9.x renames the row-model API; the Submissions grid is a rewrite wanting its browser spec first (§#100).
       - dependency-name: '@tanstack/react-table'
