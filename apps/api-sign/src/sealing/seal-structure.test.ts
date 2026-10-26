@@ -49,7 +49,7 @@ function read(buf: Uint8Array, at: number): Node {
 }
 function kids(buf: Uint8Array, node: Node): Node[] {
   const out: Node[] = [];
-  for (let at = node.body; at < node.end; ) {
+  for (let at = node.body; at < node.end;) {
     const child = read(buf, at);
     out.push(child);
     at = child.end;

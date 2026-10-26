@@ -100,3 +100,24 @@ No photograph has text written over it today (MEDIA.md: "nothing is written over
 Total 1249.2 to 1251.2 KB of 1250 with the new words (two messages in twelve catalogues), the rule and the spinner: over. Cut first, as asked: seven catalogue keys that nothing references (`ai.models.unavailable`, `…unavailableWhy`, `…unverifiedLicence`, `…needs`, `read.proofread`, `docs.reading`, `docs.noText`), removed from all twelve files. Final: **entry 6.7 of 12, stylesheet 11.8 of 14.5, total 1248.9 of 1250 KB** (the rule went in the lazy file, so the entry stylesheet did not move).
 
 Gates on the merged branch: format, typecheck, lint (2 existing warnings), test 7778, build, bundle:budget, contract:check, licence:check, builder:validate; full `pnpm test:e2e` 178 of 178 (13.0 min, under the lock).
+
+## Part C: the `@signpdf` and `asn1js` 4.x majors (branch `claude/signpdf-4`)
+
+Dependabot opened `@signpdf/signpdf`, `@signpdf/utils`, `@signpdf/placeholder-pdf-lib` and `asn1js`
+as four PRs that each fail alone; they are one change.
+
+- **No code change was needed.** The three call sites (`seal.ts`, `cms.ts`, `certificate.ts`) use
+  only `SignPdf`, `Signer`, `SUBFILTER_ETSI_CADES_DETACHED`, `pdflibAddPlaceholder` and plain
+  `asn1js` constructors, and those did not change shape.
+- **`pkijs` moves too (3.4.1 to 4.0.0).** pkijs 3 depends on its own `asn1js` 3, so with `asn1js`
+  4 in the app two copies load and the types clash (`Integer` from one is not the other's). pkijs 4
+  takes `asn1js` ^4 as a peer. This is the one addition beyond the four PRs.
+- **Node floor is now 22.** `@signpdf` 4 declares `node >=22`; CI already runs 22 and Electron 44
+  ships Node 24. Root `engines` changed from `>=20` to `>=22`.
+- **Safety net, written before the bump.** `seal-structure.test.ts` freezes, as inline snapshots
+  captured from the 3.x code, the signature dictionary (`/Filter`, `/SubFilter`, `/M`, `/Reason`,
+  `/Name`, empty `/ContactInfo` and `/Location`, `/Prop_Build`), the placeholder size (16384
+  characters), `/SigFlags 3`, and the CMS down to OIDs, versions, signed-attribute order and the
+  signature length; plus both witnesses (`node-verifier.ts` and OpenSSL), and a pdfjs and pdf-lib
+  open. The key and certificate are random per run, so key-dependent bytes are left out. The
+  snapshots passed unchanged after the bump, as did every tamper test.
