@@ -45,6 +45,7 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | What the app shows a user (words, flows) | `apps/forms/src/lib/messages/en-GB.ts` | `docs/USER-GUIDE.md` (keep it in step with the screens) |
 | Structure, simplification | `docs/plan/SIMPLIFY.md` | its ranked table and order |
 | Reviews (coverage map, findings, residual risks) | `docs/reviews/` (`2026-10-forms-ui.md`: Forms UI, twelve languages, axe, perf, keyboard; `2026-10-backend-and-shared.md`: backend and shared packages; fuzz tests are `*/fuzz*.test.ts`, seeded, `FUZZ_SEED=<n>` replays; `2026-10-sign-and-carryover.md`: Sign and seal, checked by OpenSSL and `sealing/node-verifier.ts`, tamper tests `sealing/tamper.test.ts`, plus the carry-over fixes: LAN relay, Outlook unknown outcome, lazy guided draft, spinner, scrim guard; A-7..A-10 closed: clock-skew refusal in `packages/signing`, `ipFlood` in `api-sign/src/rate-limit.ts`, `#`-escaped names and object-stream signatures in `api-forms/src/pdf/arrange.ts`, signed-copy mail once per signer) | `docs/SECURITY-REVIEW-2026-10.md` |
+| The next two catchers (Spreadsheets, Presentation & planning): plans only, nothing built | none yet (new `packages/{ooxml,sheets,slides}` and `screens/{sheets,slides}/` are planned, not present) | ADR 0027, `docs/plan/SPREADSHEETS.md`, `docs/plan/PRESENTATIONS.md` |
 | Which decision says what | `docs/adr/README.md` | one line per ADR with its status |
 | Contract / API | `docs/CONTRACT.md`, `packages/shared/src/contract`, `pnpm contract:check` | |
 | Reviews (security 2026-10, desktop and AI 2026-10: scenario table, soak, installer numbers) | `docs/SECURITY-REVIEW-2026-10.md`, `docs/reviews/2026-10-desktop-ai.md`; tests `apps/desktop/src/ai/reliability{,.real}.test.ts`; installed-program smoke `apps/desktop/scripts/smoke-installed.ts` | the finding tables |
@@ -121,4 +122,5 @@ verified from GitHub's side); the app's Get button downloads tiers from Hugging 
 step) is decided against until a native reader can check it; SIMPLIFY 9 is done (`recommendModel` by memory).
 **Unverified**: macOS, 8-12 GB laptops, CPUs without AVX2, other graphics drivers, screen readers, native-speaker
 quality (strings for a native read are listed in docs/reviews/2026-10-forms-ui.md).
+**Next (planned, 2026-10-26, nothing built):** Spreadsheets (Library, Convert, Clean, Inspect around Explain and suggest), then Presentation & planning (Outline, Slides, Plan, Share around Summarise, outline and notes): ADR 0027 and the two plans, each with defaults and owner questions. The placeholders stay inert until their room phase.
 Web bundle total is at its cap (1 249 of 1 250 KB): a new feature must cut elsewhere or raise the cap with a reason.
