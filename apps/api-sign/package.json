@@ -20,9 +20,9 @@
     "seal:dev-cert": "tsx src/sealing/dev-cert-cli.ts"
   },
   "dependencies": {
-    "@electric-sql/pglite": "^0.5.10",
+    "@electric-sql/pglite": "^0.5.11",
     "@fastify/rate-limit": "^11.2.1",
-    "@fastify/static": "^10.1.6",
+    "@fastify/static": "^10.1.7",
     "@signpdf/placeholder-pdf-lib": "^3.3.0",
     "@signpdf/signpdf": "^3.3.0",
     "@signpdf/utils": "^3.3.0",
