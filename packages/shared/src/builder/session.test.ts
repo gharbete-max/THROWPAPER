@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { emptyDefinition } from '../forms/definition.js';
 import { jsonEqual } from './changes.js';
@@ -58,7 +59,7 @@ describe('a saved session', () => {
   it('is recorded the same way by every build until someone reviews a change to it', async () => {
     const c = recorded();
     const file = { session: toSession(G, c), draft: c.state.draft };
-    await expect(`${JSON.stringify(file, null, 2)}\n`).toMatchFileSnapshot(FIXTURE.pathname);
+    await expect(`${JSON.stringify(file, null, 2)}\n`).toMatchFileSnapshot(fileURLToPath(FIXTURE));
   });
 
   it('replays the recorded session into the draft recorded with it', () => {
