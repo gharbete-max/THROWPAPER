@@ -120,7 +120,17 @@ export function isPlainFileName(value: unknown): value is string {
 }
 
 export async function readPackManifest(folder: string): Promise<PackManifest> {
-  const raw: unknown = JSON.parse(await readFile(join(folder, PACK_FILE), 'utf8'));
+  return parsePackManifest(await readFile(join(folder, PACK_FILE), 'utf8'));
+}
+
+/** A `PACK.json` read from anywhere (a folder, or the published release), checked name by name. */
+export function parsePackManifest(json: string): PackManifest {
+  let raw: unknown;
+  try {
+    raw = JSON.parse(json);
+  } catch {
+    throw new PackError('io', `${PACK_FILE} is not a Loppa AI pack manifest`);
+  }
   const m = raw as Partial<PackManifest> | null;
   const isHash = (v: unknown) => typeof v === 'string' && /^[0-9a-f]{64}$/.test(v);
   const isName = isPlainFileName;

@@ -146,7 +146,7 @@ on a laptop. Smaller tiers exist for weaker computers (_Full_, _Balanced_, _Ligh
 they read and write worse and struggle with hard scans. Loppa marks one _Recommended for this
 computer_. Tiers that failed testing are shown as _Not working yet_ and cannot be downloaded.
 
-**Getting a model**, on the _Set up AI_ page (the room's corner, or the link in the summary centre): one recommended model and one Download button; _Choose another model_ lists the rest and _Advanced_ holds the graphics card, the program, the folder and the saved results:
+**Getting a model**, on the _Add-ons and updates_ page (the room's corner, or the _Set up AI_ link in the summary centre): one recommended model and one Download button; _Choose another model_ lists the rest and _Advanced_ holds the graphics card, the program, the folder and the saved results:
 
 1. **Pick a tier and Download.** Loppa names the host (huggingface.co), the files and the total size
    and waits for you to confirm; you can cancel at any time. The files are checked before first use.
@@ -164,13 +164,34 @@ _Try the graphics card again_. The list says whether the model runs on the proce
 On a Mac the setting says it is not available yet.
 
 The installer never contains the model. The Windows installer carries the program that runs it
-(`llama-server`); a macOS runtime is not verified.
+(`llama-server`); on a Mac the program is fetched from _Add-ons and updates_ (below), and has not
+been tried on a Mac by the developers yet.
+
+## Add-ons and updates
+
+Everything optional is on one page, **Add-ons and updates** (the room's top corner; the first time
+the room opens there is a one-line note about it that you can hide). You never need to look for files
+on GitHub. Each row has a plain description, its size and a button; **every button asks first and
+names the host, the file and the size**, and nothing is fetched or checked until you press and say
+yes. There is no automatic check and no telemetry.
+
+| Row | What it is |
+| --- | --- |
+| **AI model** (the first card) | The recommended model for this computer, one Download button. The usual way. |
+| **AI program** | The small program that runs the model. _Included with Loppa_ on Windows. On a Mac, press **Get the AI program** (about 12 MB from github.com). It is checked against a fixed fingerprint before it is opened. It says _Not tested on this kind of computer yet_: if it does not start, Loppa says so and carries on without AI. |
+| **Graphics-card program** | Optional, makes reading faster on a computer with a separate graphics card. Switched on and off under _Advanced_ in the model list. |
+| **AI pack** | The model's files from Loppa's own release, about 6.9 GB, for offline installs and for computers that cannot reach Hugging Face. It can be stopped and continued. Needs the space for the files and then again for the largest one while it is joined. |
+| **New version** | _Check for a new version_ asks the releases page which version is newest (nothing is sent but the request). If there is one, you see what is new and **Download the installer for this computer**: it is saved in your Downloads folder, checked against the release's published checksums, and only then can you press **Open the installer**. Loppa never runs an installer by itself. |
+
+On the portable Windows program the page says to close Loppa and run the new file instead of the old
+one; on a Mac, to open the disk image and drag Loppa to Applications. If a download does not match
+its published fingerprint it is deleted and nothing is installed.
 
 ## Privacy
 
 **Nothing leaves this computer unless you press something and confirm it.** There is no telemetry, no
-cloud AI and no update check. The desktop's local servers answer only on this computer. The
-exceptions you start yourself are a model download or the graphics-card program (each confirmation names the host) and a phone scan,
+cloud AI and no automatic update check. The desktop's local servers answer only on this computer. The
+exceptions you start yourself are a model download, the AI program, the graphics-card program, the AI pack, checking for a new version and downloading its installer (each confirmation names the host) and a phone scan,
 which uses your local network while open. Email goes out only when you confirm, through your own mail
 program or your SMTP server.
 
@@ -201,7 +222,9 @@ verified: macOS equivalents for the rest.
 | --- | --- |
 | _There is too little free memory to load the model_ / _This computer has X GB of free memory and the model needs about Y GB_ | Close other programs and retry, or choose a lighter tier. |
 | _The file does not match the published model and was not used. Nothing was deleted._ (_Damaged_) | The file is cut off or wrong. Remove it and download or open it again. |
-| _The program that runs the model is missing_ | Open the model list to fetch it. A packaged build without `resources/ai-pack/runtime` has no runtime. |
+| _The program that runs the model is missing_ | Open _Add-ons and updates_ and press **Get the AI program**. A packaged build without `resources/ai-pack/runtime` has no runtime. |
+| _The file did not match its published fingerprint, so it was deleted._ | An add-on or installer arrived changed or cut off. Nothing was installed; press the button again, or try later. |
+| _GitHub could not be reached_ | The check needs the internet only for that press. Check the connection and try again, or place the files by hand as described above. |
 | A pack says _The model is not on this computer_ after opening `PACK.json` | A part is missing from the folder. Put every part beside `PACK.json`. A wrong or damaged part is reported as _does not match_. |
 | _That file is not the model Loppa uses_ | The file opened is not a supported model. |
 | _A file is protected with a password. Remove the protection first._ | Encrypted PDFs cannot be added to Scan. Remove the protection in the program that made it. |

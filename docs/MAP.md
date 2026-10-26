@@ -2,7 +2,7 @@
 
 A router for a coding session, written to save tokens. It summarises `docs/VISION.md`, `CLAUDE.md`,
 `docs/HANDOVER.md` and the ADRs; where it is thin, the linked file is the authority. **Change this
-file in the same PR that changes an area** (a stale map is worse than none). Last updated 2026-10-20 (cleanup: Mailer stubs, the old wizard and finished plans removed).
+file in the same PR that changes an area** (a stale map is worse than none). Last updated 2026-10-26 (Add-ons and updates: one in-app page for everything optional).
 
 ## What Loppa is
 A lightweight, **local-first office helper**, not Acrobat. A room of three independent catchers
@@ -12,7 +12,8 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 
 ## Rules that decide most questions
 1. **Offline by default.** The network only on a user press, with a confirmation naming the host
-   (ADR 0026). No telemetry, no cloud AI, no update ping.
+   (ADR 0026). No telemetry, no cloud AI, no automatic update ping. Nobody has to leave the app to find
+   files: everything optional is on the **Add-ons and updates** page (`/ai-setup`), each with a button.
 2. **AI is optional.** Loppa works with no model. One model resident at a time. AI output is labelled
    generated, kept beside the document, never written into it. The builder/import stay rule-based:
    the model never runs in `packages/shared/src/{builder,interpret,import}`.
@@ -36,9 +37,10 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 | Forms (builder, fill, draft PDF) | `screens/forms/` (`Forms.tsx`, `FillIn.tsx`, `FormResponses.tsx`, `PublicForm.tsx`, `builder/`), `packages/shared/src/{builder,interpret,import}` | ADRs 0017–0021, `docs/plan/PREDICTIVE-BUILDER.md`, `CAVEATS.md` |
 | Sign | `screens/sign/` (`Signing*.tsx`, `MarkMaker`, `PlaceMarks`), `apps/sign`, `apps/api-sign`, `packages/signing` | `docs/CONTRACT.md` §5, ADR 0009 |
 | Send (single, batch, campaigns, reply helper) | `screens/send/` (`Send*.tsx`, `Outgoing`, address parts, reply helper), `api-forms/src/{send,mail}`, `routes/send.ts`, `campaign.ts` | `docs/HANDOVER.md`, ADR 0026 |
+| Add-ons and updates (AI program for Mac, AI pack from its release, update check, installer download; first-run note) | `apps/desktop/src/addons/` (`addons.ts` the service, `release.ts` versions/assets/checksums and the narrow GitHub host list, `extract.ts` safe zip/tar.gz, `pack-download.ts`, `net.ts`, `addons-ipc.ts`; wired in `ai/shell.ts`), `packages/shared/src/ai/addons.ts` (bridge types, consent schema), `apps/forms/src/lib/addons-bridge.ts`, `screens/ai/AddOns.tsx` (rows under the model card in `AiSetup.tsx`), `screens/room/AiHint.tsx` | ADR 0026 (amendment 2026-10-26), ADR 0025 (last section), `docs/SECURITY-REVIEW-2026-10.md` (addendum) |
 | AI (coordinator, engine, models, reader, summary) | `apps/desktop/src/ai/` (`coordinator`, `engines/`, `text/`, `vision/`, `resolve`, `download`, `cache`, `graphics`, `runtime-fetch`, `server/gpu`), `packages/shared/src/{ai,summary,quoted}`, `apps/forms/src/lib/{ai-bridge,model-bridge}.ts`, `screens/ai/` (`Summary.tsx`, `AiSetup.tsx` the one Set up AI page: recommended model, Choose another, Advanced, with `summary/{ModelsPanel,ModelTiers,GraphicsSetting}.tsx`; `read-ai/`, `proofread/`) | `docs/plan/AI-SYSTEM.md`, `docs/plan/VISION-TUNING.md` (speed and accuracy numbers per setting and model), ADRs 0023–0025 |
 | Desktop packaging, AI pack | `apps/desktop/` (`scripts/build.ts`, `electron-builder.yml`, `scripts/{fetch-runtime,make-ai-pack,join-ai-pack,publish-ai-pack}.ts`, `src/ai/pack.ts`) | ADR 0016, 0025 §6, `docs/DEPLOY.md` |
-| Bundle / budgets | `scripts/bundle-budget.ts` (web total 1250 KB gz, 1248.9 on 2026-10-21; entry 12, entry css 14.5; lazy css counts in the total) | its header comment. CSS: `apps/forms/src/styles.css` is the entry (tokens, reset, shell, site, controls); `styles/app.css` loads with `App.tsx`, `styles/builder.css` with the builder, fill and public-form screens |
+| Bundle / budgets | `scripts/bundle-budget.ts` (web total 1262 KB gz, 1258.5 on 2026-10-26; entry 12, entry css 14.5; lazy css counts in the total) | its header comment. CSS: `apps/forms/src/styles.css` is the entry (tokens, reset, shell, site, controls); `styles/app.css` loads with `App.tsx`, `styles/builder.css` with the builder, fill and public-form screens |
 | Demo data | `fixtures/demo/`, seed in `apps/api-forms/src/demo` | `CLAUDE.md` § Demo data |
 | Design | `DESIGN.md`, `docs/plan/DESIGN-LANGUAGE.md`, `docs/brand/`, `docs/plan/DESIGN-PASS.md` (the 2026-10 critique, what is left) | gold is a fill, never text |
 | Photographs (twelve: empty states and screen heads, never the room) | `apps/forms/public/media/`, `EmptyState`'s `media` prop | `docs/brand/MEDIA.md` (source, licence, hash per file; `scripts/media.test.ts`) |
@@ -53,7 +55,7 @@ the product; the hosted web edition is secondary. Internal names stay `throwpape
 ## AI in one paragraph
 One multimodal model, **Qwen2.5-VL-7B-Instruct** (Q4_K_M + f16 or lighter Q8_0 projector; Apache-2.0;
 files sit in the repo root in dev, Git-ignored), run by a pinned **llama.cpp `llama-server`** child
-process on loopback (ADR 0025); killed when idle so memory is truly freed. Needs ~12 GB RAM (9.8 GB
+process on loopback (ADR 0025); killed when idle so memory is truly freed. The program comes with the Windows x64 installer; on a Mac (unverified: nobody here can run macOS) and elsewhere the Add-ons page fetches the pinned asset after a confirmation, hash-checked before it is unpacked by `addons/extract.ts`. Needs ~12 GB RAM (9.8 GB
 measured peak); CPU only by default. An optional catalogue of smaller Apache-2.0 models (Qwen3-VL
 4B/2B, SmolVLM2) is in the catalogue and was measured 2026-10-20: **Qwen3-VL-2B** reads a page in 21 s (3.7 GB) against the 7B's 56 s at 41/48 against 44/48 known strings; the 4B has no edge over the 2B; both SmolVLM2 models do not work yet. A table is asked for as `rows`, the Q8_0 projector is preferred, and the Vulkan (graphics card) build is an **optional setting**, off by default (VISION-TUNING §5, ADR 0025 amendment): "Use the graphics card (faster, optional)" in the model list, Windows x64 only (macOS says "not available yet"). Turning it on without the program asks first (github.com, file, size) or takes it from a `runtime-vulkan` folder placed by hand; the pinned build fits the layers to free memory itself (`-ngl auto`, `--device` the first listed card); any failure (no device, start, memory, first request) falls back to the processor with a plain notice and a remembered, clearable failure (`graphics.json`); the status says what it runs on. Tasks: read-page (vision), summarise, translate, quote, proofread,
 compose-email, reply. Never in the installer (≈6 GB): ships as a separate AI pack (parts < 2 GiB + `PACK.json`; `make-ai-pack.ts`, `join-ai-pack.ts`, `publish-ai-pack.ts`, `src/ai/pack.ts`; install offline via *Open a file from disk* → `PACK.json`). The Windows installer carries `llama-server` in `resources/ai-pack/runtime`. Results are cached
@@ -124,4 +126,5 @@ step) is decided against until a native reader can check it; SIMPLIFY 9 is done 
 **Unverified**: macOS, 8-12 GB laptops, CPUs without AVX2, other graphics drivers, screen readers, native-speaker
 quality (strings for a native read are listed in docs/reviews/2026-10-forms-ui.md).
 **Next (planned, 2026-10-26, nothing built):** Spreadsheets (Library, Convert, Clean, Inspect around Explain and suggest), then Presentation & planning (Outline, Slides, Plan, Share around Summarise, outline and notes): ADR 0027 and the two plans, each with defaults and owner questions. The placeholders stay inert until their room phase.
-Web bundle total is at its cap (1 249 of 1 250 KB): a new feature must cut elsewhere or raise the cap with a reason.
+**Add-ons and updates** (2026-10-26, built): the page `/ai-setup` is now "Add-ons and updates" (corner link and palette say so; Summary's link still says "Set up AI"): the AI model card, then rows for the AI program ("Included" on Windows x64, "Get the AI program" on a Mac), the graphics-card program, the AI pack (the published pack release, about 6.9 GB, same checked machinery) and "Check for a new version" (user-pressed, `desktop-v` tags only, installer downloaded to Downloads, checked against the release's `SHA256SUMS.txt`, opened only by a press). A one-line dismissible note in the room points to it (desktop). `window.loppaAddons` is the bridge. **Unverified**: the Mac program (pinned, unpacked by the real code, never run), the installer download against the real CDN (tested against a fake GitHub and by real requests for the redirect hosts), a packaged-app launch of the new IPC (CI's Desktop workflow).
+Web bundle total: 1 258.5 of 1 262 KB (raised from 1 250 for Add-ons and updates, reason in the budget's header): a new feature must cut elsewhere or raise the cap with a reason.

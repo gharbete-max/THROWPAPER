@@ -49,7 +49,8 @@ import {
 } from '../bridge.js';
 import { fill, messagesFor } from '../messages.js';
 import { registerAiIpc } from '../ai/ai-ipc.js';
-import { AI_CHANNELS, MODEL_CHANNELS } from '../ai/channels.js';
+import { registerAddonsIpc } from '../addons/addons-ipc.js';
+import { ADDONS_CHANNELS, AI_CHANNELS, MODEL_CHANNELS } from '../ai/channels.js';
 import { registerModelIpc } from '../ai/model-ipc.js';
 import { createShellAi } from '../ai/shell.js';
 import { closeAll, createLock } from './lifecycle.js';
@@ -81,7 +82,11 @@ const { lang, t } = messagesFor([app.getLocale(), ...app.getPreferredSystemLangu
  * The AI coordinator (ADR 0024, amending ADR 0023): the one model, run by a `llama-server` process of its own, started only when a
  * job is asked for, and a narrow IPC to the Forms window. Nothing here runs at start-up.
  */
-const { coordinator: ai, model } = createShellAi({
+const {
+  coordinator: ai,
+  model,
+  addons,
+} = createShellAi({
   chooseFile: async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       title: t.menuOpenModel,
@@ -99,6 +104,15 @@ const { coordinator: ai, model } = createShellAi({
   repoRoot: app.isPackaged ? null : join(here, '..', '..', '..'),
   emit: (event) => sendToMain(AI_CHANNELS.event, event),
   emitLegacy: (event) => sendToMain(MODEL_CHANNELS.event, event),
+  addons: {
+    version: app.getVersion(),
+    // electron-builder's portable program sets this while it runs.
+    portable: Boolean(process.env.PORTABLE_EXECUTABLE_FILE),
+    downloads: app.getPath('downloads'),
+    // A person pressed "Open the installer": the system opens it as a double-click would.
+    openPath: (path) => shell.openPath(path),
+    emit: (event) => sendToMain(ADDONS_CHANNELS.event, event),
+  },
   env: process.env,
 });
 
@@ -459,6 +473,7 @@ function registerIpc(): void {
   const formsOnly = () => (server ? [server.url] : []);
   registerModelIpc(ipcMain, model, formsOnly);
   registerAiIpc(ipcMain, ai, formsOnly);
+  registerAddonsIpc(ipcMain, addons, formsOnly);
   const fail = (error: unknown): Result => ({ ok: false, error: (error as Error).message });
   const refused: Result = { ok: false, error: 'not-the-panel' };
 
@@ -595,7 +610,9 @@ if (!app.requestSingleInstanceLock()) {
     // After an operation that has the servers stopped (a backup) has finished, and not for ever.
     const closeServers = () =>
       exclusive(() => closeAll([() => server?.close(), () => sign?.close()], 30_000));
-    void closeAll([closeServers, () => model.close()], 45_000).finally(() => app.quit());
+    void closeAll([closeServers, () => model.close(), async () => addons.close()], 45_000).finally(
+      () => app.quit(),
+    );
   });
 
   void app.whenReady().then(async () => {

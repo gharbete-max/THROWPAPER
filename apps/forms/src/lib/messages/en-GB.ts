@@ -1500,6 +1500,55 @@ export const enGB = {
   'ai.models.optional':
     'AI is optional. Loppa works fully without any model. Nothing is downloaded unless you press Download and confirm.',
   'ai.setup.title': 'Set up AI',
+  'addons.title': 'Add-ons and updates',
+  'addons.intro':
+    'Everything optional is here, so you never have to look for files online. Nothing is fetched until you press a button and confirm.',
+  'addons.more': 'Program, pack and updates',
+  'addons.program': 'AI program',
+  'addons.program.note': 'The small program that runs the AI model on this computer.',
+  'addons.program.included': 'Included with Loppa.',
+  'addons.there': 'On this computer.',
+  'addons.program.none': 'There is no AI program for this kind of computer yet.',
+  'addons.program.get': 'Get the AI program',
+  'addons.untested':
+    'Not tested on this kind of computer yet. If it does not start, Loppa says so and carries on without AI.',
+  'addons.graphics': 'Graphics-card program',
+  'addons.graphics.note':
+    'Optional. Reads pages faster on a computer with a separate graphics card. It is switched on and off under Advanced, in the model list above.',
+  'addons.graphics.get': 'Get the graphics-card program',
+  'addons.pack': 'AI pack',
+  'addons.pack.note':
+    'For offline installs and for computers that cannot reach Hugging Face. The usual way is the Download button in the model list above.',
+  'addons.pack.get': 'Get the AI pack (about {size} GB)',
+  'addons.pack.there': 'The AI model is already on this computer.',
+  'addons.update': 'New version',
+  'addons.update.note': 'Loppa never looks for updates by itself. You have version {version}.',
+  'addons.update.check': 'Check for a new version',
+  'addons.update.checkConfirm':
+    'Ask {host} which version is newest? Nothing is sent except the request itself, and nothing is installed. Continue?',
+  'addons.update.checkYes': 'Check',
+  'addons.update.newest': 'You have the newest version.',
+  'addons.update.available': 'Version {latest} is available.',
+  'addons.update.notes': 'What is new',
+  'addons.update.get': 'Download the installer for this computer ({size} MB)',
+  'addons.update.none': 'This version has no installer for this computer.',
+  'addons.update.saved':
+    'The installer is in your Downloads folder and matches its published fingerprint.',
+  'addons.update.open': 'Open the installer',
+  'addons.update.portable':
+    'You use the portable program. Close Loppa, then run the new file instead of this one.',
+  'addons.update.mac': 'Open the disk image, then drag Loppa to Applications.',
+  'addons.getConfirm':
+    '{what}. Download from {host}? Files: {files}. Size: {size} MB, and it takes that much disk space. Your documents are not sent anywhere, and you can cancel at any time. It is checked against its published fingerprint before use. Continue?',
+  'addons.problem.not-the-listed-file':
+    'The file did not match its published fingerprint, so it was deleted. Nothing was installed.',
+  'addons.problem.offline': 'GitHub could not be reached. Check the connection and try again.',
+  'addons.problem.rate-limited':
+    'GitHub is limiting requests from this connection right now. Try again later.',
+  'addons.problem.no-disk-space': 'There is not enough free disk space.',
+  'addons.hint': 'AI is optional — set it up when you want to.',
+  'addons.hint.dismiss': 'Hide this note',
+  'addons.progress': '{done} of {total} MB',
   'ai.setup.doesText': 'Summarises, translates, proofreads and drafts email.',
   'ai.setup.doesVision': 'Reads a scanned page.',
   'ai.setup.another': 'Choose another model',

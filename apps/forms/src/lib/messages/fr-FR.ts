@@ -1523,6 +1523,56 @@ export const frFR: Record<MessageKey, string> = {
   'ai.models.optional':
     'L’IA est facultative. Loppa fonctionne pleinement sans aucun modèle. Rien n’est téléchargé tant que vous n’appuyez pas sur Télécharger et ne confirmez pas.',
   'ai.setup.title': 'Configurer l’IA',
+  'addons.title': 'Modules complémentaires et mises à jour',
+  'addons.intro':
+    'Tout ce qui est facultatif est ici, pour que vous n’ayez jamais à chercher des fichiers en ligne. Rien n’est récupéré tant que vous n’appuyez pas sur un bouton et ne confirmez pas.',
+  'addons.more': 'Programme, pack et mises à jour',
+  'addons.program': 'Programme d’IA',
+  'addons.program.note': 'Le petit programme qui exécute le modèle d’IA sur cet ordinateur.',
+  'addons.program.included': 'Inclus avec Loppa.',
+  'addons.there': 'Sur cet ordinateur.',
+  'addons.program.none': 'Il n’existe pas encore de programme d’IA pour ce type d’ordinateur.',
+  'addons.program.get': 'Obtenir le programme d’IA',
+  'addons.untested':
+    'Pas encore testé sur ce type d’ordinateur. S’il ne démarre pas, Loppa le dit et continue sans IA.',
+  'addons.graphics': 'Programme pour carte graphique',
+  'addons.graphics.note':
+    'Facultatif. Lit les pages plus vite sur un ordinateur doté d’une carte graphique dédiée. Il s’active et se désactive sous Avancé, dans la liste des modèles ci-dessus.',
+  'addons.graphics.get': 'Obtenir le programme pour carte graphique',
+  'addons.pack': 'Pack d’IA',
+  'addons.pack.note':
+    'Pour les installations hors ligne et les ordinateurs qui ne peuvent pas joindre Hugging Face. La voie habituelle est le bouton Télécharger dans la liste des modèles ci-dessus.',
+  'addons.pack.get': 'Obtenir le pack d’IA (environ {size} Go)',
+  'addons.pack.there': 'Le modèle d’IA est déjà sur cet ordinateur.',
+  'addons.update': 'Nouvelle version',
+  'addons.update.note':
+    'Loppa ne cherche jamais de mises à jour de lui-même. Vous avez la version {version}.',
+  'addons.update.check': 'Rechercher une nouvelle version',
+  'addons.update.checkConfirm':
+    'Demander à {host} quelle est la version la plus récente ? Rien n’est envoyé hormis la requête elle-même, et rien n’est installé. Continuer ?',
+  'addons.update.checkYes': 'Rechercher',
+  'addons.update.newest': 'Vous avez la version la plus récente.',
+  'addons.update.available': 'La version {latest} est disponible.',
+  'addons.update.notes': 'Nouveautés',
+  'addons.update.get': 'Télécharger l’installateur pour cet ordinateur ({size} Mo)',
+  'addons.update.none': 'Cette version n’a pas d’installateur pour cet ordinateur.',
+  'addons.update.saved':
+    'L’installateur est dans votre dossier Téléchargements et correspond à son empreinte publiée.',
+  'addons.update.open': 'Ouvrir l’installateur',
+  'addons.update.portable':
+    'Vous utilisez la version portable. Fermez Loppa, puis lancez le nouveau fichier à la place de celui-ci.',
+  'addons.update.mac': 'Ouvrez l’image disque, puis faites glisser Loppa dans Applications.',
+  'addons.getConfirm':
+    '{what}. Télécharger depuis {host} ? Fichiers : {files}. Taille : {size} Mo, et elle occupe autant d’espace disque. Vos documents ne sont envoyés nulle part et vous pouvez annuler à tout moment. Le fichier est vérifié par rapport à son empreinte publiée avant utilisation. Continuer ?',
+  'addons.problem.not-the-listed-file':
+    'Le fichier ne correspondait pas à son empreinte publiée et a été supprimé. Rien n’a été installé.',
+  'addons.problem.offline': 'GitHub est inaccessible. Vérifiez la connexion et réessayez.',
+  'addons.problem.rate-limited':
+    'GitHub limite actuellement les requêtes de cette connexion. Réessayez plus tard.',
+  'addons.problem.no-disk-space': 'L’espace disque libre est insuffisant.',
+  'addons.hint': 'L’IA est facultative — configurez-la quand vous le voulez.',
+  'addons.hint.dismiss': 'Masquer cette note',
+  'addons.progress': '{done} sur {total} Mo',
   'ai.setup.doesText': 'Résume, traduit, relit et prépare des brouillons de courriel.',
   'ai.setup.doesVision': 'Lit une page numérisée.',
   'ai.setup.another': 'Choisir un autre modèle',

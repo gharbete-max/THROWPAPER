@@ -1505,6 +1505,57 @@ export const esES: Record<MessageKey, string> = {
   'ai.models.optional':
     'La IA es opcional. Loppa funciona por completo sin ningún modelo. No se descarga nada a menos que pulses Descargar y confirmes.',
   'ai.setup.title': 'Configurar la IA',
+  'addons.title': 'Complementos y actualizaciones',
+  'addons.intro':
+    'Todo lo opcional está aquí, para que nunca tengas que buscar archivos en internet. No se descarga nada hasta que pulses un botón y confirmes.',
+  'addons.more': 'Programa, paquete y actualizaciones',
+  'addons.program': 'Programa de IA',
+  'addons.program.note': 'El pequeño programa que ejecuta el modelo de IA en este equipo.',
+  'addons.program.included': 'Incluido con Loppa.',
+  'addons.there': 'En este equipo.',
+  'addons.program.none': 'Todavía no hay un programa de IA para este tipo de equipo.',
+  'addons.program.get': 'Obtener el programa de IA',
+  'addons.untested':
+    'Aún no probado en este tipo de equipo. Si no arranca, Loppa lo dice y sigue sin IA.',
+  'addons.graphics': 'Programa para la tarjeta gráfica',
+  'addons.graphics.note':
+    'Opcional. Lee las páginas más rápido en un equipo con tarjeta gráfica independiente. Se activa y desactiva en Avanzado, en la lista de modelos de arriba.',
+  'addons.graphics.get': 'Obtener el programa para la tarjeta gráfica',
+  'addons.pack': 'Paquete de IA',
+  'addons.pack.note':
+    'Para instalaciones sin conexión y para equipos que no llegan a Hugging Face. Lo habitual es el botón Descargar de la lista de modelos de arriba.',
+  'addons.pack.get': 'Obtener el paquete de IA (unos {size} GB)',
+  'addons.pack.there': 'El modelo de IA ya está en este equipo.',
+  'addons.update': 'Nueva versión',
+  'addons.update.note':
+    'Loppa nunca busca actualizaciones por sí solo. Tienes la versión {version}.',
+  'addons.update.check': 'Buscar una versión nueva',
+  'addons.update.checkConfirm':
+    '¿Preguntar a {host} cuál es la versión más reciente? No se envía nada salvo la propia petición, y no se instala nada. ¿Continuar?',
+  'addons.update.checkYes': 'Buscar',
+  'addons.update.newest': 'Tienes la versión más reciente.',
+  'addons.update.available': 'La versión {latest} está disponible.',
+  'addons.update.notes': 'Novedades',
+  'addons.update.get': 'Descargar el instalador para este equipo ({size} MB)',
+  'addons.update.none': 'Esta versión no tiene instalador para este equipo.',
+  'addons.update.saved':
+    'El instalador está en tu carpeta de Descargas y coincide con su huella publicada.',
+  'addons.update.open': 'Abrir el instalador',
+  'addons.update.portable':
+    'Usas la versión portátil. Cierra Loppa y ejecuta el archivo nuevo en lugar de este.',
+  'addons.update.mac': 'Abre la imagen de disco y arrastra Loppa a Aplicaciones.',
+  'addons.getConfirm':
+    '{what}. ¿Descargar desde {host}? Archivos: {files}. Tamaño: {size} MB, y ocupa ese espacio en disco. Tus documentos no se envían a ningún sitio y puedes cancelar en cualquier momento. El archivo se comprueba con su huella publicada antes de usarlo. ¿Continuar?',
+  'addons.problem.not-the-listed-file':
+    'El archivo no coincidía con su huella publicada y se eliminó. No se instaló nada.',
+  'addons.problem.offline':
+    'No se pudo conectar con GitHub. Revisa la conexión e inténtalo de nuevo.',
+  'addons.problem.rate-limited':
+    'GitHub limita ahora las peticiones de esta conexión. Inténtalo más tarde.',
+  'addons.problem.no-disk-space': 'No hay suficiente espacio libre en disco.',
+  'addons.hint': 'La IA es opcional: configúrala cuando quieras.',
+  'addons.hint.dismiss': 'Ocultar esta nota',
+  'addons.progress': '{done} de {total} MB',
   'ai.setup.doesText': 'Resume, traduce, revisa y redacta borradores de correo.',
   'ai.setup.doesVision': 'Lee una página escaneada.',
   'ai.setup.another': 'Elegir otro modelo',

@@ -150,7 +150,7 @@ export interface DownloadOptions {
 const MAX_REDIRECTS = 5;
 
 /** `fetch` that follows redirects itself so that no hop can leave the allowed hosts. */
-async function fetchChecked(
+export async function fetchChecked(
   url: string,
   init: RequestInit,
   options: Pick<DownloadOptions, 'fetch' | 'allowHost'>,

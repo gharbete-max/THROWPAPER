@@ -17,7 +17,7 @@ import { dirname, join, resolve } from 'node:path';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { LLAMA_SERVER, type RuntimeAsset } from '@tp/shared/ai';
-import { untar } from '../src/ai/runtime-fetch.js';
+import { extractArchive } from '../src/addons/extract.js';
 import { describeFolder, sha256Of, verifyRuntimeFolder } from '../src/ai/runtime.js';
 
 async function download(asset: RuntimeAsset, to: string): Promise<void> {
@@ -62,7 +62,7 @@ async function main(): Promise<void> {
 
   await rm(out, { recursive: true, force: true });
   await mkdir(out, { recursive: true });
-  untar(archive, out);
+  await extractArchive(archive, out);
 
   if (args.includes('--record')) {
     console.log(JSON.stringify(await describeFolder(out), null, 2));

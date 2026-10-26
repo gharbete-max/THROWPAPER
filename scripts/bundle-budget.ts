@@ -79,6 +79,15 @@ const DIST = join(import.meta.dirname, '..', 'apps', 'forms', 'dist');
  * The improvement plan (`docs/plan/IMPROVEMENTS.md`: scan filters, the digital copy, flow, send, sign)
  * raises the total to 1 250 KB for the same reason; the entry and stylesheet caps do not move.
  *
+ * Add-ons and updates (2026-10-26, ADR 0026 amended) took the total from 1 246.7 to 1 258.5 KB, so it
+ * is raised from 1 250 to 1 262 (headroom 3.5): one lazily-loaded page (about 3 KB: rows for the AI
+ * program, the graphics-card program, the AI pack and the update check) and its 39 words in twelve
+ * catalogues (about 8 KB), a first-run note in the room and a few CSS rules in the lazy stylesheet.
+ * A cut pass first: no key of the AI area was unused (the rest are built from a prefix and a
+ * state), and the page reuses the existing words for Download, Cancel, the graphics-card prompt and
+ * the generic problems. The entry (6.6 KB, cap 12) and the entry stylesheet (11.8, cap 14.5) did
+ * not move.
+ *
  * The total needs the most headroom and gets it. 499 KB sounds alarming beside the other two and
  * is not comparable to them: it is every locale catalogue, every lazily-loaded screen and the
  * barcode decoder added together, of which a given visitor downloads a small fraction. A budget
@@ -96,7 +105,7 @@ const BUDGET_KB = {
    */
   stylesheet: 14.5,
   /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
-  total: 1250,
+  total: 1262,
 } as const;
 
 function gzippedKb(path: string): number {

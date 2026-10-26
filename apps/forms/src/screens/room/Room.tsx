@@ -17,6 +17,7 @@ import { useEdition } from '../../lib/edition.js';
 import { modelBridge } from '../../lib/model-bridge.js';
 import { scanWith } from '../../lib/documents-handoff.js';
 import { RecentDocuments } from './documents/RecentDocuments.js';
+import { AiHint } from './AiHint.js';
 import { rememberIntroSeen, useReducedMotion } from '../../lib/motion.js';
 import { Mark } from '../../components/Mark.js';
 import { Icon, type IconName } from '../../components/Icon.js';
@@ -161,7 +162,7 @@ export function Room() {
           />
           {edition === 'desktop' && modelBridge() ? (
             <Link className="button button--quiet small" to="/ai-setup">
-              {t('ai.setup.title')}
+              {t('addons.title')}
             </Link>
           ) : null}
           <span className="room__who small">{user.name}</span>
@@ -170,6 +171,7 @@ export function Room() {
           </button>
         </span>
       </header>
+      {edition === 'desktop' && modelBridge() ? <AiHint /> : null}
 
       <main
         className="room__floor"

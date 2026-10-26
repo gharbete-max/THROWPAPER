@@ -1492,6 +1492,55 @@ export const isIS: Record<MessageKey, string> = {
   'ai.models.optional':
     'Gervigreind er valfrjáls. Loppa virkar til fulls án nokkurs líkans. Ekkert er sótt nema þú ýtir á Sækja og staðfestir.',
   'ai.setup.title': 'Setja upp gervigreind',
+  'addons.title': 'Viðbætur og uppfærslur',
+  'addons.intro':
+    'Allt valfrjálst er hér, svo þú þarft aldrei að leita að skrám á netinu. Ekkert er sótt fyrr en þú ýtir á takka og staðfestir.',
+  'addons.more': 'Forrit, pakki og uppfærslur',
+  'addons.program': 'Gervigreindarforrit',
+  'addons.program.note': 'Lítla forritið sem keyrir gervigreindarlíkanið á þessari tölvu.',
+  'addons.program.included': 'Fylgir með Loppa.',
+  'addons.there': 'Á þessari tölvu.',
+  'addons.program.none': 'Enn er ekkert gervigreindarforrit til fyrir þessa tegund af tölvu.',
+  'addons.program.get': 'Sækja gervigreindarforritið',
+  'addons.untested':
+    'Enn ekki prófað á þessari tegund af tölvu. Ef það ræsist ekki segir Loppa frá þí og heldur áfram án gervigreindar.',
+  'addons.graphics': 'Skjákortsforrit',
+  'addons.graphics.note':
+    'Valfrjálst. Les síður hraðar á tölvu með sérstöku skjákorti. Kveikt og slökkt er á því undir Ítarlegt í líkanalistanum hér að ofan.',
+  'addons.graphics.get': 'Sækja skjákortsforritið',
+  'addons.pack': 'Gervigreindarpakki',
+  'addons.pack.note':
+    'Fyrir uppsetningu án nets og fyrir tölvur sem ná ekki til Hugging Face. Venjulega leiðin er takkinn Sækja í líkanalistanum hér að ofan.',
+  'addons.pack.get': 'Sækja gervigreindarpakkann (um {size} GB)',
+  'addons.pack.there': 'Gervigreindarlíkanið er þegar á þessari tölvu.',
+  'addons.update': 'Ný útgáfa',
+  'addons.update.note': 'Loppa leitar aldrei sjálf að uppfærslum. Þú ert með útgáfu {version}.',
+  'addons.update.check': 'Leita að nýrri útgáfu',
+  'addons.update.checkConfirm':
+    'Spyrja {host} hver sú nýjasta er? Ekkert er sent nema fyrirspurnin sjálf og ekkert er sett upp. Halda áfram?',
+  'addons.update.checkYes': 'Leita',
+  'addons.update.newest': 'Þú ert með nýjustu útgáfu.',
+  'addons.update.available': 'Útgáfa {latest} er til.',
+  'addons.update.notes': 'Hvað er nýtt',
+  'addons.update.get': 'Sækja uppsetningarforritið fyrir þessa tölvu ({size} MB)',
+  'addons.update.none': 'Þessi útgáfa hefur ekkert uppsetningarforrit fyrir þessa tölvu.',
+  'addons.update.saved':
+    'Uppsetningarforritið er í möppunni Niðurhal og samsvarar útgefnu fingrafari sínu.',
+  'addons.update.open': 'Opna uppsetningarforritið',
+  'addons.update.portable':
+    'Þú notar færanlegu útgáfuna. Lokaðu Loppa og keyrðu síðan nýju skrána í stað þessarar.',
+  'addons.update.mac': 'Opnaðu disksmyndina og dró Loppa í Forrit.',
+  'addons.getConfirm':
+    '{what}. Sækja frá {host}? Skrár: {files}. Stærð: {size} MB og það tekur jafnmikið diskpláss. Skjölin þín eru hvergi send og þú getur hætt hvenær sem er. Skráin er borin saman við útgefið fingrafar hennar áður en hún er notuð. Halda áfram?',
+  'addons.problem.not-the-listed-file':
+    'Skráin samsvaraði ekki útgefnu fingrafari sínu og var eytt. Ekkert var sett upp.',
+  'addons.problem.offline': 'Ekki náðist samband við GitHub. Athugaðu tenginguna og reyndu aftur.',
+  'addons.problem.rate-limited':
+    'GitHub takmarkar nú beiðnir frá þessari tengingu. Reyndu aftur síðar.',
+  'addons.problem.no-disk-space': 'Ekki er nóg laust diskpláss.',
+  'addons.hint': 'Gervigreind er valfrjáls — settu hana upp þegar þú vilt.',
+  'addons.hint.dismiss': 'Fela þessa athugasemd',
+  'addons.progress': '{done} af {total} MB',
   'ai.setup.doesText': 'Tekur saman, þýðir, les yfir og skrifar drög að tölvupósti.',
   'ai.setup.doesVision': 'Les skannaða síðu.',
   'ai.setup.another': 'Velja annað líkan',

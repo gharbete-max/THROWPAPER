@@ -1485,6 +1485,56 @@ export const svSE: Record<MessageKey, string> = {
   'ai.models.optional':
     'AI är valfritt. Loppa fungerar fullt ut utan någon modell. Inget hämtas om du inte trycker på Hämta och bekräftar.',
   'ai.setup.title': 'Ställ in AI',
+  'addons.title': 'Tillägg och uppdateringar',
+  'addons.intro':
+    'Allt valfritt finns här, så du behöver aldrig leta efter filer på nätet. Inget hämtas förrän du trycker på en knapp och bekräftar.',
+  'addons.more': 'Program, paket och uppdateringar',
+  'addons.program': 'AI-program',
+  'addons.program.note': 'Det lilla program som kör AI-modellen på den här datorn.',
+  'addons.program.included': 'Ingår i Loppa.',
+  'addons.there': 'Finns på den här datorn.',
+  'addons.program.none': 'Det finns ännu inget AI-program för den här sortens dator.',
+  'addons.program.get': 'Hämta AI-programmet',
+  'addons.untested':
+    'Inte testat på den här sortens dator än. Om det inte startar säger Loppa det och fortsätter utan AI.',
+  'addons.graphics': 'Grafikkortsprogram',
+  'addons.graphics.note':
+    'Valfritt. Läser sidor snabbare på en dator med eget grafikkort. Det slås på och av under Avancerat, i modellistan ovan.',
+  'addons.graphics.get': 'Hämta grafikkortsprogrammet',
+  'addons.pack': 'AI-paket',
+  'addons.pack.note':
+    'För installation utan nät och för datorer som inte når Hugging Face. Det vanliga sättet är knappen Ladda ner i modellistan ovan.',
+  'addons.pack.get': 'Hämta AI-paketet (cirka {size} GB)',
+  'addons.pack.there': 'AI-modellen finns redan på den här datorn.',
+  'addons.update': 'Ny version',
+  'addons.update.note':
+    'Loppa letar aldrig efter uppdateringar av sig själv. Du har version {version}.',
+  'addons.update.check': 'Leta efter en ny version',
+  'addons.update.checkConfirm':
+    'Fråga {host} vilken version som är nyast? Inget skickas förutom själva frågan, och inget installeras. Fortsätta?',
+  'addons.update.checkYes': 'Leta',
+  'addons.update.newest': 'Du har den nyaste versionen.',
+  'addons.update.available': 'Version {latest} finns.',
+  'addons.update.notes': 'Vad är nytt',
+  'addons.update.get': 'Ladda ner installationsprogrammet för den här datorn ({size} MB)',
+  'addons.update.none': 'Den här versionen har inget installationsprogram för den här datorn.',
+  'addons.update.saved':
+    'Installationsprogrammet ligger i mappen Nedladdningar och stämmer med sitt publicerade fingeravtryck.',
+  'addons.update.open': 'Öppna installationsprogrammet',
+  'addons.update.portable':
+    'Du använder den portabla versionen. Stäng Loppa och kör sedan den nya filen i stället för den här.',
+  'addons.update.mac': 'Öppna diskavbilden och dra Loppa till Program.',
+  'addons.getConfirm':
+    '{what}. Ladda ner från {host}? Filer: {files}. Storlek: {size} MB, och den tar lika mycket diskutrymme. Dina dokument skickas ingenstans och du kan avbryta när som helst. Filen kontrolleras mot sitt publicerade fingeravtryck innan den används. Fortsätta?',
+  'addons.problem.not-the-listed-file':
+    'Filen stämde inte med sitt publicerade fingeravtryck och raderades. Inget installerades.',
+  'addons.problem.offline': 'GitHub gick inte att nå. Kontrollera anslutningen och försök igen.',
+  'addons.problem.rate-limited':
+    'GitHub begränsar just nu förfrågningar från den här anslutningen. Försök igen senare.',
+  'addons.problem.no-disk-space': 'Det finns inte tillräckligt med ledigt diskutrymme.',
+  'addons.hint': 'AI är valfritt — ställ in det när du vill.',
+  'addons.hint.dismiss': 'Dölj den här anteckningen',
+  'addons.progress': '{done} av {total} MB',
   'ai.setup.doesText': 'Sammanfattar, översätter, korrekturläser och skriver utkast till e-post.',
   'ai.setup.doesVision': 'Läser en skannad sida.',
   'ai.setup.another': 'Välj en annan modell',

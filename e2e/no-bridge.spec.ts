@@ -40,7 +40,7 @@ async function expectResponsive(page: Page) {
 test('AI setup without the bridge says it is a desktop feature @smoke', async ({ page }) => {
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   await page.goto('/ai-setup');
-  await expect(page.getByRole('heading', { name: 'Set up AI' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Add-ons and updates' })).toBeVisible();
   await expect(page.getByText('AI setup is available in the desktop app.')).toBeVisible();
   await expectResponsive(page);
 });

@@ -6,9 +6,11 @@ import {
   MODEL_REGISTRY,
   TEXT_MODEL,
   minTotalMemoryBytes,
+  type AddonsEvent,
   type AiEvent,
 } from '@tp/shared/ai';
 import type { ModelEvent } from '@tp/shared/summary';
+import { createAddons, type Addons } from '../addons/addons.js';
 import { ResultCache } from './cache.js';
 import { createCoordinator, type Coordinator } from './coordinator.js';
 import { FakeEngine } from './engines/fake-engine.js';
@@ -41,6 +43,15 @@ export interface ElectronPieces {
   repoRoot: string | null;
   emit(event: AiEvent): void;
   emitLegacy(event: ModelEvent): void;
+  /** Add-ons and updates (`window.loppaAddons`). */
+  addons: {
+    version: string;
+    /** The Windows portable program, which is replaced and not installed over. */
+    portable: boolean;
+    downloads: string;
+    openPath(path: string): Promise<string>;
+    emit(event: AddonsEvent): void;
+  };
   env: NodeJS.ProcessEnv;
 }
 
@@ -48,6 +59,8 @@ export interface ShellAi {
   coordinator: Coordinator;
   /** `window.loppaModel`, answered by the coordinator. */
   model: ModelService;
+  /** `window.loppaAddons`. */
+  addons: Addons;
 }
 
 export function createShellAi(pieces: ElectronPieces): ShellAi {
@@ -106,6 +119,7 @@ export function createShellAi(pieces: ElectronPieces): ShellAi {
     return v === 'full' || v === 'lite' ? v : 'auto';
   };
 
+  let addonsBusy = (): boolean => false;
   const coordinator = createCoordinator({
     // One engine factory per catalogue model; only one is ever alive (the coordinator's lock).
     engines: Object.fromEntries(
@@ -135,8 +149,28 @@ export function createShellAi(pieces: ElectronPieces): ShellAi {
     chooseFile: pieces.chooseFile,
     fetch: (input, init) => fetch(input, init),
     cache: new ResultCache(join(pieces.userData, 'ai-cache', 'index.json')),
+    // An add-on being fetched is an activity the models must not start beside (and the reverse).
+    busy: () => addonsBusy(),
     fake,
   });
   coordinator.onEvent(pieces.emit);
-  return { coordinator, model: createModelAdapter(coordinator, { emit: pieces.emitLegacy }) };
+  const addons = createAddons({
+    version: pieces.addons.version,
+    platform: process.platform,
+    arch: process.arch,
+    portable: pieces.addons.portable,
+    dir,
+    downloads: pieces.addons.downloads,
+    models: { status: coordinator.status, busy: () => coordinator.state().activity !== 'idle' },
+    runtime,
+    fetch: (input, init) => fetch(input, init),
+    openPath: pieces.addons.openPath,
+    emit: pieces.addons.emit,
+  });
+  addonsBusy = () => addons.working();
+  return {
+    coordinator,
+    model: createModelAdapter(coordinator, { emit: pieces.emitLegacy }),
+    addons,
+  };
 }

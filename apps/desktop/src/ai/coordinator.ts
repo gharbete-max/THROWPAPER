@@ -117,6 +117,8 @@ export interface CoordinatorDeps {
   fetch: typeof fetch;
   cache: ResultCache;
   idleMs?: number;
+  /** Something else is downloading (the add-ons page): a model download waits for it. */
+  busy?(): boolean;
   /** CI and end-to-end: no file, no check, no memory test. The engines are whatever `engines` gives. */
   fake?: boolean;
 }
@@ -682,7 +684,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     if (!graphics) return { ok: false, problem: 'failed' };
     // The network only on a confirmed action naming exactly what is fetched (ADR 0026).
     if (!graphics.consentMatches(consent)) return { ok: false, problem: 'consent-required' };
-    if (activity !== 'idle') return { ok: false, problem: 'busy' };
+    if (activity !== 'idle' || deps.busy?.()) return { ok: false, problem: 'busy' };
     activity = 'downloading';
     installAbort = new AbortController();
     const signal = installAbort.signal;
@@ -741,7 +743,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
     if (!isDownloadable(model)) return { ok: false, problem: 'download-unavailable' };
     // What the person agreed to must be exactly what would be fetched: host, files, total size.
     if (!consentMatches(model, consent)) return { ok: false, problem: 'consent-required' };
-    if (activity !== 'idle') return { ok: false, problem: 'busy' };
+    if (activity !== 'idle' || deps.busy?.()) return { ok: false, problem: 'busy' };
 
     const todo = (await locateModel(model, await context()))
       .filter((item) => item.found === null && !item.file.optional)
@@ -828,7 +830,7 @@ export function createCoordinator(deps: CoordinatorDeps): Coordinator {
   async function openFromDisk(modelId: string): Promise<AiStart> {
     const model = modelById(modelId);
     if (!model) return { ok: false, problem: 'failed' };
-    if (activity !== 'idle') return { ok: false, problem: 'busy' };
+    if (activity !== 'idle' || deps.busy?.()) return { ok: false, problem: 'busy' };
     const chosen = await deps.chooseFile();
     if (!chosen) return { ok: false, problem: 'cancelled' };
 
