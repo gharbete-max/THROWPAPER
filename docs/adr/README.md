@@ -28,3 +28,4 @@ One line per decision; open a file only when its row matters. Generated from eac
 | [0024](0024-ai-coordinator.md) | One AI coordinator for every Loppa: models as manifests, one resident at a time | proposed. Phase 2 of `docs/plan/AI-SYSTEM.md` (the coordinator foundation) is built under it; the vision |
 | [0025](0025-single-multimodal-model.md) | One multimodal model for everything, run by a pinned llama-server, shipped as an AI pack | accepted — the owner's decision of 2026-10-19. The migration is built; reading a page |
 | [0026](0026-offline-first-launch-position.md) | The launch position: offline first, the network only on a confirmed action | accepted 2026-10-20 (the owner asked that the open product decisions be made from the |
+| [0027](0027-next-catchers.md) | The next two catchers: Spreadsheets, then Presentation & planning, on what Documents proved | proposed 2026-10-26 |
