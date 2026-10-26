@@ -30,7 +30,7 @@
     "@tp/shared": "workspace:*",
     "@tp/signing": "workspace:*",
     "@tp/tokens": "workspace:^",
-    "asn1js": "^3.0.10",
+    "asn1js": "^4.0.0",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.45.4",
     "fastify": "^5.12.7",
