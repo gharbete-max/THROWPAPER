@@ -25,7 +25,7 @@
     "@fastify/static": "^10.1.6",
     "@signpdf/placeholder-pdf-lib": "^3.3.0",
     "@signpdf/signpdf": "^3.3.0",
-    "@signpdf/utils": "^3.3.0",
+    "@signpdf/utils": "^4.0.0",
     "@tp/i18n": "workspace:^",
     "@tp/shared": "workspace:*",
     "@tp/signing": "workspace:*",
