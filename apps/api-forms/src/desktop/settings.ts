@@ -64,21 +64,21 @@ export const DesktopSettings = z.object({
       from: z.string().email().default('loppa@localhost.localdomain'),
       smtp: SmtpSettings.optional(),
     })
-    .default({}),
+    .prefault({}),
   ai: z
     .object({
       mode: AiMode.default('off'),
       /** Where `online` connects. Recorded now; nothing calls it until P5 builds `AiProvider`. */
       endpoint: z.string().url().optional(),
     })
-    .default({}),
+    .prefault({}),
   signing: z
     .object({
       mode: SigningMode.default('local'),
       /** Where `online` connects — an `api-sign` the user runs or rents. Nothing calls it before P1c. */
       endpoint: z.string().url().optional(),
     })
-    .default({}),
+    .prefault({}),
   /** An explicit Chromium for PDFs, when neither Edge nor Chrome is where Playwright looks. */
   pdfBrowserPath: z.string().optional(),
 });

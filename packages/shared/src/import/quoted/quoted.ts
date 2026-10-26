@@ -28,7 +28,7 @@ export type QuotedCategory = (typeof QUOTED_CATEGORIES)[number];
 
 const Lexicon = z
   .object({
-    categories: z.record(
+    categories: z.partialRecord(
       z.enum(QUOTED_CATEGORIES),
       z.record(z.string(), z.array(z.string().min(1))),
     ),

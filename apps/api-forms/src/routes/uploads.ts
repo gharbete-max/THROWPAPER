@@ -136,7 +136,7 @@ export function registerUploadRoutes(
     schema: {
       tags: ['uploads'],
       params: z.object({
-        submissionId: z.string().uuid(),
+        submissionId: z.guid(),
         key: z.string().min(1).max(128),
       }),
       response: { 401: api.ErrorResponse, 403: api.ErrorResponse, 404: api.ErrorResponse },
@@ -150,7 +150,7 @@ export function registerUploadRoutes(
       }
 
       const params = z
-        .object({ submissionId: z.string().uuid(), key: z.string().min(1).max(128) })
+        .object({ submissionId: z.guid(), key: z.string().min(1).max(128) })
         .parse(request.params);
 
       if (!isUploadKey(params.key)) return notFound(reply);
@@ -337,7 +337,7 @@ export function registerUploadRoutes(
   });
 }
 
-const FormIdParam = z.object({ id: z.string().uuid() });
+const FormIdParam = z.object({ id: z.guid() });
 const PaperParam = FormIdParam.extend({ key: z.string().min(1).max(128) });
 const PaperResponse = z.object({
   key: z.string(),

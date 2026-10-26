@@ -43,7 +43,7 @@ import type { BuilderAliasRecord } from '../db/repositories/types.js';
  * Forms-internal: documented by its Zod schemas in `@tp/shared/interpret`, not `CONTRACT.md`.
  */
 
-const IdParam = z.object({ id: z.string().uuid() });
+const IdParam = z.object({ id: z.guid() });
 
 const errorResponses = {
   401: api.ErrorResponse,

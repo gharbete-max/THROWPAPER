@@ -16,7 +16,7 @@ export type PhoneScanPage = z.infer<typeof PhoneScanPage>;
 
 /** What the computer sees of its session. */
 export const PhoneScanSession = z.object({
-  id: z.string().uuid(),
+  id: z.guid(),
   /** The link the phone opens. Only this session's pages can be sent through it. */
   phoneUrl: z.string(),
   /** The same link as an SVG QR code, for the phone to read off the screen. */

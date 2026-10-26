@@ -82,7 +82,7 @@ export const Evidence = z
       text: z.string().min(1),
     }),
     /** What the scheme said, as it said it. Loose on purpose — see the seam's own comment. */
-    details: z.record(z.string()).default({}),
+    details: z.record(z.string(), z.string()).default({}),
   })
   .refine((evidence) => LEVEL_RANK[evidence.level] <= LEVEL_RANK[maxLevelFor(evidence.method)], {
     message: 'The level claims more than the method achieves',
@@ -126,8 +126,8 @@ export const Envelope = z.object({
   environment: Environment,
   expiresAt: z.string().datetime(),
   status: EnvelopeStatus,
-  partyStatus: z.record(PartyStatus),
-  evidence: z.record(Evidence),
+  partyStatus: z.record(z.string(), PartyStatus),
+  evidence: z.record(z.string(), Evidence),
 });
 export type Envelope = z.infer<typeof Envelope>;
 

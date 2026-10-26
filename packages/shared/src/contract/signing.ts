@@ -43,7 +43,7 @@ export const CreateEnvelopeResponse = z.object({
   envelopeId: z.string().min(1),
   status: EnvelopeStatus,
   /** Per party, by party id: the link that party signs at. Empty until the envelope is sent. */
-  signUrls: z.record(z.string().url()),
+  signUrls: z.record(z.string(), z.string().url()),
 });
 
 /** §5.2 — where an envelope stands. */
@@ -102,7 +102,7 @@ export const WriteDeclarationRequest = z.object({
 export const DeclarationView = z.object({
   key: z.string(),
   version: z.number().int().min(1),
-  texts: z.record(z.string()),
+  texts: z.record(z.string(), z.string()),
   /** Written by a person in this organisation; usable for a production envelope. */
   authored: z.boolean(),
   /** A shared placeholder (the seed's), usable in test mode only. */

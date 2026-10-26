@@ -26,7 +26,7 @@ const RecipesSchema = z
             id: z.string().regex(/^[a-z][a-z0-9-]*$/),
             prior: z.number().int(),
             /** A template's name, as the catalogue has it; a structure names itself. */
-            name: z.record(z.string().min(1)).optional(),
+            name: z.record(z.string(), z.string().min(1)).optional(),
             structureOnly: z.literal(true).optional(),
           })
           .strict(),

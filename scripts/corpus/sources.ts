@@ -85,7 +85,7 @@ export const corpusSources = z
   .strict();
 export type CorpusDocument = z.infer<typeof corpusSources>['documents'][number];
 
-const files = z.record(file);
+const files = z.record(z.string(), file);
 /** A corpus document's page, printed and scanned by `pnpm corpus:scan` (S14). */
 const scannedHere = z
   .object({

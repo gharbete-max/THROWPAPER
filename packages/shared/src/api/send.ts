@@ -64,7 +64,7 @@ export type BatchTemplate = z.infer<typeof BatchTemplate>;
 
 /** The press on a batch (`POST /v1/send/batch`). `key` makes a second press the same press. */
 export const SendBatchRequest = z.object({
-  key: z.string().uuid(),
+  key: z.guid(),
   /** The confirmation step, answered. A request without it queues nothing. */
   confirmed: z.literal(true),
   /** Test: everything goes to this one address instead, marked as a test. */
@@ -93,7 +93,7 @@ export const SendModeResponse = z.object({
 export type SendModeResponse = z.infer<typeof SendModeResponse>;
 
 export const SendQueued = z.object({
-  items: z.array(z.object({ index: z.number().int(), to: z.string(), id: z.string().uuid() })),
+  items: z.array(z.object({ index: z.number().int(), to: z.string(), id: z.guid() })),
 });
 export type SendQueued = z.infer<typeof SendQueued>;
 
@@ -102,7 +102,7 @@ export const SEND_STATES = ['queued', 'sent', 'failed', 'skipped'] as const;
 export const SendStatusResponse = z.object({
   items: z.array(
     z.object({
-      id: z.string().uuid(),
+      id: z.guid(),
       state: z.enum(SEND_STATES),
       /** Which provider took it: `queue` is To send, `outbox` and `console` are tests. */
       provider: z.string().nullable(),

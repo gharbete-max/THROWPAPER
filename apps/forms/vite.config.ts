@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { readFileSync } from 'node:fs';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -44,8 +44,38 @@ const defaultTokens = JSON.parse(
   readFileSync(new URL('../../packages/tokens/src/default-tokens.json', import.meta.url), 'utf8'),
 ) as { colour: { primary: string; background: string } };
 
+/**
+ * Zod 4's classic schemas import its whole JSON Schema generator (about 19 KB of the 77 KB raw
+ * that Zod adds to a bundle) so that every schema can answer `.toJSONSchema()`. The browser never
+ * asks; only the API's OpenAPI document does. In the page's build and in its workers' the
+ * generator is swapped for stubs that keep every export name and throw if called, so a bundle
+ * pays for what it uses. `pnpm bundle:budget` is what notices if this stops working.
+ */
+const ZOD_JSON_SCHEMA = /zod[\\/]v4[\\/]core[\\/](to-json-schema|json-schema-processors)\.js$/;
+function zodWithoutJsonSchema(): Plugin {
+  return {
+    name: 'zod-without-json-schema',
+    enforce: 'pre',
+    apply: 'build',
+    load(id) {
+      const file = id.split('?')[0]!;
+      if (!ZOD_JSON_SCHEMA.test(file)) return null;
+      const names = [
+        ...readFileSync(file, 'utf8').matchAll(/^export (?:const|function|class) (\w+)/gm),
+      ];
+      const unavailable = `() => { throw new Error('Zod JSON Schema is not bundled in the browser'); }`;
+      return names
+        .map(
+          ([, name]) => `export const ${name} = ${name === 'allProcessors' ? '{}' : unavailable};`,
+        )
+        .join('\n');
+    },
+  };
+}
+
 export default defineConfig({
   plugins: [
+    zodWithoutJsonSchema(),
     react(),
     /**
      * Installable, and able to open on a venue's bad wifi.
@@ -127,6 +157,14 @@ export default defineConfig({
       },
     }),
   ],
+  worker: { plugins: () => [zodWithoutJsonSchema()] },
+  /**
+   * Terser, not esbuild: about 2% smaller gzipped across the build (24 KB of the 1 250 KB total
+   * budget). Zod 4 adds about 18 KB to the build after the generator above is stubbed out — its
+   * classic schemas are bigger than Zod 3's, in the page and again in the import worker — and
+   * this is what pays for it without raising the budget.
+   */
+  build: { minify: 'terser' },
   server: {
     port: 5173,
     proxy: DEV_PROXY,

@@ -9,11 +9,11 @@ import fastifyStatic from '@fastify/static';
 import multipart from '@fastify/multipart';
 import {
   jsonSchemaTransform,
-  serializerCompiler,
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
 import type { FastifyError } from 'fastify';
+import { serializerCompiler } from './zod-serializer.js';
 import { redactSecretsInUrl } from './log-redaction.js';
 import { constants as zlibConstants } from 'node:zlib';
 import { REVALIDATE, cacheControlForFile } from './cache-headers.js';

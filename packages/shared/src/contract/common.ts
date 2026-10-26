@@ -8,13 +8,13 @@ import { z } from 'zod';
 export const CONTRACT_VERSION = 3;
 export const CONTRACT_VERSION_HEADER = 'x-contract-version';
 
-export const OrganisationId = z.string().uuid();
+export const OrganisationId = z.guid();
 export const ContactRef = z.string().min(1).max(128);
 /** BCP-47. Validated loosely here; packages/i18n owns the org's allowed set. */
 export const Locale = z.string().regex(/^[a-z]{2}(-[A-Z]{2})?$/);
 export const IdempotencyKey = z.string().min(8).max(255);
 
-export const MergeData = z.record(z.unknown());
+export const MergeData = z.record(z.string(), z.unknown());
 
 export const Recipient = z.object({
   email: z.string().email(),

@@ -8,8 +8,8 @@ import { requireAuth } from '../auth/plugin.js';
 import { QR_DARK } from '../documents/admission.js';
 import { imageType, type PhoneScanStore } from '../phone-scan/store.js';
 
-const IdParam = z.object({ id: z.string().uuid() });
-const PageParam = z.object({ id: z.string().uuid(), n: z.coerce.number().int().min(1) });
+const IdParam = z.object({ id: z.guid() });
+const PageParam = z.object({ id: z.guid(), n: z.coerce.number().int().min(1) });
 // 32 random bytes, base64url: anything else is not a link this server made.
 const TokenParam = z.object({ token: z.string().regex(/^[A-Za-z0-9_-]{43}$/) });
 const errors = {

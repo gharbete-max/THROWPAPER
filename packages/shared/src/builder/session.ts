@@ -106,12 +106,13 @@ const StateSchema = z
       .object({
         provenance: z.enum(['guided', 'import', 'mixed']),
         fields: z.record(
+          z.string(),
           z
             .object({
               source,
               nodeId: z.string().optional(),
               decided: slots.optional(),
-              setAside: z.record(JsonSchema).optional(),
+              setAside: z.record(z.string(), JsonSchema).optional(),
               guided: JsonSchema.optional(),
               proposal: JsonSchema.optional(),
             })
@@ -121,7 +122,7 @@ const StateSchema = z
         brandDecided: z.enum(['organisation', 'default']).optional(),
       })
       .strict(),
-    pending: z.record(JsonSchema),
+    pending: z.record(z.string(), JsonSchema),
     focus: z.string().nullable(),
     guess: z.object({ templateId: z.string(), pMille: z.number().int() }).strict().nullable(),
     cursor: z.string(),

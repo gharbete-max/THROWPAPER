@@ -37,7 +37,7 @@ const Secrets = z.object({
   sealKeyPem: z.string(),
   sealCertPem: z.string(),
   /** organisationId → the plain token its Forms presents. Sign itself stores only the hash. */
-  callers: z.record(z.string()).default({}),
+  callers: z.record(z.string(), z.string()).default({}),
 });
 type Secrets = z.infer<typeof Secrets>;
 

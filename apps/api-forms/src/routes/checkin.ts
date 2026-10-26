@@ -11,9 +11,9 @@ import { attendanceOf, checkIn } from '../checkin/service.js';
 import { guestsForAll } from '../checkin/party.js';
 import { attendeeName } from '../documents/admission.js';
 
-const EventParam = z.object({ id: z.string().uuid() });
-const SubmissionParam = z.object({ id: z.string().uuid() });
-const UndoParam = z.object({ id: z.string().uuid(), submissionId: z.string().uuid() });
+const EventParam = z.object({ id: z.guid() });
+const SubmissionParam = z.object({ id: z.guid() });
+const UndoParam = z.object({ id: z.guid(), submissionId: z.guid() });
 
 /**
  * Which card to take back, defaulting to the registrant's.
@@ -37,7 +37,7 @@ const CheckInRequest = z.object({
 });
 
 const AttendeeSummary = z.object({
-  submissionId: z.string().uuid(),
+  submissionId: z.guid(),
   /** The card's own reference: `ABCD-EFGH` for the registrant, `ABCD-EFGH:2` for their guest. */
   reference: z.string(),
   name: z.string(),

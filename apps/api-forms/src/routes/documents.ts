@@ -16,7 +16,7 @@ import { contentDisposition } from '../documents/filename.js';
 import type { PrivateUploadStore } from '../uploads/private-store.js';
 import { forms as formSchemas } from '@tp/shared';
 
-const IdParam = z.object({ id: z.string().uuid() });
+const IdParam = z.object({ id: z.guid() });
 
 const errorResponses = {
   401: api.ErrorResponse,
@@ -28,18 +28,18 @@ const errorResponses = {
 const DraftBody = z
   .object({
     locale: z.string().max(20).optional(),
-    values: z.record(z.unknown()).optional(),
+    values: z.record(z.string(), z.unknown()).optional(),
   })
   .default({});
 
 const JobResponse = z.object({
-  id: z.string().uuid(),
+  id: z.guid(),
   kind: z.string(),
   status: z.enum(['queued', 'running', 'done', 'failed']),
   progressDone: z.number().int(),
   progressTotal: z.number().int(),
   error: z.string().nullable(),
-  result: z.record(z.unknown()).nullable(),
+  result: z.record(z.string(), z.unknown()).nullable(),
 });
 
 const DownloadQuery = z.object({

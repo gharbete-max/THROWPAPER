@@ -41,7 +41,7 @@ describe('layoutProblems', () => {
   it.each<[string, (doc: Json) => void, RegExp]>([
     // Shape.
     ['an unknown key', (d) => (line(d).colour = 'red'), /Unrecognized key/],
-    ['a fraction', (d) => (line(d).box.x0 = 1000.5), /integer/],
+    ['a fraction', (d) => (line(d).box.x0 = 1000.5), /expected int/],
     ['an iu above 10000', (d) => (line(d).box.x1 = 10001), /10000/],
     ['another irVersion', (d) => (d.irVersion = 2), /irVersion/],
     ['an unknown role', (d) => (block(d).role = 'sidebar'), /role/],

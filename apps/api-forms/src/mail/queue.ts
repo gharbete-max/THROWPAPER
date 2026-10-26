@@ -46,7 +46,7 @@ export interface OutgoingStore {
 }
 
 const Stored = z.object({
-  id: z.string().uuid(),
+  id: z.guid(),
   to: z.string(),
   subject: z.string(),
   text: z.string(),

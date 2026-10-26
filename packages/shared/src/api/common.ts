@@ -7,7 +7,8 @@ import { z } from 'zod';
  * products is versioned and frozen by joint decision, while this surface belongs to Loppa
  * alone and changes with its UI.
  */
-export const Uuid = z.string().uuid();
+/** `guid`, not `uuid`: Zod 3 took any 8-4-4-4-12 hex string; Zod 4's `uuid` also checks version and variant bits. */
+export const Uuid = z.guid();
 export const Locale = z.string().regex(/^[a-z]{2}(-[A-Z]{2})?$/);
 export const Email = z.string().email().max(320);
 

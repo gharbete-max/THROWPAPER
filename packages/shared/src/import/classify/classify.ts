@@ -54,9 +54,9 @@ const WeightsSchema = z
         table: z.array(kindSchema).min(1),
       })
       .strict(),
-    kinds: z.record(
+    kinds: z.partialRecord(
       kindSchema,
-      z.object({ bias: millinats, features: z.record(featureSchema, millinats) }).strict(),
+      z.object({ bias: millinats, features: z.partialRecord(featureSchema, millinats) }).strict(),
     ),
     score: z
       .object({

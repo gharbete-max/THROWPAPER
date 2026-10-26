@@ -118,7 +118,7 @@ export const AnswersFile = z
     answersVersion: z.literal(1),
     createdAt: AliasEntry.shape.createdAt,
     nodes: z.array(z.string().min(1)).min(1),
-    ways: z.record(
+    ways: z.partialRecord(
       z.enum(LANGUAGES),
       z.record(z.string().min(1), z.array(AliasEntry.shape.phrase).min(1)),
     ),
@@ -413,7 +413,7 @@ const REFUSALS = [
 export const MAX_IMPORTED_ALIASES = 5_000;
 
 /** A learned alias as `GET /v1/builder/aliases` lists it: the entry, and its id. */
-export const LearnedAlias = AliasEntry.extend({ id: z.string().uuid() });
+export const LearnedAlias = AliasEntry.extend({ id: z.guid() });
 export type LearnedAlias = z.infer<typeof LearnedAlias>;
 
 export const LearnedAliasList = z.object({ aliases: z.array(LearnedAlias) }).strict();
@@ -439,7 +439,9 @@ export const AliasRefusedResponse = z
 export type AliasRefusedResponse = z.infer<typeof AliasRefusedResponse>;
 
 /** `POST /v1/builder/aliases/import`: a file, to see what it would do — or to do it. */
-export const ImportAliases = z.object({ file: z.unknown(), confirm: z.boolean() }).strict();
+export const ImportAliases = z
+  .object({ file: z.unknown().optional(), confirm: z.boolean() })
+  .strict();
 export type ImportAliases = z.infer<typeof ImportAliases>;
 
 export const AliasImportResult = z

@@ -13,7 +13,7 @@ export const UpsertContact = z.object({
   name: z.string().optional(),
   preferredLocale: Locale.optional(),
   tags: z.array(z.string()).optional(),
-  customFields: z.record(CustomFieldValue).optional(),
+  customFields: z.record(z.string(), CustomFieldValue).optional(),
 });
 
 export const UpsertContactsRequest = z.object({

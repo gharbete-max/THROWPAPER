@@ -843,7 +843,8 @@ export const FormDefinition = z.object({
   /** Bumped when the document shape changes in a way old versions cannot be read as. */
   schemaVersion: z.literal(1),
   fields: z.array(Field).default([]),
-  settings: FormSettings.default({}),
+  /** `prefault`, not `default`: Zod 4's default skips parsing, and `{}` must still gain every setting's own default. */
+  settings: FormSettings.prefault({}),
   /** Absent on every form built from scratch, which is why `schemaVersion` stays at 1. */
   paper: Paper.optional(),
 });

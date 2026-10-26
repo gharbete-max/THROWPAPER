@@ -48,7 +48,7 @@ export function mergeCampaign(text: string, row: BatchRow, unsubscribe?: string)
 
 export const SendCampaignRequest = z.object({
   /** Made when the confirmation opened: a second press with it is the same press. */
-  key: z.string().uuid(),
+  key: z.guid(),
   /** The confirmation step, answered. A request without it queues nothing. */
   confirmed: z.literal(true),
   /** Test: everything goes to this one address instead, marked, and suppression is not applied. */

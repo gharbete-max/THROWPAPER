@@ -85,8 +85,8 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5(@types/node@26.6.5)(vite@6.4.4(@types/node@26.6.5)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
       zod:
-        specifier: ^3.24.1
-        version: 3.25.76
+        specifier: ^4.6.6
+        version: 4.6.7
 
   apps/api-forms:
     dependencies:
@@ -154,8 +154,8 @@ importers:
         specifier: ^5.12.7
         version: 5.12.7
       fastify-type-provider-zod:
-        specifier: ^4.0.2
-        version: 4.0.2(fastify@5.12.7)(zod@3.25.76)
+        specifier: ^7.0.0
+        version: 7.0.0(@fastify/swagger@9.9.2)(fastify@5.12.7)(openapi-types@12.1.3)(zod@4.6.7)
       jose:
         specifier: ^6.2.12
         version: 6.2.12
@@ -178,8 +178,8 @@ importers:
         specifier: ^19.3.1
         version: 19.3.1
       zod:
-        specifier: ^3.24.1
-        version: 3.25.76
+        specifier: ^4.6.6
+        version: 4.6.7
     devDependencies:
       '@types/archiver':
         specifier: ^8.0.0
@@ -242,8 +242,8 @@ importers:
         specifier: ^5.12.7
         version: 5.12.7
       fastify-type-provider-zod:
-        specifier: ^4.0.2
-        version: 4.0.2(fastify@5.12.7)(zod@3.25.76)
+        specifier: ^7.0.0
+        version: 7.0.0(@fastify/swagger@9.9.2)(fastify@5.12.7)(openapi-types@12.1.3)(zod@4.6.7)
       pdf-lib:
         specifier: ^1.17.1
         version: 1.17.1
@@ -254,8 +254,8 @@ importers:
         specifier: ^3.4.5
         version: 3.4.9
       zod:
-        specifier: ^3.24.1
-        version: 3.25.76
+        specifier: ^4.6.6
+        version: 4.6.7
     devDependencies:
       drizzle-kit:
         specifier: ^0.31.11
@@ -412,6 +412,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.3.4
         version: 4.7.0(vite@6.4.4(@types/node@26.6.5)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
+      terser:
+        specifier: ^5.51.2
+        version: 5.51.2
       vite:
         specifier: ^6.4.4
         version: 6.4.4(@types/node@26.6.5)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
@@ -460,8 +463,8 @@ importers:
         specifier: workspace:*
         version: link:../signing
       zod:
-        specifier: ^3.24.1
-        version: 3.25.76
+        specifier: ^4.6.6
+        version: 4.6.7
     devDependencies:
       '@tp/i18n':
         specifier: workspace:*
@@ -470,8 +473,8 @@ importers:
   packages/signing:
     dependencies:
       zod:
-        specifier: ^3.24.1
-        version: 3.25.76
+        specifier: ^4.6.6
+        version: 4.6.7
 
   packages/tokens:
     dependencies:
@@ -1655,9 +1658,6 @@ packages:
   '@fastify/deepmerge@3.2.2':
     resolution: {integrity: sha512-155eqA/WMQdN6gUD4RrhS2K0Pcz2Ou9pQ86L0sipOpP9ONbTA6oYw/hW4VdBjR4egcDHqmWUK9x80oUX7S1mDQ==}
 
-  '@fastify/error@4.2.0':
-    resolution: {integrity: sha512-RSo3sVDXfHskiBZKBPRgnQTtIqpi/7zhJOEmAxCiBcM7d0uwdGdxLlsCaLzGs8v8NnxIRlfG0N51p5yFaOentQ==}
-
   '@fastify/error@4.2.1':
     resolution: {integrity: sha512-MYBumuIwP+5MIpXSyKm6/o1Eigcoij186lWUssX3LH5U8KWqU0ktZhzC4CErIX9EJeQeRGI+zJZQWakBlFbUcg==}
 
@@ -2654,11 +2654,6 @@ packages:
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
 
-  acorn@8.18.0:
-    resolution: {integrity: sha512-lGq+9yr1/GuAWaVYIHRjvvySG5/4VfKIvC8EWxStPdcDh/Ka7FG3twP6v4d5BkravUilhIAsG4Qj83t02LWUPQ==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-
   acorn@8.19.0:
     resolution: {integrity: sha512-oJlA3XiRm7Cyk6qFD2Jn8ak9B7jSy0qy00ADO3+8dpT0LSjFihQYv4C02LFCSYJV3Q37xYwwRy5m+IpIiUzqWw==}
     engines: {node: '>=0.4.0'}
@@ -3485,11 +3480,13 @@ packages:
   fastify-plugin@6.0.1:
     resolution: {integrity: sha512-4wW4RxSmvPXLrh5mgQEiu43qU3bw44N2ss4FTkTkQIbprUhE+/s43QX0j/ttcztdWK7PEkHqVthdc5GdEGDvjA==}
 
-  fastify-type-provider-zod@4.0.2:
-    resolution: {integrity: sha512-FDRzSL3ZuoZ+4YDevR1YOinmDKkxOdy3QB9dDR845sK+bQvDroPKhHAXLEAOObDxL7SMA0OZN/A4osrNBTdDTQ==}
+  fastify-type-provider-zod@7.0.0:
+    resolution: {integrity: sha512-yUEKMyy+kml+4fzUU9GxVtYVKmPKNFo8OVd2N/RH2I/7JZiKvOqF1BUj3f/JJU3DDQDM7pMv2bf/Y8COPaxUWg==}
     peerDependencies:
-      fastify: ^5.0.0
-      zod: ^3.14.2
+      '@fastify/swagger': '>=9.5.1'
+      fastify: ^5.5.0
+      openapi-types: ^12.1.3
+      zod: '>=4.1.5'
 
   fastify@5.12.7:
     resolution: {integrity: sha512-v4pEPsTRPuqlDIYiQFB+BHjVN4SdHX9u0ABk0ZDUKbbdY1vsNryUd1j4Z+jQEZajvYIVk047Kimva9/AJ79GYw==}
@@ -5394,13 +5391,8 @@ packages:
   zlibjs@0.3.1:
     resolution: {integrity: sha512-+J9RrgTKOmlxFSDHo0pI1xM6BLVUv+o0ZT9ANtCxGkjIVCCUdx9alUF8Gm+dGLKbkkkidWIHFDZHDMpfITt4+w==}
 
-  zod-to-json-schema@3.25.2:
-    resolution: {integrity: sha512-O/PgfnpT1xKSDeQYSCfRI5Gy3hPf91mKVDuYLUHZJMiDFptvP41MSnWofm8dnCm0256ZNfZIM7DSzuSMAFnjHA==}
-    peerDependencies:
-      zod: ^3.25.28 || ^4
-
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
 snapshots:
 
@@ -6669,8 +6661,6 @@ snapshots:
 
   '@fastify/deepmerge@3.2.2': {}
 
-  '@fastify/error@4.2.0': {}
-
   '@fastify/error@4.2.1': {}
 
   '@fastify/fast-json-stringify-compiler@5.1.1':
@@ -7561,11 +7551,9 @@ snapshots:
 
   abstract-logging@2.0.1: {}
 
-  acorn-jsx@5.3.2(acorn@8.18.0):
+  acorn-jsx@5.3.2(acorn@8.19.0):
     dependencies:
-      acorn: 8.18.0
-
-  acorn@8.18.0: {}
+      acorn: 8.19.0
 
   acorn@8.19.0: {}
 
@@ -8439,8 +8427,8 @@ snapshots:
 
   espree@10.4.0:
     dependencies:
-      acorn: 8.18.0
-      acorn-jsx: 5.3.2(acorn@8.18.0)
+      acorn: 8.19.0
+      acorn-jsx: 5.3.2(acorn@8.19.0)
       eslint-visitor-keys: 4.2.1
 
   esquery@1.7.0:
@@ -8506,12 +8494,13 @@ snapshots:
 
   fastify-plugin@6.0.1: {}
 
-  fastify-type-provider-zod@4.0.2(fastify@5.12.7)(zod@3.25.76):
+  fastify-type-provider-zod@7.0.0(@fastify/swagger@9.9.2)(fastify@5.12.7)(openapi-types@12.1.3)(zod@4.6.7):
     dependencies:
-      '@fastify/error': 4.2.0
+      '@fastify/error': 4.2.1
+      '@fastify/swagger': 9.9.2
       fastify: 5.12.7
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.2(zod@3.25.76)
+      openapi-types: 12.1.3
+      zod: 4.6.7
 
   fastify@5.12.7:
     dependencies:
@@ -10570,8 +10559,4 @@ snapshots:
 
   zlibjs@0.3.1: {}
 
-  zod-to-json-schema@3.25.2(zod@3.25.76):
-    dependencies:
-      zod: 3.25.76
-
-  zod@3.25.76: {}
+  zod@4.6.7: {}

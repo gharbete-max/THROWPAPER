@@ -97,7 +97,7 @@ const errorResponses = {
   422: api.ErrorResponse,
 } as const;
 
-const IdParam = z.object({ id: z.string().uuid() });
+const IdParam = z.object({ id: z.guid() });
 const VersionParam = IdParam.extend({ version: z.coerce.number().int().positive() });
 
 export function registerFormRoutes(
@@ -852,13 +852,13 @@ export function registerFormRoutes(
     preHandler: authenticated,
     schema: {
       tags: ['forms'],
-      params: IdParam.extend({ userId: z.string().uuid() }),
+      params: IdParam.extend({ userId: z.guid() }),
       response: { 204: z.null(), ...errorResponses },
     },
     handler: async (request, reply) => {
       const auth = request.auth;
       if (!auth) return unauthenticated(reply);
-      const { id, userId } = IdParam.extend({ userId: z.string().uuid() }).parse(request.params);
+      const { id, userId } = IdParam.extend({ userId: z.guid() }).parse(request.params);
 
       const found = await resolve(deps.repos, auth, id);
       if (!found) return notFound(reply);

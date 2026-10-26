@@ -119,7 +119,7 @@ export function registerSendRoutes(
       if (fields.get('confirmed') !== 'true') {
         return fail(reply, 400, 'not-confirmed', 'Nothing is sent before the confirmation');
       }
-      const key = z.string().uuid().safeParse(fields.get('key'));
+      const key = z.guid().safeParse(fields.get('key'));
       const recipients = z
         .array(api.Email)
         .min(1)
@@ -243,7 +243,7 @@ export function registerSendRoutes(
     },
     handler: async (request) => {
       const ids = z
-        .array(z.string().uuid())
+        .array(z.guid())
         .max(api.SEND_LIMITS.batch)
         .catch([])
         .parse((request.query as { ids: string }).ids.split(',').filter(Boolean));
