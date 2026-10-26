@@ -51,13 +51,13 @@ tiers exist. The model is never in the installer (the Windows installer carries 
 Either choose a tier under _AI models_ and confirm the download (it names the host, huggingface.co, and
 the size), or open a **pack** offline: the model files cut into parts under 2 GiB with a SHA-256 each,
 plus `PACK.json`, chosen with _Open a file or an AI pack from disk_. Loppa joins and checks every part
-before using anything. Building and publishing a pack: `docs/DEPLOY.md` (last section); the design:
+before using anything. **The pack is published:** [ai-pack-qwen2.5-vl-7b-instruct-q4_k_m](https://github.com/gharbete-max/THROWPAPER/releases/tag/ai-pack-qwen2.5-vl-7b-instruct-q4_k_m) (6 files, 6.89 GB; Apache-2.0) — download every file into one folder, then open `PACK.json` from _Open a file or an AI pack from disk_. Building and publishing a pack: `docs/DEPLOY.md` (last section); the design:
 `docs/adr/0025-single-multimodal-model.md`. In development, `LOPPA_AI_DIR` or `LOPPA_MODEL_PATH` point
 a run at files.
 
 ## For developers
 
-Start with [`docs/MAP.md`](docs/MAP.md): vision, rules, where to look per area, commands, quirks. The
+Start with [`docs/MAP.md`](docs/MAP.md): vision, rules, where to look per area, commands, quirks. Node 22 or newer. The
 short always-loaded rules are in `CLAUDE.md`; the owner's words are in `docs/VISION.md`.
 
 Requires Node ≥ 20 and pnpm 9 (`corepack enable`).

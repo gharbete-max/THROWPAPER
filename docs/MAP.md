@@ -102,26 +102,23 @@ resources (one Postgres, fixed ports): take the lock `mkdir C:/Users/gusta/AppDa
 before DB tests/e2e, `rmdir` after. Run agents one at a time unless work is truly disjoint.
 Merge `origin/main` in (never rebase or force-push a PR branch that Auto-fix watches).
 
-## Current state (2026-10-21)
-**Built and merged** (everything is on `main`; no PRs or agents are open):
-- **Documents catcher**: the room, Forms (guided and manual, draft PDF, fill), Scan as three steps (Bring in, Fix,
-  Keep) with filters, digital copy, searchable PDF, redaction, Word to PDF, invoice reading; Sign (own marks, placement,
-  cancel, second seal verifier); Send (one document, batch, campaigns with a footer you complete, do-not-email list,
-  reply helper, corporate email, proofreading).
-- **AI**: one model (Qwen2.5-VL-7B) through a pinned llama-server, a catalogue of smaller Apache-2.0 tiers, a 'Set up
-  AI' page, an optional graphics-card setting with a processor fallback, the AI pack (split/join/publish scripts,
-  offline install), measured speeds (docs/plan/VISION-TUNING.md).
-- **Structure**: the rail follows the room (earlier features folded), `screens/` in feature folders, CSS split (entry
-  11.8 KB), Mailer stubs and the old wizard removed, finished plans in `docs/archive/`, ADR index, this map.
-- **Quality**: reviews of backend/shared (fuzz tests, 11 fixes), forms UI (432 renders in twelve languages, axe
-  clean), desktop/AI (50-task soak, installer smoke) and Sign (8 fixes), all in `docs/reviews/`; e2e 178/178,
-  unit 7 778; security review in `docs/SECURITY-REVIEW-2026-10.md`.
-
-**Published**: the AI pack is a public release, `ai-pack-qwen2.5-vl-7b-instruct-q4_k_m` (5 files, 6.89 GB, hashes
-verified from GitHub's side); the app's Get button downloads tiers from Hugging Face, the pack opens from a folder.
-**Not done**: the graphics card on macOS (Metal); SmolVLM2 tiers marked not-working-yet. SIMPLIFY 8 (one word per
-step) is decided against until a native reader can check it; SIMPLIFY 9 is done (`recommendModel` by memory).
-**Unverified**: macOS, 8-12 GB laptops, CPUs without AVX2, other graphics drivers, screen readers, native-speaker
-quality (strings for a native read are listed in docs/reviews/2026-10-forms-ui.md).
-**Next (planned, 2026-10-26, nothing built):** Spreadsheets (Library, Convert, Clean, Inspect around Explain and suggest), then Presentation & planning (Outline, Slides, Plan, Share around Summarise, outline and notes): ADR 0027 and the two plans, each with defaults and owner questions. The placeholders stay inert until their room phase.
-Web bundle total is at its cap (1 249 of 1 250 KB): a new feature must cut elsewhere or raise the cap with a reason.
+## Current state (2026-10-26)
+**Everything planned is merged and released.** Desktop **0.2.0** is the Latest release (`desktop-v0.2.0`: Windows
+installer and portable, two Mac disk images, `SHA256SUMS.txt`; checksums verified); the AI pack is its own
+non-latest release (`ai-pack-qwen2.5-vl-7b-instruct-q4_k_m`, 6.89 GB). Never mark the pack Latest: the README
+links `releases/latest/download/<installer>`.
+- **Documents catcher**: the room, Forms, Scan as three steps (filters, digital copy, redaction, Word, invoice), Sign
+  (marks, placement, seal with a second verifier), Send (single, batch, campaigns, reply helper, proofread,
+  corporate email), AI (one model through a pinned llama-server, tiers catalogue, Set up AI page, optional graphics
+  card). Structure: feature folders in `screens/`, split CSS, ADR index, this map.
+- **Libraries (2026-10-26)**: Zod 4.6 with fastify-type-provider-zod 7 (the audit waiver is gone),
+  `@signpdf` 4 / `asn1js` 4 / `pkijs` 4 (Node 22 or newer), nodemailer and fast-uri patched.
+- **Quality**: four review waves in `docs/reviews/`, security review `docs/SECURITY-REVIEW-2026-10.md`; on the final
+  `main`: all gates green, `pnpm audit --prod --audit-level high` exits 0, unit 7 828 (`pnpm test` exits 0 on
+  Windows), e2e 178/178, web bundle 1 246.7 of 1 250 KB.
+- **Planned, not built**: the next catchers, `docs/plan/SPREADSHEETS.md`, `docs/plan/PRESENTATIONS.md`,
+  `docs/adr/0027-next-catchers.md` (first slices need no AI model; they need a per-catcher bundle line).
+**Not done**: the graphics card on macOS (Metal); SmolVLM2 tiers marked not-working-yet; SIMPLIFY 8 (needs a native
+reader). **Unverified**: macOS, 8-12 GB laptops, CPUs without AVX2, other graphics drivers, screen readers,
+native-speaker quality (strings listed in docs/reviews/2026-10-forms-ui.md). A routine Dependabot group (#239)
+waits for its rebase.
