@@ -1194,6 +1194,48 @@
   gap: var(--tp-spacing-unit);
 }
 
+.room__hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding-inline: calc(var(--tp-spacing-unit) * 2);
+  color: var(--tp-room-quiet);
+}
+
+/* Add-ons and updates (screens/ai/AddOns.tsx): one row each, the text first, its button after. */
+
+.addons {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.addon {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-spacing-unit);
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-block: calc(var(--tp-spacing-unit) * 1.5);
+  border-block-start: 1px solid var(--tp-colour-border);
+}
+
+.addon__text {
+  flex: 1 1 16rem;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.addon__notes {
+  max-block-size: 12rem;
+  margin: 0;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
 .room__who {
   color: var(--tp-room-quiet);
 }

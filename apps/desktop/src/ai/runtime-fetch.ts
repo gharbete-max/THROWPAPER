@@ -1,22 +1,9 @@
-import { spawnSync } from 'node:child_process';
-import { mkdir, rename, rm } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { mkdir, rename, rm, stat } from 'node:fs/promises';
+import { join } from 'node:path';
 import { isRuntimeHost, type RuntimeAsset } from '@tp/shared/ai';
 import { downloadFile, type OnProgress } from './download.js';
+import { extractArchive } from '../addons/extract.js';
 import { verifyRuntimeFolder } from './runtime.js';
-
-/** Unpacks a zip with the system's own `tar` (bsdtar reads zip; the GNU tar first on a POSIX shell's PATH on Windows cannot). */
-export function untar(archive: string, out: string): void {
-  const tar =
-    process.platform === 'win32'
-      ? join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe')
-      : 'tar';
-  const done = spawnSync(tar, ['-xf', archive, '-C', out], {
-    cwd: dirname(archive), // a name with a drive letter in it is a remote host to GNU tar
-    stdio: 'ignore',
-  });
-  if (done.status !== 0) throw new Error('tar could not unpack the archive');
-}
 
 /**
  * Fetches one pinned runtime asset into `dir` (the folder the program is looked for in): the
@@ -53,8 +40,13 @@ export async function fetchRuntime(options: {
     });
     await rm(unpacked, { recursive: true, force: true });
     await mkdir(unpacked, { recursive: true });
-    untar(archive, unpacked);
-    if ((await verifyRuntimeFolder(unpacked, asset)) !== 'ok') {
+    // Names, links and sizes are checked as it unpacks (addons/extract.ts): a hash proves the file
+    // is the one released, not that what is inside it is safe to write.
+    await extractArchive(archive, unpacked);
+    // `unpinned`: an asset nobody here has run lists no files, so only the archive's hash was
+    // checked; its program must still be there.
+    const entry = await stat(join(unpacked, asset.entry)).catch(() => null);
+    if ((await verifyRuntimeFolder(unpacked, asset)) === 'damaged' || !entry?.isFile()) {
       throw new Error('a file of the unpacked runtime is missing or changed');
     }
     await rm(dir, { recursive: true, force: true });

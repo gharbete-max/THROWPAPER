@@ -1495,6 +1495,55 @@ export const fiFI: Record<MessageKey, string> = {
   'ai.models.optional':
     'Tekoäly on valinnaista. Loppa toimii täysin ilman mallia. Mitään ei ladata, ellet paina Lataa ja vahvista.',
   'ai.setup.title': 'Ota tekoäly käyttöön',
+  'addons.title': 'Lisäosat ja päivitykset',
+  'addons.intro':
+    'Kaikki valinnainen on täällä, joten tiedostoja ei tarvitse etsiä verkosta. Mitään ei haeta, ennen kuin painat painiketta ja vahvistat.',
+  'addons.more': 'Ohjelma, paketti ja päivitykset',
+  'addons.program': 'Tekoälyohjelma',
+  'addons.program.note': 'Pieni ohjelma, joka ajaa tekoälymallia tällä tietokoneella.',
+  'addons.program.included': 'Kuuluu Loppaan.',
+  'addons.there': 'Tällä tietokoneella.',
+  'addons.program.none': 'Tälle tietokonetyypille ei ole vielä tekoälyohjelmaa.',
+  'addons.program.get': 'Hae tekoälyohjelma',
+  'addons.untested':
+    'Ei vielä kokeiltu tällä tietokonetyypillä. Jos se ei käynnisty, Loppa kertoo siitä ja jatkaa ilman tekoälyä.',
+  'addons.graphics': 'Näytönohjainohjelma',
+  'addons.graphics.note':
+    'Valinnainen. Lukee sivut nopeammin tietokoneella, jossa on erillinen näytönohjain. Se kytketään päälle ja pois kohdassa Lisäasetukset, ylhäällä olevassa malliluettelossa.',
+  'addons.graphics.get': 'Hae näytönohjainohjelma',
+  'addons.pack': 'Tekoälypaketti',
+  'addons.pack.note':
+    'Verkottomiin asennuksiin ja tietokoneille, jotka eivät tavoita Hugging Facea. Tavallinen tapa on Lataa-painike ylhäällä olevassa malliluettelossa.',
+  'addons.pack.get': 'Hae tekoälypaketti (noin {size} Gt)',
+  'addons.pack.there': 'Tekoälymalli on jo tällä tietokoneella.',
+  'addons.update': 'Uusi versio',
+  'addons.update.note': 'Loppa ei koskaan etsi päivityksiä itse. Sinulla on versio {version}.',
+  'addons.update.check': 'Tarkista uusi versio',
+  'addons.update.checkConfirm':
+    'Kysytäänkö palvelimelta {host}, mikä versio on uusin? Mitään ei lähetetä itse kysymystä lukuun ottamatta, eikä mitään asenneta. Jatketaanko?',
+  'addons.update.checkYes': 'Tarkista',
+  'addons.update.newest': 'Sinulla on uusin versio.',
+  'addons.update.available': 'Versio {latest} on saatavilla.',
+  'addons.update.notes': 'Mitä uutta',
+  'addons.update.get': 'Lataa tämän tietokoneen asennusohjelma ({size} Mt)',
+  'addons.update.none': 'Tässä versiossa ei ole asennusohjelmaa tälle tietokoneelle.',
+  'addons.update.saved':
+    'Asennusohjelma on Lataukset-kansiossa ja vastaa julkaistua sormenjäljenään.',
+  'addons.update.open': 'Avaa asennusohjelma',
+  'addons.update.portable':
+    'Käytät kannettavaa versiota. Sulje Loppa ja suorita sitten uusi tiedosto tämän sijaan.',
+  'addons.update.mac': 'Avaa levykuva ja vedä Loppa Ohjelmat-kansioon.',
+  'addons.getConfirm':
+    '{what}. Ladataanko osoitteesta {host}? Tiedostot: {files}. Koko: {size} Mt, ja se vie yhtä paljon levytilaa. Asiakirjojasi ei lähetetä mihinkään, ja voit keskeyttää milloin vain. Tiedosto tarkistetaan julkaistua sormenjälkeä vasten ennen käyttöä. Jatketaanko?',
+  'addons.problem.not-the-listed-file':
+    'Tiedosto ei vastannut julkaistua sormenjälkeään, joten se poistettiin. Mitään ei asennettu.',
+  'addons.problem.offline': 'GitHubiin ei saatu yhteyttä. Tarkista yhteys ja yritä uudelleen.',
+  'addons.problem.rate-limited':
+    'GitHub rajoittaa tämän yhteyden pyyntöjä juuri nyt. Yritä myöhemmin uudelleen.',
+  'addons.problem.no-disk-space': 'Levytilaa ei ole tarpeeksi.',
+  'addons.hint': 'Tekoäly on valinnainen — ota se käyttöön, kun haluat.',
+  'addons.hint.dismiss': 'Piilota tämä huomautus',
+  'addons.progress': '{done} / {total} Mt',
   'ai.setup.doesText': 'Tiivistää, kääntää, oikolukee ja luonnostelee sähköpostia.',
   'ai.setup.doesVision': 'Lukee skannatun sivun.',
   'ai.setup.another': 'Valitse toinen malli',

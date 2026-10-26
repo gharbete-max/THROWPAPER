@@ -116,3 +116,58 @@ Dependencies
 
 Row 4 (an orphaned child after a hard kill of the shell) is the one that matters. Rows 13 and 14 are
 cheap hardening for when the runtime check is next touched.
+
+
+## Addendum 2026-10-26: Add-ons and updates
+
+What was added: the AI program fetched in the app (macOS and other systems), the AI pack from its
+release, the user-pressed update check and the installer download, and the page that holds them
+(`apps/desktop/src/addons/`, `window.loppaAddons`). Reviewed against the lists above. Nothing under
+`docs/CONTRACT.md` changed; `packages/shared/src/ai/addons.ts` is new (types and one Zod schema).
+
+| #   | Area              | Finding                                                                                                                                                                                                                                                                                                     | Severity | Status                                                                                                                                                                                                                                           |
+| --- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 16  | Runtime archive   | `fetchRuntime` unpacked the graphics-card archive with the system `tar` after the archive hash matched. A hash proves the file is the one released, not that its entry names are safe (`..`, absolute paths, links), and an unverified asset has no per-file list. `ai/runtime-fetch.ts`.                        | Low      | Fixed: `addons/extract.ts`, a reader of our own for `.zip` and `.tar.gz` (names, links, caps, ratio), used for every runtime archive and by `fetch-runtime.ts`. Tests: `extract.test.ts` (54 cases), and the real Windows and macOS archives. |
+| 17  | Runtime fetch     | The check after unpacking demanded `ok`, which an unverified asset (no file list) can never be: the first Mac fetch would have failed on the verdict, not on anything wrong. `ai/runtime-fetch.ts`.                                                                                                        | Info     | Fixed: only `damaged` fails; the program must be present. Test: `addons.test.ts` "is fetched, checked against the pinned hash, unpacked".                                                                                                       |
+
+Checked, no finding (each with its test):
+
+- **IPC arguments.** The four channels that fetch take one consent, parsed by the Zod schema
+  `ConsentRequest` at the main boundary (host at most 253 characters, at most 32 file names of at most
+  255, a non-negative safe integer): extra keys are dropped, anything else is `consent-required`
+  (`addons-ipc.test.ts`, 17 shapes). `plainConsent` of the AI channels now uses the same schema.
+  Opening the installer and cancelling take no argument at all.
+- **Origin guard.** All channels go through `originGuard` and are registered with Forms' origin
+  alone (`addons-ipc.test.ts` tries five other frames on every channel).
+- **The consent is compared, never used.** What a window sends is checked against what the shell would
+  fetch (host, files, total size); the address, the file name and the folder come from code and from
+  the release list, never from a window. A wrong consent fetches nothing and touches no disk
+  (`addons.test.ts`: "wants the exact consent").
+- **Consent record.** One line per confirmed action: the time, `addon:<task>` and the three consent fields.
+- **No path from the renderer reaches the file system.** The installer's path is the shell's own and
+  `openInstaller` hashes the file again immediately before `shell.openPath` (a changed file is not
+  opened: test). The Downloads path is Electron's `app.getPath('downloads')`.
+- **Hosts.** A third list, exact names: `github.com`, `api.github.com`, `release-assets.githubusercontent.com`,
+  `objects.githubusercontent.com` (confirmed by a real request). Not a suffix rule, so
+  `raw.githubusercontent.com`, user-content hosts and look-alikes are refused; https only; redirects
+  followed by hand, five at most, each checked (`release.test.ts`, `addons.test.ts` with a redirect to
+  another host, to plain http, to `raw.githubusercontent.com`). The model download's list is unchanged
+  (`isAllowedHost('github.com')` stays false: test).
+- **Nothing sent.** The requests carry `Accept` and `User-Agent: Loppa` only: no cookie, no
+  `Authorization`, no body, no referrer, no app version (test reads the headers the fake server saw).
+- **Caps.** Release list 2 MB, checksum file and `PACK.json` 64 KB, installer 600 MB and exactly the size
+  the release lists (more bytes stop the stream), temp file then atomic rename, hash mismatch deletes the
+  partial file. Release notes are shown as plain text with control characters removed, cut to 4 000
+  characters, never as HTML.
+- **Pack.** `PACK.json` must agree with the app's manifest (name, size, hash); part names must be the
+  file's `.partN`, so a hostile list cannot name `locations.json` or `consents.jsonl` (test).
+- **Concurrency.** One add-on at a time, and never beside a model download or a task, both ways (test
+  of the shell's wiring).
+
+Accepted: the checksum list comes from the same release as the installer, so it guards against a
+damaged file or a tampered CDN copy but not against a release that was itself replaced; the builds
+are not code-signed (LAUNCH-CHECKLIST §6) and the installer opens only by a press. Between the last
+hash and the system opening the file there is a window in which another program running as the same
+user could swap it; that program could replace the application too. Not verified: macOS (the program
+fetched there has never been run by this project), and a packaged build's launch of the new channels
+(the Desktop workflow on both systems).

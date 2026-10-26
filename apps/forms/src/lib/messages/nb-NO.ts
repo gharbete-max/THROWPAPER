@@ -1479,6 +1479,56 @@ export const nbNO: Record<MessageKey, string> = {
   'ai.models.optional':
     'AI er valgfritt. Loppa fungerer fullt ut uten noen modell. Ingenting lastes ned med mindre du trykker Hent og bekrefter.',
   'ai.setup.title': 'Sett opp AI',
+  'addons.title': 'Tillegg og oppdateringer',
+  'addons.intro':
+    'Alt valgfritt ligger her, så du aldri trenger å lete etter filer på nettet. Ingenting hentes før du trykker på en knapp og bekrefter.',
+  'addons.more': 'Program, pakke og oppdateringer',
+  'addons.program': 'KI-program',
+  'addons.program.note': 'Det lille programmet som kjører KI-modellen på denne datamaskinen.',
+  'addons.program.included': 'Følger med Loppa.',
+  'addons.there': 'Finnes på denne datamaskinen.',
+  'addons.program.none': 'Det finnes ikke noe KI-program for denne typen datamaskin ånnu.',
+  'addons.program.get': 'Hent KI-programmet',
+  'addons.untested':
+    'Ikke testet på denne typen datamaskin ennå. Hvis det ikke starter, sier Loppa fra og fortsetter uten KI.',
+  'addons.graphics': 'Grafikkortprogram',
+  'addons.graphics.note':
+    'Valgfritt. Leser sider raskere på en datamaskin med eget grafikkort. Det slås av og på under Avansert i modelllisten over.',
+  'addons.graphics.get': 'Hent grafikkortprogrammet',
+  'addons.pack': 'KI-pakke',
+  'addons.pack.note':
+    'For installasjon uten nett og for datamaskiner som ikke når Hugging Face. Vanlig fremgangsmåte er Last ned-knappen i modelllisten over.',
+  'addons.pack.get': 'Hent KI-pakken (omtrent {size} GB)',
+  'addons.pack.there': 'KI-modellen finnes allerede på denne datamaskinen.',
+  'addons.update': 'Ny versjon',
+  'addons.update.note':
+    'Loppa ser aldri etter oppdateringer på egen hånd. Du har versjon {version}.',
+  'addons.update.check': 'Se etter ny versjon',
+  'addons.update.checkConfirm':
+    'Spøre {host} hvilken versjon som er nyest? Ingenting sendes unntatt selve forespørselen, og ingenting installeres. Fortsette?',
+  'addons.update.checkYes': 'Se etter',
+  'addons.update.newest': 'Du har den nyeste versjonen.',
+  'addons.update.available': 'Versjon {latest} er tilgjengelig.',
+  'addons.update.notes': 'Hva er nytt',
+  'addons.update.get': 'Last ned installasjonsprogrammet for denne datamaskinen ({size} MB)',
+  'addons.update.none': 'Denne versjonen har ikke noe installasjonsprogram for denne datamaskinen.',
+  'addons.update.saved':
+    'Installasjonsprogrammet ligger i Nedlastinger-mappen og stemmer med det publiserte fingeravtrykket.',
+  'addons.update.open': 'Åpne installasjonsprogrammet',
+  'addons.update.portable':
+    'Du bruker den bærbare versjonen. Lukk Loppa og kjør så den nye filen i stedet for denne.',
+  'addons.update.mac': 'Åpne diskavbildet og dra Loppa til Programmer.',
+  'addons.getConfirm':
+    '{what}. Laste ned fra {host}? Filer: {files}. Størrelse: {size} MB, og den tar like mye diskplass. Dokumentene dine sendes ikke noe sted, og du kan avbryte når som helst. Filen kontrolleres mot det publiserte fingeravtrykket før bruk. Fortsette?',
+  'addons.problem.not-the-listed-file':
+    'Filen stemte ikke med det publiserte fingeravtrykket og ble slettet. Ingenting ble installert.',
+  'addons.problem.offline': 'Fikk ikke kontakt med GitHub. Sjekk tilkoblingen og prøv igjen.',
+  'addons.problem.rate-limited':
+    'GitHub begrenser forespørsler fra denne tilkoblingen akkurat nå. Prøv igjen senere.',
+  'addons.problem.no-disk-space': 'Det er ikke nok ledig diskplass.',
+  'addons.hint': 'KI er valgfritt — sett det opp når du vil.',
+  'addons.hint.dismiss': 'Skjul dette notatet',
+  'addons.progress': '{done} av {total} MB',
   'ai.setup.doesText': 'Sammenfatter, oversetter, korrekturleser og lager utkast til e-post.',
   'ai.setup.doesVision': 'Leser en skannet side.',
   'ai.setup.another': 'Velg en annen modell',

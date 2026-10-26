@@ -1538,6 +1538,56 @@ export const deDE: Record<MessageKey, string> = {
   'ai.models.optional':
     'KI ist optional. Loppa funktioniert vollständig ohne Modell. Es wird nichts heruntergeladen, solange Sie nicht auf Herunterladen drücken und bestätigen.',
   'ai.setup.title': 'KI einrichten',
+  'addons.title': 'Zusätze und Updates',
+  'addons.intro':
+    'Alles Optionale ist hier, damit Sie nie online nach Dateien suchen müssen. Nichts wird geladen, bis Sie eine Schaltfläche drücken und bestätigen.',
+  'addons.more': 'Programm, Paket und Updates',
+  'addons.program': 'KI-Programm',
+  'addons.program.note': 'Das kleine Programm, das das KI-Modell auf diesem Computer ausführt.',
+  'addons.program.included': 'Im Lieferumfang von Loppa.',
+  'addons.there': 'Auf diesem Computer.',
+  'addons.program.none': 'Für diese Art von Computer gibt es noch kein KI-Programm.',
+  'addons.program.get': 'KI-Programm holen',
+  'addons.untested':
+    'Auf dieser Art von Computer noch nicht getestet. Startet es nicht, sagt Loppa das und arbeitet ohne KI weiter.',
+  'addons.graphics': 'Grafikkartenprogramm',
+  'addons.graphics.note':
+    'Optional. Liest Seiten schneller auf einem Computer mit eigener Grafikkarte. Ein- und ausgeschaltet wird es unter Erweitert in der Modellliste oben.',
+  'addons.graphics.get': 'Grafikkartenprogramm holen',
+  'addons.pack': 'KI-Paket',
+  'addons.pack.note':
+    'Für Installationen ohne Netz und für Computer, die Hugging Face nicht erreichen. Der übliche Weg ist die Schaltfläche Herunterladen in der Modellliste oben.',
+  'addons.pack.get': 'KI-Paket holen (etwa {size} GB)',
+  'addons.pack.there': 'Das KI-Modell ist schon auf diesem Computer.',
+  'addons.update': 'Neue Version',
+  'addons.update.note': 'Loppa sucht nie von selbst nach Updates. Sie haben Version {version}.',
+  'addons.update.check': 'Nach neuer Version suchen',
+  'addons.update.checkConfirm':
+    '{host} fragen, welche Version die neueste ist? Außer der Anfrage selbst wird nichts gesendet, und nichts wird installiert. Fortfahren?',
+  'addons.update.checkYes': 'Suchen',
+  'addons.update.newest': 'Sie haben die neueste Version.',
+  'addons.update.available': 'Version {latest} ist verfügbar.',
+  'addons.update.notes': 'Was ist neu',
+  'addons.update.get': 'Installationsprogramm für diesen Computer herunterladen ({size} MB)',
+  'addons.update.none': 'Diese Version hat kein Installationsprogramm für diesen Computer.',
+  'addons.update.saved':
+    'Das Installationsprogramm liegt im Ordner Downloads und stimmt mit seinem veröffentlichten Fingerabdruck überein.',
+  'addons.update.open': 'Installationsprogramm öffnen',
+  'addons.update.portable':
+    'Sie nutzen die portable Version. Schließen Sie Loppa und führen Sie dann die neue Datei anstelle dieser aus.',
+  'addons.update.mac': 'Öffnen Sie das Disk-Image und ziehen Sie Loppa in Programme.',
+  'addons.getConfirm':
+    '{what}. Von {host} herunterladen? Dateien: {files}. Größe: {size} MB, und so viel Speicherplatz belegt es. Ihre Dokumente werden nirgendwohin gesendet, und Sie können jederzeit abbrechen. Die Datei wird vor der Nutzung mit ihrem veröffentlichten Fingerabdruck verglichen. Fortfahren?',
+  'addons.problem.not-the-listed-file':
+    'Die Datei stimmte nicht mit ihrem veröffentlichten Fingerabdruck überein und wurde gelöscht. Nichts wurde installiert.',
+  'addons.problem.offline':
+    'GitHub war nicht erreichbar. Prüfen Sie die Verbindung und versuchen Sie es erneut.',
+  'addons.problem.rate-limited':
+    'GitHub begrenzt gerade Anfragen von dieser Verbindung. Versuchen Sie es später erneut.',
+  'addons.problem.no-disk-space': 'Es ist nicht genug freier Speicherplatz vorhanden.',
+  'addons.hint': 'KI ist optional — richten Sie sie ein, wenn Sie möchten.',
+  'addons.hint.dismiss': 'Diesen Hinweis ausblenden',
+  'addons.progress': '{done} von {total} MB',
   'ai.setup.doesText': 'Fasst zusammen, übersetzt, korrigiert und entwirft E-Mails.',
   'ai.setup.doesVision': 'Liest eine gescannte Seite.',
   'ai.setup.another': 'Anderes Modell wählen',

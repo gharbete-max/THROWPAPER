@@ -27,8 +27,9 @@ apps/sign       Signing: the signer's page (open a link, sign by typing or drawi
 apps/api-sign   Sign's backend: own database, CONTRACT §5.1–5.7, PAdES seal + audit page
 apps/desktop    Loppa desktop (Windows, macOS): hosts Forms and Sign on embedded PGlite and loopback ports,
                 offline first; runs the AI centre (`src/ai/`, ADRs 0023–0025: one model through a pinned
-                llama-server, one resident at a time). Not a product: imports only @tp/api-forms/desktop
-                and @tp/api-sign/local (ADR 0016)
+                llama-server, one resident at a time) and Add-ons and updates (`src/addons/`, ADR 0026:
+                the AI program, the AI pack, the update check; GitHub only, on a confirmed press). Not a
+                product: imports only @tp/api-forms/desktop and @tp/api-sign/local (ADR 0016)
 packages/tokens Design tokens as JSON → CSS vars / email styles / print CSS; the contrast guard; the room's colours
 packages/i18n   Catalogues and locale utilities (ICU collation)
 packages/ui     One `cn()` helper

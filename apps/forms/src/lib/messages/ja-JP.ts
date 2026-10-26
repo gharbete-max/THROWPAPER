@@ -1485,6 +1485,58 @@ export const jaJP: Record<MessageKey, string> = {
   'ai.models.optional':
     'AI は任意です。モデルがなくても Loppa は問題なく使えます。「ダウンロード」を押して確認しない限り、何もダウンロードされません。',
   'ai.setup.title': 'AIを設定',
+  'addons.title': 'アドオンとアップデート',
+  'addons.intro':
+    '任意のものはすべてここにあります。ネットでファイルを探す必要はありません。ボタンを押して確認するまで、何も取得されません。',
+  'addons.more': 'プログラム、パック、アップデート',
+  'addons.program': 'AIプログラム',
+  'addons.program.note': 'このコンピューターでAIモデルを実行する小さなプログラムです。',
+  'addons.program.included': 'Loppaに含まれています。',
+  'addons.there': 'このコンピューターにあります。',
+  'addons.program.none': 'この種類のコンピューター向けのAIプログラムはまだありません。',
+  'addons.program.get': 'AIプログラムを取得',
+  'addons.untested':
+    'この種類のコンピューターではまだ試していません。起動しない場合はLoppaがそうお知らせし、AIなしで続けます。',
+  'addons.graphics': 'グラフィックカード用プログラム',
+  'addons.graphics.note':
+    '任意です。独立したグラフィックカードがあるコンピューターで、ページをより速く読み取ります。上のモデル一覧の「詳細設定」でオン・オフを切り替えます。',
+  'addons.graphics.get': 'グラフィックカード用プログラムを取得',
+  'addons.pack': 'AIパック',
+  'addons.pack.note':
+    'オフラインでのインストールや、Hugging Faceに接続できないコンピューター向けです。ふつうは上のモデル一覧の「ダウンロード」ボタンを使います。',
+  'addons.pack.get': 'AIパックを取得（約{size} GB）',
+  'addons.pack.there': 'AIモデルはすでにこのコンピューターにあります。',
+  'addons.update': '新しいバージョン',
+  'addons.update.note':
+    'Loppaが自分でアップデートを探すことはありません。現在のバージョンは{version}です。',
+  'addons.update.check': '新しいバージョンを確認',
+  'addons.update.checkConfirm':
+    '{host}に最新バージョンを尋ねますか？リクエスト自体以外は何も送信されず、何もインストールされません。続けますか？',
+  'addons.update.checkYes': '確認',
+  'addons.update.newest': '最新バージョンをお使いです。',
+  'addons.update.available': 'バージョン{latest}を利用できます。',
+  'addons.update.notes': '新着情報',
+  'addons.update.get': 'このコンピューター用のインストーラーをダウンロード（{size} MB）',
+  'addons.update.none': 'このバージョンには、このコンピューター用のインストーラーがありません。',
+  'addons.update.saved':
+    'インストーラーは「ダウンロード」フォルダーにあり、公開されたフィンガープリントと一致しました。',
+  'addons.update.open': 'インストーラーを開く',
+  'addons.update.portable':
+    'ポータブル版をお使いです。Loppaを終了し、このファイルの代わりに新しいファイルを実行してください。',
+  'addons.update.mac':
+    'ディスクイメージを開き、Loppaを「アプリケーション」にドラッグしてください。',
+  'addons.getConfirm':
+    '{what}。{host}からダウンロードしますか？ファイル：{files}。サイズ：{size} MB。同じだけディスク容量を使います。ドキュメントはどこにも送信されず、いつでもキャンセルできます。使用前に、公開されたフィンガープリントと照合します。続けますか？',
+  'addons.problem.not-the-listed-file':
+    'ファイルが公開されたフィンガープリントと一致しなかったため、削除しました。何もインストールされていません。',
+  'addons.problem.offline':
+    'GitHubに接続できませんでした。接続を確認して、もう一度お試しください。',
+  'addons.problem.rate-limited':
+    'GitHubがこの接続からのリクエストを現在制限しています。しばらくしてからお試しください。',
+  'addons.problem.no-disk-space': 'ディスクの空き容量が足りません。',
+  'addons.hint': 'AIは任意です—　必要なときに設定してください。',
+  'addons.hint.dismiss': 'このメモを非表示',
+  'addons.progress': '{done} / {total} MB',
   'ai.setup.doesText': '要約、翻訳、校正、メールの下書きを行います。',
   'ai.setup.doesVision': 'スキャンしたページを読み取ります。',
   'ai.setup.another': '別のモデルを選ぶ',

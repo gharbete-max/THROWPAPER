@@ -23,7 +23,7 @@ async function signIn(page: Page) {
 async function setUp(page: Page) {
   await expect(page.getByText('The model is not on this computer.')).toBeVisible();
   await page.getByRole('link', { name: 'Set up AI' }).click();
-  await expect(page.getByRole('heading', { name: 'Set up AI', level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Add-ons and updates', level: 1 })).toBeVisible();
   // Nothing is downloaded, and the download says why it is off.
   await expect(page.getByRole('button', { name: 'Download' })).toBeDisabled();
   await expect(page.getByText(/There is no download for this yet/)).toBeVisible();

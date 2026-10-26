@@ -242,3 +242,18 @@ optional)", in the model list. The processor build stays the default and the fal
   the Vulkan program is hashed before it is started. One model resident at a time: ending the process gives the
   card's memory back; changing the setting ends a loaded model so it restarts the new way. The status says
   whether the model runs on the processor or the graphics card, and the card's name.
+
+## Getting the program inside the app (amendment, 2026-10-26)
+
+The runtime story gains one road and loses none. The Windows x64 installer still carries
+`llama-server` (verified, 51 files hashed). Where the installer does not carry it (macOS on Apple
+Silicon and Intel, Windows arm64, Linux), "Add-ons and updates" offers **Get the AI program**: the
+pinned asset of the same release (`b11741`) after a confirmation naming `github.com`, the file and its
+size (ADR 0026, amendment). The archive's hash is checked before it is opened, it is unpacked by
+`apps/desktop/src/addons/extract.ts` into `<user data>/models/runtime`, and the existing resolve order
+finds it there. These assets stay **UNVERIFIED** (`verified: false`): no file list, so only the
+archive and the program's presence are checked, and the page says "Not tested on this kind of computer
+yet". The macOS archives hold relative symbolic links between the libraries; they are unpacked as
+copies. The hashes and sizes in the manifest are the ones the release page gave; on 2026-10-26 all seven
+pinned assets were compared with the digests GitHub's API lists for `b11741` and agree, and the
+macOS arm64 archive was downloaded and hashed (equal).

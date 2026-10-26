@@ -87,7 +87,7 @@ export function CommandPalette() {
       if (modelBridge()) {
         list.push(
           { id: 'summary', label: t('room.centre'), icon: 'globe', to: '/summary' },
-          { id: 'ai-setup', label: t('ai.setup.title'), icon: 'settings', to: '/ai-setup' },
+          { id: 'ai-setup', label: t('addons.title'), icon: 'settings', to: '/ai-setup' },
         );
       }
     }

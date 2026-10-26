@@ -1,15 +1,16 @@
 /**
  * The Forms window's bridges to the AI coordinator: `window.loppaAi` (ADR 0024) and, over the same
- * coordinator, `window.loppaModel` (ADR 0023), and nothing else.
+ * coordinator, `window.loppaModel` (ADR 0023), and `window.loppaAddons` (add-ons and updates,
+ * ADR 0026 amended), and nothing else.
  *
  * Bundled to CommonJS by `scripts/build.ts` as `model-preload.cjs`, because a sandboxed preload
  * cannot be an ES module. The hosted edition has no such preload, so a pane finds no bridge and
  * says "Not in this edition". See `ai-ipc.ts` and `model-ipc.ts` for who is answered.
  */
 import { contextBridge, ipcRenderer } from 'electron';
-import type { AiBridge, AiEvent } from '@tp/shared/ai';
+import type { AddonsBridge, AddonsEvent, AiBridge, AiEvent } from '@tp/shared/ai';
 import type { ModelBridge, ModelEvent } from '@tp/shared/summary';
-import { AI_CHANNELS, MODEL_CHANNELS } from './channels.js';
+import { ADDONS_CHANNELS, AI_CHANNELS, MODEL_CHANNELS } from './channels.js';
 
 const ai: AiBridge = {
   status: () => ipcRenderer.invoke(AI_CHANNELS.status),
@@ -48,5 +49,23 @@ const model: ModelBridge = {
   },
 };
 
+const addons: AddonsBridge = {
+  status: () => ipcRenderer.invoke(ADDONS_CHANNELS.status),
+  installProgram: (consent) => ipcRenderer.invoke(ADDONS_CHANNELS.installProgram, consent),
+  installPack: (consent) => ipcRenderer.invoke(ADDONS_CHANNELS.installPack, consent),
+  checkUpdate: (consent) => ipcRenderer.invoke(ADDONS_CHANNELS.checkUpdate, consent),
+  downloadInstaller: (consent) => ipcRenderer.invoke(ADDONS_CHANNELS.downloadInstaller, consent),
+  openInstaller: () => ipcRenderer.invoke(ADDONS_CHANNELS.openInstaller),
+  cancel: () => ipcRenderer.invoke(ADDONS_CHANNELS.cancel),
+  onEvent(listener) {
+    const forward = (_event: unknown, payload: AddonsEvent) => listener(payload);
+    ipcRenderer.on(ADDONS_CHANNELS.event, forward);
+    return () => {
+      ipcRenderer.removeListener(ADDONS_CHANNELS.event, forward);
+    };
+  },
+};
+
+contextBridge.exposeInMainWorld('loppaAddons', addons);
 contextBridge.exposeInMainWorld('loppaAi', ai);
 contextBridge.exposeInMainWorld('loppaModel', model);

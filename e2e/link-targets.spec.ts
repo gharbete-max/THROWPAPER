@@ -24,7 +24,7 @@ test('the link between Set up AI and Summary is a 24 px target at 360 px wide', 
   expect((await toSetup.boundingBox())!.height).toBeGreaterThanOrEqual(24);
 
   await toSetup.click();
-  await expect(page.getByRole('heading', { name: 'Set up AI', level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Add-ons and updates', level: 1 })).toBeVisible();
   const toSummary = page.getByRole('main').getByRole('link', { name: 'Summary and translation' });
   await expect(toSummary).toBeVisible();
   expect((await toSummary.boundingBox())!.height).toBeGreaterThanOrEqual(24);

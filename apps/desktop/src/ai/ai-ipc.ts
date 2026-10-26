@@ -1,4 +1,4 @@
-import type { AiConsent } from '@tp/shared/ai';
+import { ConsentRequest, type AiConsent } from '@tp/shared/ai';
 import type { Coordinator } from './coordinator.js';
 import { isReadPageTask } from '@tp/shared/ai';
 import { isComposeTask, isProofreadTask, isReplyTask } from '@tp/shared/summary';
@@ -24,20 +24,8 @@ const PLAIN_ID = /^[a-z0-9._-]{1,80}$/;
  * or make it large.
  */
 export function plainConsent(value: unknown): AiConsent | null {
-  if (typeof value !== 'object' || value === null) return null;
-  const c = value as Record<string, unknown>;
-  if (
-    typeof c.host !== 'string' ||
-    c.host.length > 253 ||
-    typeof c.totalBytes !== 'number' ||
-    !Number.isSafeInteger(c.totalBytes) ||
-    !Array.isArray(c.files) ||
-    c.files.length > 32 ||
-    !c.files.every((name) => typeof name === 'string' && name.length <= 255)
-  ) {
-    return null;
-  }
-  return { host: c.host, files: [...(c.files as string[])], totalBytes: c.totalBytes };
+  const parsed = ConsentRequest.safeParse(value);
+  return parsed.success ? parsed.data : null;
 }
 
 export function registerAiIpc(

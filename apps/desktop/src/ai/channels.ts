@@ -9,6 +9,18 @@ export const MODEL_CHANNELS = {
   event: 'loppa-model:event',
 } as const;
 
+/** The IPC channels of the add-ons bridge (`window.loppaAddons`, ADR 0026 amended). */
+export const ADDONS_CHANNELS = {
+  status: 'loppa-addons:status',
+  installProgram: 'loppa-addons:install-program',
+  installPack: 'loppa-addons:install-pack',
+  checkUpdate: 'loppa-addons:check-update',
+  downloadInstaller: 'loppa-addons:download-installer',
+  openInstaller: 'loppa-addons:open-installer',
+  cancel: 'loppa-addons:cancel',
+  event: 'loppa-addons:event',
+} as const;
+
 /** The IPC channels of the generic AI bridge (`window.loppaAi`, ADR 0024). */
 export const AI_CHANNELS = {
   status: 'loppa-ai:status',

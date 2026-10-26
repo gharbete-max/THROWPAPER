@@ -1483,6 +1483,55 @@ export const daDK: Record<MessageKey, string> = {
   'ai.models.optional':
     'AI er valgfrit. Loppa virker fuldt ud uden en model. Intet hentes, medmindre du trykker på Hent og bekræfter.',
   'ai.setup.title': 'Opsæt AI',
+  'addons.title': 'Tillæg og opdateringer',
+  'addons.intro':
+    'Alt valgfrit er samlet her, så du aldrig behøver lede efter filer på nettet. Intet hentes, før du trykker på en knap og bekræfter.',
+  'addons.more': 'Program, pakke og opdateringer',
+  'addons.program': 'AI-program',
+  'addons.program.note': 'Det lille program, der kører AI-modellen på denne computer.',
+  'addons.program.included': 'Følger med Loppa.',
+  'addons.there': 'Findes på denne computer.',
+  'addons.program.none': 'Der findes endnu ikke noget AI-program til denne slags computer.',
+  'addons.program.get': 'Hent AI-programmet',
+  'addons.untested':
+    'Endnu ikke prøvet på denne slags computer. Hvis det ikke starter, siger Loppa det og fortsætter uden AI.',
+  'addons.graphics': 'Grafikkortprogram',
+  'addons.graphics.note':
+    'Valgfrit. Læser sider hurtigere på en computer med eget grafikkort. Det slås til og fra under Avanceret i modellisten ovenfor.',
+  'addons.graphics.get': 'Hent grafikkortprogrammet',
+  'addons.pack': 'AI-pakke',
+  'addons.pack.note':
+    'Til installation uden net og til computere, der ikke kan nå Hugging Face. Den almindelige vej er knappen Download i modellisten ovenfor.',
+  'addons.pack.get': 'Hent AI-pakken (ca. {size} GB)',
+  'addons.pack.there': 'AI-modellen findes allerede på denne computer.',
+  'addons.update': 'Ny version',
+  'addons.update.note': 'Loppa leder aldrig selv efter opdateringer. Du har version {version}.',
+  'addons.update.check': 'Led efter en ny version',
+  'addons.update.checkConfirm':
+    'Spørg {host}, hvilken version der er nyest? Intet sendes ud over selve forespørgslen, og intet installeres. Fortsæt?',
+  'addons.update.checkYes': 'Led',
+  'addons.update.newest': 'Du har den nyeste version.',
+  'addons.update.available': 'Version {latest} er tilgængelig.',
+  'addons.update.notes': 'Hvad er nyt',
+  'addons.update.get': 'Download installationsprogrammet til denne computer ({size} MB)',
+  'addons.update.none': 'Denne version har intet installationsprogram til denne computer.',
+  'addons.update.saved':
+    'Installationsprogrammet ligger i mappen Overførsler og stemmer med sit offentliggjorte fingeraftryk.',
+  'addons.update.open': 'Åbn installationsprogrammet',
+  'addons.update.portable':
+    'Du bruger den bærbare version. Luk Loppa, og kør så den nye fil i stedet for denne.',
+  'addons.update.mac': 'Åbn diskaftrykket, og træk Loppa til Programmer.',
+  'addons.getConfirm':
+    '{what}. Download fra {host}? Filer: {files}. Størrelse: {size} MB, og den fylder lige så meget på disken. Dine dokumenter sendes ingen steder, og du kan afbryde når som helst. Filen kontrolleres mod sit offentliggjorte fingeraftryk, før den bruges. Fortsæt?',
+  'addons.problem.not-the-listed-file':
+    'Filen stemte ikke med sit offentliggjorte fingeraftryk og blev slettet. Intet blev installeret.',
+  'addons.problem.offline': 'GitHub kunne ikke nås. Tjek forbindelsen, og prøv igen.',
+  'addons.problem.rate-limited':
+    'GitHub begrænser i øjeblikket forespørgsler fra denne forbindelse. Prøv igen senere.',
+  'addons.problem.no-disk-space': 'Der er ikke nok ledig diskplads.',
+  'addons.hint': 'AI er valgfrit — sæt det op, når du vil.',
+  'addons.hint.dismiss': 'Skjul denne note',
+  'addons.progress': '{done} af {total} MB',
   'ai.setup.doesText': 'Resumerer, oversætter, korrekturlæser og skriver udkast til e-mail.',
   'ai.setup.doesVision': 'Læser en indscannet side.',
   'ai.setup.another': 'Vælg en anden model',

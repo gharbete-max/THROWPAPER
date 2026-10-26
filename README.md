@@ -46,6 +46,11 @@ Run anyway_. On a Mac, right-click Loppa and choose _Open_ the first time. Check
 
 ## The AI model files and the AI pack
 
+**Everything optional is inside the app: _Add-ons and updates_** (the room's top corner). The AI
+model, the program that runs it, the graphics-card program, the AI pack and a check for a new
+version each have a button there, with the size and a confirmation that names the host. You never
+need to look for files on GitHub yourself.
+
 AI is optional; Loppa works fully without it. The full model needs about 12 GB of memory; smaller
 tiers exist. The model is never in the installer (the Windows installer carries only `llama-server`).
 Either choose a tier under _AI models_ and confirm the download (it names the host, huggingface.co, and
