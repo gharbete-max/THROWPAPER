@@ -108,3 +108,14 @@ a log shipper's problem. Two lines would take the bump on purpose; a bump that s
 by default is closed by default. **Revisit if 16.x gets an advisory, or when the bump is taken
 deliberately with `quiet: true` in both `env.ts`.**
 
+### Audit waiver, 2026-10-26 (GHSA-mrhx-c7xc-m3w5)
+
+`pnpm audit --prod --audit-level high` began failing on `main` when GHSA-mrhx-c7xc-m3w5 (Zod: memory
+exhaustion validating a large array, `$ZodArray` / `handleArrayResult`, versions below 4.6.6) was
+published. The workspace is on Zod 3.25.76. Checked: `handleArrayResult` exists only in
+`zod/v4/core/schemas.js`; the Zod 3 `ZodArray` that `import { z } from 'zod'` runs does not contain it, and
+nothing in the repository imports `zod/v4`. The route body limits (1 to 16 MB) bound the input anyway. So
+the advisory is ignored in `package.json` (`pnpm.auditConfig.ignoreGhsas`) and the real fix is the Zod 4
+migration above (#99). Remove the ignore when that lands, or when an advisory names the Zod 3 line.
+The same run found moderate `nodemailer` (address parsing) and `fast-uri` advisories: fixed by overrides
+to `nodemailer ^10.1.4`, `fast-uri ^3.1.9` and `^4.2.3`.

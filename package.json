@@ -64,8 +64,15 @@
   },
   "pnpm": {
     "overrides": {
-      "fast-uri@<3.1.7": "^3.1.7",
+      "fast-uri@>=3.0.0 <3.1.9": "^3.1.9",
+      "fast-uri@>=4.0.0 <4.2.3": "^4.2.3",
+      "nodemailer@<10.1.4": "^10.1.4",
       "shell-quote@<1.11.0": "^1.11.0"
+    },
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-mrhx-c7xc-m3w5"
+      ]
     }
   }
 }
