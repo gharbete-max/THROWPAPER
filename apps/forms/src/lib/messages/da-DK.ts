@@ -2085,6 +2085,9 @@ export const daDK: Record<MessageKey, string> = {
   'signPlace.forgetConfirm': 'Glemme den gemte “{what}” på denne computer?',
   'signPlace.typed': 'Skriv',
   'signPlace.drawn': 'Tegn',
+  'signPlace.pen': 'Pen',
+  'signPlace.undo': 'Fortryd',
+  'signPlace.thickness': 'Tykkelse',
   'signPlace.typedLabel': 'Tekst der skal bruges',
   'signPlace.drawArea': 'Tegneområde',
   'signPlace.clear': 'Ryd',
@@ -2252,4 +2255,17 @@ export const daDK: Record<MessageKey, string> = {
   'suppress.lastSkipped':
     'plural:one Den seneste kampagne udelod {count} adresse fra denne liste. | other Den seneste kampagne udelod {count} adresser fra denne liste.',
   'suppress.failed': 'Listen kunne ikke ændres. Prøv igen.',
+  'nav.people': 'Personer',
+  'people.title': 'Personer',
+  'people.empty':
+    'Ingen personer endnu. Tilføj den første for at tilmelde vedkommende til et arrangement.',
+  'people.add': 'Tilføj person',
+  'people.name': 'Navn',
+  'people.phone': 'Telefon',
+  'people.note': 'Notat',
+  'people.events': 'Tilmeldt',
+  'people.noEvents': 'Ingen arrangementer at tilmelde til endnu.',
+  'people.delete': 'Slet',
+  'people.deleteConfirm': 'Slet personen?',
+  'people.failed': 'Personerne kunne ikke indlæses.',
 };

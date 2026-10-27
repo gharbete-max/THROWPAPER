@@ -30,6 +30,7 @@ import type {
   MessageRecord,
   SendingDomainRecord,
   CampaignSuppressionRecord,
+  PersonRecord,
   SigningRequestRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
@@ -65,6 +66,7 @@ export interface MemoryState {
   builderAliases: (BuilderAliasRecord & { key: string })[];
   sendingDomains: SendingDomainRecord[];
   campaignSuppressions: CampaignSuppressionRecord[];
+  people: PersonRecord[];
   signingRequests: SigningRequestRecord[];
   messages: MessageRecord[];
   audit: AuditEntryRecord[];
@@ -131,6 +133,7 @@ export function createMemoryRepositories(
     builderAliases: seed.builderAliases ?? [],
     sendingDomains: seed.sendingDomains ?? [],
     campaignSuppressions: seed.campaignSuppressions ?? [],
+    people: seed.people ?? [],
     signingRequests: seed.signingRequests ?? [],
     messages: seed.messages ?? [],
     audit: seed.audit ?? [],
@@ -1044,6 +1047,37 @@ export function createMemoryRepositories(
         const updated: SendingDomainRecord = { ...existing, ...input };
         state.sendingDomains[index] = updated;
         return { ...updated };
+      },
+    },
+
+    people: {
+      list: async (organisationId) =>
+        state.people
+          .filter((p) => p.organisationId === organisationId)
+          .map((p) => ({ ...p, eventIds: [...p.eventIds] })),
+      create: async (organisationId, input) => {
+        const record = {
+          ...input,
+          eventIds: [...input.eventIds],
+          id: randomUUID(),
+          organisationId,
+          createdAt: new Date(),
+        };
+        state.people.push(record);
+        return { ...record, eventIds: [...record.eventIds] };
+      },
+      update: async (organisationId, id, input) => {
+        const found = state.people.find((p) => p.id === id && p.organisationId === organisationId);
+        if (!found) return null;
+        Object.assign(found, input, { eventIds: [...input.eventIds] });
+        return { ...found, eventIds: [...found.eventIds] };
+      },
+      remove: async (organisationId, id) => {
+        const before = state.people.length;
+        state.people = state.people.filter(
+          (p) => !(p.id === id && p.organisationId === organisationId),
+        );
+        return state.people.length < before;
       },
     },
 

@@ -86,12 +86,11 @@ pnpm test:e2e
 
 ## Demo data
 
-`pnpm db:seed` (and the desktop's "open with demo data", which runs the same `seedDemo`) writes,
+`pnpm db:seed` (the web demo's data; the desktop no longer offers demo data: it starts empty, and people are added by hand under People) writes,
 today: the Demo AB organisation with an admin and an operator, its brand kit, one event with ~200
 registrations through a published form, a draft form shared with the admin, a form in the bin, and
 two draft forms standing for documents brought in ("Membership application (from a PDF)",
-"Inspection (from a Word file)"). The desktop's demo also leaves one message waiting in To send (the
-filled membership PDF attached). That is what it **contains**. Beside it, `fixtures/demo/` holds
+"Inspection (from a Word file)"). That is what it **contains**. Beside it, `fixtures/demo/` holds
 the files a person drops in: a PDF with fields of its own (blank and filled), a three-page PDF to
 arrange, an invoice picture, a CSV for Send/batch and a sample document in Swedish and English for
 the summary centre; the corpus in `fixtures/documents/` has the imported PDF and Word originals. Not

@@ -484,6 +484,16 @@ export const client = {
     clearSession();
   },
 
+  listPeople: () => request<api.PersonListResponse>('/v1/people'),
+
+  savePerson: (input: api.PersonInput, id?: string) =>
+    request<api.PersonResponse>(id ? `/v1/people/${id}` : '/v1/people', {
+      method: id ? 'PUT' : 'POST',
+      body: JSON.stringify(input),
+    }),
+
+  deletePerson: (id: string) => request<void>(`/v1/people/${id}`, { method: 'DELETE' }),
+
   listEvents: () => request<{ events: api.EventResponse[] }>('/v1/events'),
 
   getEvent: (id: string) => request<api.EventResponse>(`/v1/events/${id}`),

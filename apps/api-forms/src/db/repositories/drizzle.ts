@@ -28,6 +28,7 @@ import {
   organisations,
   sendingDomains,
   campaignSuppressions,
+  people,
   signingRequests,
   submissions,
   refreshTokens,
@@ -55,6 +56,7 @@ import type {
   Repositories,
   SendingDomainRecord,
   CampaignSuppressionRecord,
+  PersonRecord,
   SigningRequestRecord,
   SubmissionCompleteInput,
   SubmissionDraftInput,
@@ -1353,6 +1355,38 @@ export function createDrizzleRepositories(db: Db): Repositories {
               eq(campaignSuppressions.email, email.trim().toLowerCase()),
             ),
           )
+          .returning();
+        return rows.length > 0;
+      },
+    },
+
+    people: {
+      list: async (organisationId) =>
+        (await db
+          .select()
+          .from(people)
+          .where(eq(people.organisationId, organisationId))
+          .orderBy(people.name)) as PersonRecord[],
+      create: async (organisationId, input) => {
+        const [row] = await db
+          .insert(people)
+          .values({ ...input, organisationId })
+          .returning();
+        if (!row) throw new Error('person insert returned no row');
+        return row as PersonRecord;
+      },
+      update: async (organisationId, id, input) => {
+        const [row] = await db
+          .update(people)
+          .set(input)
+          .where(and(eq(people.id, id), eq(people.organisationId, organisationId)))
+          .returning();
+        return (row as PersonRecord | undefined) ?? null;
+      },
+      remove: async (organisationId, id) => {
+        const rows = await db
+          .delete(people)
+          .where(and(eq(people.id, id), eq(people.organisationId, organisationId)))
           .returning();
         return rows.length > 0;
       },

@@ -519,6 +519,27 @@ export interface CampaignSuppressionRepository {
   remove(organisationId: string, email: string): Promise<boolean>;
 }
 
+export interface PersonRecord {
+  id: string;
+  organisationId: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  note: string | null;
+  /** The events this person is registered for. */
+  eventIds: string[];
+  createdAt: Date;
+}
+
+export type PersonInput = Pick<PersonRecord, 'name' | 'email' | 'phone' | 'note' | 'eventIds'>;
+
+export interface PersonRepository {
+  list(organisationId: string): Promise<PersonRecord[]>;
+  create(organisationId: string, input: PersonInput): Promise<PersonRecord>;
+  update(organisationId: string, id: string, input: PersonInput): Promise<PersonRecord | null>;
+  remove(organisationId: string, id: string): Promise<boolean>;
+}
+
 export interface MessageRecord {
   id: string;
   organisationId: string;
@@ -795,6 +816,7 @@ export interface Repositories {
   builderAliases: BuilderAliasRepository;
   sendingDomains: SendingDomainRepository;
   campaignSuppressions: CampaignSuppressionRepository;
+  people: PersonRepository;
   messages: MessageRepository;
   audit: AuditRepository;
   ledger: LedgerRepository;

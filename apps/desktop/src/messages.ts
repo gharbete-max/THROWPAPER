@@ -28,8 +28,6 @@ const EN = {
   setupName: 'Your name',
   setupEmail: 'Your email address',
   setupStart: 'Start',
-  setupOrDemo: 'Or look around first:',
-  setupDemo: 'Open with demo data',
   setupWorking: 'Setting up…',
 
   settingsTitle: 'Settings',
@@ -142,8 +140,6 @@ const SV: typeof EN = {
   setupName: 'Ditt namn',
   setupEmail: 'Din e-postadress',
   setupStart: 'Börja',
-  setupOrDemo: 'Eller titta runt först:',
-  setupDemo: 'Öppna med demodata',
   setupWorking: 'Förbereder…',
 
   settingsTitle: 'Inställningar',

@@ -768,6 +768,7 @@ export function buildDemoState(options: { registrations?: number; now?: Date } =
     jobs: [],
     sendingDomains: [],
     // One address that has asked not to get campaigns, so a demo shows an audience being cut.
+    people: [],
     campaignSuppressions: [
       {
         organisationId,

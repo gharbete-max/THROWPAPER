@@ -5,3 +5,4 @@ export * from './word-pdf.js';
 export * from './send.js';
 export * from './campaign.js';
 export * from './copy-pdf.js';
+export * from './people.js';

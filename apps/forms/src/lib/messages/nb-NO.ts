@@ -2084,6 +2084,9 @@ export const nbNO: Record<MessageKey, string> = {
   'signPlace.forgetConfirm': 'Glemme den lagrede «{what}» på denne datamaskinen?',
   'signPlace.typed': 'Skriv',
   'signPlace.drawn': 'Tegn',
+  'signPlace.pen': 'Penn',
+  'signPlace.undo': 'Angre',
+  'signPlace.thickness': 'Tykkelse',
   'signPlace.typedLabel': 'Tekst som skal brukes',
   'signPlace.drawArea': 'Tegneområde',
   'signPlace.clear': 'Tøm',
@@ -2252,4 +2255,17 @@ export const nbNO: Record<MessageKey, string> = {
   'suppress.lastSkipped':
     'plural:one Den siste kampanjen hoppet over {count} adresse på denne listen. | other Den siste kampanjen hoppet over {count} adresser på denne listen.',
   'suppress.failed': 'Listen kunne ikke endres. Prøv igjen.',
+  'nav.people': 'Personer',
+  'people.title': 'Personer',
+  'people.empty':
+    'Ingen personer ennå. Legg til den første for å melde vedkommende på et arrangement.',
+  'people.add': 'Legg til person',
+  'people.name': 'Navn',
+  'people.phone': 'Telefon',
+  'people.note': 'Notat',
+  'people.events': 'Påmeldt',
+  'people.noEvents': 'Ingen arrangementer å melde på ennå.',
+  'people.delete': 'Slett',
+  'people.deleteConfirm': 'Slette personen?',
+  'people.failed': 'Personene kunne ikke lastes.',
 };

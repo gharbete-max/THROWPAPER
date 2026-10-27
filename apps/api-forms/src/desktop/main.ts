@@ -5,6 +5,7 @@
  * edition is exercised where there is no display — CI, a Linux box, this repository's own e2e —
  * and a way in for anyone who would rather use their own browser than a window.
  */
+import { randomUUID } from 'node:crypto';
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { startDesktopServer } from './start.js';
@@ -18,7 +19,14 @@ const server = await startDesktopServer({
   ...(process.env['LOPPA_PORT'] ? { port: Number(process.env['LOPPA_PORT']) } : {}),
 });
 
-if (!(await server.isSetUp()) && process.argv.includes('--demo')) await server.loadDemo();
+// Same as the shell: no set-up form, the workspace is named by a random install ID.
+if (!(await server.isSetUp())) {
+  await server.bootstrap({
+    organisationName: 'Loppa',
+    name: 'Loppa',
+    email: `${randomUUID()}@install.invalid`,
+  });
+}
 
 const link = await server.signInLink();
 console.log(
@@ -33,7 +41,7 @@ console.log(
     }\n` +
     (link
       ? `  Sign in:      ${link}\n                (single use, 15 minutes; restart for another)\n`
-      : '  Not set up yet. Run again with --demo for the demo data, or use the desktop app.\n'),
+      : '  Not set up yet. Restart to create the workspace.\n'),
 );
 
 for (const signal of ['SIGTERM', 'SIGINT'] as const) {

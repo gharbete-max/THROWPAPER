@@ -223,6 +223,7 @@ describe('twelve languages, each its own', () => {
       'guided.brand.quick.minimal',
     ],
     'da-DK': [
+      'signPlace.pen',
       'reply.tone',
       'docs.keep.original',
       'invoiceScan.json',
@@ -279,6 +280,7 @@ describe('twelve languages, each its own', () => {
     'fi-FI': ['brand.logo'],
     'is-IS': [],
     'fr-FR': [
+      'people.note',
       'table.actions',
       'signPlace.signature',
       'signPlace.date',
@@ -328,6 +330,7 @@ describe('twelve languages, each its own', () => {
       'review.kind.question',
     ],
     'de-DE': [
+      'people.name',
       'docs.keep.original',
       'scanEdit.text',
       'scanEdit.item.text',

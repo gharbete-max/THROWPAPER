@@ -134,12 +134,6 @@ function Setup({ t, bridge }: { t: Messages; bridge: LoppaBridge }) {
           </div>
         </fieldset>
       </form>
-      <div className="actions">
-        <span className="muted">{t.setupOrDemo}</span>
-        <button type="button" disabled={busy} onClick={() => void run(() => bridge.loadDemo())}>
-          {t.setupDemo}
-        </button>
-      </div>
       {error ? (
         <p className="error" role="alert">
           {error}

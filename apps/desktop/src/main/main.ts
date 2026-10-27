@@ -7,6 +7,7 @@
  * itself: a first-run screen, settings that live on this machine, "open the data folder", backup,
  * and the OS password store for an SMTP password.
  */
+import { randomUUID } from 'node:crypto';
 import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import {
   KEYS_FILE,
@@ -511,22 +512,6 @@ function registerIpc(): void {
     }
   });
 
-  ipcMain.handle(CHANNELS.loadDemo, async (event): Promise<Result> => {
-    if (!fromPanel(event)) return refused;
-    try {
-      const done = await exclusive(async () => {
-        if (!server || !(await server.loadDemo())) return false;
-        await restartNow();
-        return true;
-      });
-      if (!done) return { ok: false, error: 'already-set-up' };
-      await replacePanelWithMain();
-      return { ok: true };
-    } catch (error) {
-      return fail(error);
-    }
-  });
-
   ipcMain.handle(CHANNELS.saveSettings, async (event, form: SettingsForm): Promise<Result> => {
     if (!fromPanel(event)) return refused;
     try {
@@ -622,8 +607,27 @@ if (!app.requestSingleInstanceLock()) {
       registerIpc();
       limitPermissions();
       server = await startServer();
-      if (await server.isSetUp()) await openMainWindow();
-      else await openPanel('setup');
+      /*
+       * No sign-in and no set-up form: the data never leaves this computer, so the first start makes
+       * the workspace itself, named by a random ID drawn once per install. The "email" is that ID
+       * at a reserved name; nothing is ever sent to it.
+       */
+      if (!(await server.isSetUp())) {
+        const id = randomUUID();
+        await exclusive(async () => {
+          await server?.bootstrap(
+            WorkspaceOwner.parse({
+              organisationName: 'Loppa',
+              name: t.appName,
+              email: `${id}@install.invalid`,
+              locale: lang,
+            }),
+          );
+          // Now there is an organisation, Forms can be given its Sign token.
+          await restartNow();
+        });
+      }
+      await openMainWindow();
     } catch (error) {
       dialog.showErrorBox(t.startFailed, (error as Error).stack ?? String(error));
       app.exit(1);
