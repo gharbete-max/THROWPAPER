@@ -3,7 +3,7 @@ import { useT } from '../../lib/i18n.js';
 import { inkBounds, saveMark, type MarkSlot, type SavedMark } from '../../lib/sign-marks.js';
 
 /**
- * Makes a signature or initials: typed, or drawn with a pointer. Typing is an equal way, not a
+ * Makes a signature or initials: typed, drawn with a pointer, or written in pen mode (pressure, undo). Typing is an equal way, not a
  * fallback — somebody on a keyboard or a screen reader cannot draw (see `SignaturePad`).
  *
  * The result is a transparent PNG cropped to its ink, so the mark's proportions are its own and a
@@ -14,6 +14,13 @@ const SIZE = { signature: { width: 600, height: 200 }, initials: { width: 300, h
 /** The ink of a mark on paper. PDF content, not interface colour: it must read on white. */
 const INK = '#111111';
 const PAD = 6;
+
+/** One point of a pen stroke; `w` is the line width there, from the pen's pressure. */
+interface Pt {
+  x: number;
+  y: number;
+  w: number;
+}
 
 export function MarkMaker({
   slot,
@@ -29,7 +36,10 @@ export function MarkMaker({
   const { width, height } = SIZE[slot];
   const canvas = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
-  const [how, setHow] = useState<'typed' | 'drawn'>('typed');
+  const [how, setHow] = useState<'typed' | 'drawn' | 'pen'>('typed');
+  // Pen mode keeps its strokes, so one can be undone and the width of each follows the pressure.
+  const strokes = useRef<Pt[][]>([]);
+  const [thickness, setThickness] = useState(4);
   const [text, setText] = useState('');
   const [inked, setInked] = useState(false);
 
@@ -54,7 +64,37 @@ export function MarkMaker({
   function clear() {
     const ctx = context();
     if (ctx) ctx.clearRect(0, 0, width, height);
+    strokes.current = [];
     setInked(false);
+  }
+
+  /** Paints every pen stroke again: segments of the pressure's width, round at both ends. */
+  function repaint() {
+    const ctx = context();
+    if (!ctx) return;
+    ctx.clearRect(0, 0, width, height);
+    for (const stroke of strokes.current) {
+      stroke.forEach((point, index) => {
+        const from = stroke[index - 1] ?? point;
+        ctx.lineWidth = (from.w + point.w) / 2;
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        // A single point is a dot.
+        ctx.lineTo(point.x + (index === 0 ? 0.01 : 0), point.y);
+        ctx.stroke();
+      });
+    }
+    setInked(strokes.current.length > 0);
+  }
+
+  /** A mouse reports 0.5 while pressed, a pen its real pressure; either gives a visible line. */
+  function pen(event: PointerEvent<HTMLCanvasElement>, last?: Pt): Pt {
+    const { x, y } = at(event);
+    const w = thickness * (0.4 + 1.2 * (event.pressure || 0.5));
+    // Half-way to the new point: the smoothing that takes the shake out of a hand-held line.
+    return last
+      ? { x: last.x + (x - last.x) * 0.5, y: last.y + (y - last.y) * 0.5, w }
+      : { x, y, w };
   }
 
   /** The typed words in the page's own font (a token), italic like handwriting. */
@@ -111,7 +151,7 @@ export function MarkMaker({
   return (
     <div className="stack stack--tight sign-place__maker">
       <div className="row" role="radiogroup" aria-label={t(`signPlace.${slot}`)}>
-        {(['typed', 'drawn'] as const).map((choice) => (
+        {(['typed', 'drawn', 'pen'] as const).map((choice) => (
           <button
             key={choice}
             type="button"
@@ -120,6 +160,7 @@ export function MarkMaker({
             className={how === choice ? 'button' : 'button button--quiet'}
             onClick={() => {
               setHow(choice);
+              strokes.current = [];
               setInked(false);
             }}
           >
@@ -154,6 +195,11 @@ export function MarkMaker({
               if (!ctx) return;
               event.currentTarget.setPointerCapture(event.pointerId);
               drawing.current = true;
+              if (how === 'pen') {
+                strokes.current.push([pen(event)]);
+                repaint();
+                return;
+              }
               const { x, y } = at(event);
               ctx.beginPath();
               ctx.moveTo(x, y);
@@ -164,6 +210,12 @@ export function MarkMaker({
             }}
             onPointerMove={(event) => {
               if (!drawing.current) return;
+              if (how === 'pen') {
+                const stroke = strokes.current.at(-1);
+                if (stroke) stroke.push(pen(event, stroke.at(-1)));
+                repaint();
+                return;
+              }
               const ctx = context();
               if (!ctx) return;
               const { x, y } = at(event);
@@ -174,6 +226,31 @@ export function MarkMaker({
             onPointerCancel={() => (drawing.current = false)}
           />
           <div>
+            {how === 'pen' && (
+              <>
+                <button
+                  type="button"
+                  className="button button--quiet small"
+                  disabled={!inked}
+                  onClick={() => {
+                    strokes.current.pop();
+                    repaint();
+                  }}
+                >
+                  {t('signPlace.undo')}
+                </button>{' '}
+                <label className="small">
+                  {t('signPlace.thickness')}{' '}
+                  <input
+                    type="range"
+                    min={2}
+                    max={10}
+                    value={thickness}
+                    onChange={(event) => setThickness(Number(event.target.value))}
+                  />
+                </label>{' '}
+              </>
+            )}
             <button type="button" className="button button--quiet small" onClick={clear}>
               {t('signPlace.clear')}
             </button>

@@ -75,6 +75,9 @@ const FormResponses = lazy(() =>
   import('./screens/forms/FormResponses.js').then((m) => ({ default: m.FormResponses })),
 );
 const Inbox = lazy(() => import('./screens/earlier/Inbox.js').then((m) => ({ default: m.Inbox })));
+const People = lazy(() =>
+  import('./screens/people/People.js').then((m) => ({ default: m.People })),
+);
 const Users = lazy(() => import('./screens/earlier/Users.js').then((m) => ({ default: m.Users })));
 const Invoices = lazy(() =>
   import('./screens/scan/Invoices.js').then((m) => ({ default: m.Invoices })),
@@ -429,6 +432,7 @@ function Shell() {
               <NavSection to="/scan" icon="upload" label={t('room.scan')} />
               <NavSection to="/signing" icon="signature" label={t('room.sign')} />
               <NavSection to="/send" icon="email" label={t('room.send')} />
+              <NavSection to="/people" icon="people" label={t('nav.people')} />
               {/* The desktop sends nothing by itself: its mail waits here for somebody to send it. */}
               {edition === 'desktop' && (
                 <NavSection to="/outgoing" icon="email" label={t('nav.outgoing')} count={waiting} />
@@ -499,12 +503,17 @@ function Shell() {
           was the one place that printed the raw enum, so the same person was "Administrator" on
           the users screen and "admin" in the bar above it, in every language including English.
         */}
-            <span className="topline__who small muted">
-              {user.name} · {t(`users.role.${user.role}`)}
-            </span>
-            <button className="button button--quiet small" onClick={signOut}>
-              {t('app.signOut')}
-            </button>
+            {/* The desktop has no account to name and nothing to sign out of. */}
+            {edition !== 'desktop' && (
+              <>
+                <span className="topline__who small muted">
+                  {user.name} · {t(`users.role.${user.role}`)}
+                </span>
+                <button className="button button--quiet small" onClick={signOut}>
+                  {t('app.signOut')}
+                </button>
+              </>
+            )}
           </header>
         </>
       )}
@@ -520,6 +529,7 @@ function Shell() {
               <Route path="/events/new" element={<EventForm />} />
               <Route path="/events/:id" element={<EventForm />} />
               <Route path="/forms" element={<Forms />} />
+              <Route path="/people" element={<People />} />
               <Route path="/responses" element={<Inbox />} />
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/scan" element={<Scan />} />

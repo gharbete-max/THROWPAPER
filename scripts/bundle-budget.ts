@@ -104,8 +104,12 @@ const BUDGET_KB = {
    * `styles/builder.css`) are not capped here; they are counted in the total below.
    */
   stylesheet: 14.5,
-  /** Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap. */
-  total: 1262,
+  /**
+   * Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap.
+   * 1262 -> 1270 (2026-10-27): the People screen, Sign's pen mode and their strings in twelve
+   * languages measured 1262.2.
+   */
+  total: 1270,
 } as const;
 
 function gzippedKb(path: string): number {

@@ -10,7 +10,6 @@ import { CHANNELS, type LoppaBridge } from '../bridge.js';
 const bridge: LoppaBridge = {
   state: () => ipcRenderer.invoke(CHANNELS.state),
   bootstrap: (owner) => ipcRenderer.invoke(CHANNELS.bootstrap, owner),
-  loadDemo: () => ipcRenderer.invoke(CHANNELS.loadDemo),
   saveSettings: (form) => ipcRenderer.invoke(CHANNELS.saveSettings, form),
   closePanel: () => ipcRenderer.send(CHANNELS.closePanel),
   keys: (form) => ipcRenderer.invoke(CHANNELS.keys, form),

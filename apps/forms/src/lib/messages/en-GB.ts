@@ -2095,6 +2095,9 @@ export const enGB = {
   'signPlace.forgetConfirm': 'Forget the saved “{what}” on this computer?',
   'signPlace.typed': 'Type',
   'signPlace.drawn': 'Draw',
+  'signPlace.pen': 'Pen',
+  'signPlace.undo': 'Undo',
+  'signPlace.thickness': 'Thickness',
   'signPlace.typedLabel': 'Text to use',
   'signPlace.drawArea': 'Drawing area',
   'signPlace.clear': 'Clear',
@@ -2259,6 +2262,18 @@ export const enGB = {
   'suppress.lastSkipped':
     'plural:one The last campaign skipped {count} address on this list. | other The last campaign skipped {count} addresses on this list.',
   'suppress.failed': 'The list could not be changed. Try again.',
+  'nav.people': 'People',
+  'people.title': 'People',
+  'people.empty': 'No people yet. Add the first one to register them for an event.',
+  'people.add': 'Add a person',
+  'people.name': 'Name',
+  'people.phone': 'Phone',
+  'people.note': 'Note',
+  'people.events': 'Registered for',
+  'people.noEvents': 'No events to register for yet.',
+  'people.delete': 'Delete',
+  'people.deleteConfirm': 'Delete this person?',
+  'people.failed': 'The people could not be loaded.',
 } as const;
 
 /**

@@ -2092,6 +2092,9 @@ export const svSE: Record<MessageKey, string> = {
   'signPlace.forgetConfirm': 'Glömma den sparade ”{what}” på den här datorn?',
   'signPlace.typed': 'Skriv',
   'signPlace.drawn': 'Rita',
+  'signPlace.pen': 'Penna',
+  'signPlace.undo': 'Ångra',
+  'signPlace.thickness': 'Tjocklek',
   'signPlace.typedLabel': 'Text att använda',
   'signPlace.drawArea': 'Rityta',
   'signPlace.clear': 'Rensa',
@@ -2261,4 +2264,17 @@ export const svSE: Record<MessageKey, string> = {
   'suppress.lastSkipped':
     'plural:one Det senaste utskicket hoppade över {count} adress på den här listan. | other Det senaste utskicket hoppade över {count} adresser på den här listan.',
   'suppress.failed': 'Listan kunde inte ändras. Försök igen.',
+  'nav.people': 'Personer',
+  'people.title': 'Personer',
+  'people.empty':
+    'Inga personer än. Lägg till den första för att anmäla personen till ett evenemang.',
+  'people.add': 'Lägg till person',
+  'people.name': 'Namn',
+  'people.phone': 'Telefon',
+  'people.note': 'Anteckning',
+  'people.events': 'Anmäld till',
+  'people.noEvents': 'Inga evenemang att anmäla till än.',
+  'people.delete': 'Ta bort',
+  'people.deleteConfirm': 'Ta bort personen?',
+  'people.failed': 'Personerna kunde inte läsas in.',
 };

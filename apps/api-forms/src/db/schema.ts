@@ -533,6 +533,29 @@ export const campaignSuppressions = pgTable(
 );
 
 /**
+ * People the user keeps by hand, to register for events without a public form.
+ *
+ * `eventIds` is the registration: an array, not a join table, because a person is registered for a
+ * handful of events at most and nothing reads it the other way round except the event's own list.
+ */
+export const people = pgTable(
+  'people',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    organisationId: uuid('organisation_id')
+      .notNull()
+      .references(() => organisations.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    email: text('email'),
+    phone: text('phone'),
+    note: text('note'),
+    eventIds: text('event_ids').array().notNull().default([]),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('people_org_idx').on(table.organisationId)],
+);
+
+/**
  * Every message the system has sent — `SPEC-mailer.md` §5: "a per-recipient log of exactly what
  * was rendered and sent". Delivery events (B11) attach to these rows.
  */

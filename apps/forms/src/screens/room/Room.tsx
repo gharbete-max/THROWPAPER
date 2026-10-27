@@ -165,10 +165,15 @@ export function Room() {
               {t('addons.title')}
             </Link>
           ) : null}
-          <span className="room__who small">{user.name}</span>
-          <button className="button button--quiet small" onClick={signOut}>
-            {t('app.signOut')}
-          </button>
+          {/* The desktop has no account: its one user is the install, with nothing to sign out of. */}
+          {edition !== 'desktop' && (
+            <>
+              <span className="room__who small">{user.name}</span>
+              <button className="button button--quiet small" onClick={signOut}>
+                {t('app.signOut')}
+              </button>
+            </>
+          )}
         </span>
       </header>
       {edition === 'desktop' && modelBridge() ? <AiHint /> : null}

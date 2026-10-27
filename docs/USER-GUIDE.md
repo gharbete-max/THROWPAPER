@@ -20,7 +20,7 @@ centre:
 list (_Scan_). A PDF with fields of its own offers _Fill it in_. _Recent documents_ keeps only names, on
 this device; choose a file again to open it, or _Clear the list_.
 
-First start asks for your organisation's name and yours, or offers demo data. Nothing is sent to set up.
+There is nothing to set up and nobody to sign in as: the first start makes the workspace itself and names this install by a random ID drawn once. Nothing is sent. Add the people you register for events under **People**.
 
 ## Forms
 

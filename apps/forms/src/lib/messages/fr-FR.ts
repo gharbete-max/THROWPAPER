@@ -2139,6 +2139,9 @@ export const frFR: Record<MessageKey, string> = {
   'signPlace.forgetConfirm': 'Oublier « {what} » enregistré sur cet ordinateur ?',
   'signPlace.typed': 'Saisir',
   'signPlace.drawn': 'Dessiner',
+  'signPlace.pen': 'Stylet',
+  'signPlace.undo': 'Annuler',
+  'signPlace.thickness': 'Épaisseur',
   'signPlace.typedLabel': 'Texte à utiliser',
   'signPlace.drawArea': 'Zone de dessin',
   'signPlace.clear': 'Effacer',
@@ -2313,4 +2316,17 @@ export const frFR: Record<MessageKey, string> = {
   'suppress.lastSkipped':
     'plural:one La dernière campagne a écarté {count} adresse de cette liste. | other La dernière campagne a écarté {count} adresses de cette liste.',
   'suppress.failed': 'La liste n’a pas pu être modifiée. Réessayez.',
+  'nav.people': 'Personnes',
+  'people.title': 'Personnes',
+  'people.empty':
+    'Aucune personne pour l’instant. Ajoutez la première pour l’inscrire à un événement.',
+  'people.add': 'Ajouter une personne',
+  'people.name': 'Nom',
+  'people.phone': 'Téléphone',
+  'people.note': 'Note',
+  'people.events': 'Inscrit à',
+  'people.noEvents': 'Aucun événement auquel inscrire pour l’instant.',
+  'people.delete': 'Supprimer',
+  'people.deleteConfirm': 'Supprimer cette personne ?',
+  'people.failed': 'Impossible de charger les personnes.',
 };

@@ -46,7 +46,6 @@ export interface KeysForm {
 export interface LoppaBridge {
   state(): Promise<PanelState>;
   bootstrap(owner: { organisationName: string; name: string; email: string }): Promise<Result>;
-  loadDemo(): Promise<Result>;
   saveSettings(form: SettingsForm): Promise<Result>;
   closePanel(): void;
   keys(form: KeysForm): Promise<Result>;
@@ -55,7 +54,6 @@ export interface LoppaBridge {
 export const CHANNELS = {
   state: 'loppa:state',
   bootstrap: 'loppa:bootstrap',
-  loadDemo: 'loppa:load-demo',
   saveSettings: 'loppa:save-settings',
   closePanel: 'loppa:close-panel',
   keys: 'loppa:keys',
