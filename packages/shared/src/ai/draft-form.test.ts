@@ -34,7 +34,7 @@ describe('readDraft', () => {
       }),
       'sv-SE',
     );
-    expect(draft?.fields.map((f) => [f.type, f.label['sv-SE']])).toEqual([
+    expect(draft?.fields.map((f) => [f.type, 'label' in f ? f.label['sv-SE'] : null])).toEqual([
       ['short_text', 'Name'],
       ['short_text', 'Pick'],
     ]);
