@@ -96,7 +96,8 @@ test('the template gallery has a drawing on every card', async ({ page }) => {
   await page.locator('.doors__myself button').click();
   const cards = page.locator('label.template');
   await expect(cards.first()).toBeVisible();
-  expect(await cards.count()).toBeGreaterThan(4);
+  // The catalogue is fetched when this view opens, so the blank card shows first.
+  await expect.poll(() => cards.count()).toBeGreaterThan(4);
   await expect(page.locator('label.template .template__cover')).toHaveCount(await cards.count());
 });
 
