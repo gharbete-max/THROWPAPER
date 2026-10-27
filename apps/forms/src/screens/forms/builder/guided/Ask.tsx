@@ -25,6 +25,7 @@ export function Ask({
   onQuestions,
   locale,
   onDraft,
+  focusInput = true,
 }: {
   templates: readonly FormTemplate[];
   /** A template's name in the interface language. */
@@ -36,6 +37,8 @@ export function Ask({
   /** The form's default language, for a draft by the AI. */
   locale: string;
   onDraft: (draft: DraftForm) => void;
+  /** False when another start was asked for by the address and holds the focus. */
+  focusInput?: boolean;
 }) {
   const t = useT();
   const [text, setText] = useState('');
@@ -86,7 +89,7 @@ export function Ask({
             id="ask-input"
             className="ask__input"
             value={text}
-            autoFocus
+            autoFocus={focusInput}
             autoComplete="off"
             placeholder={t('ask.placeholder')}
             onChange={(event) => setText(event.target.value)}

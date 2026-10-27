@@ -1,13 +1,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { pickText } from '@tp/i18n';
-import {
-  emptyDefinition,
-  type FormResponse,
-  type FormScope,
-  type FormTemplate,
-} from '@tp/shared/forms';
-import type { DraftForm } from '@tp/shared/ai';
+import { type FormResponse, type FormScope, type FormTemplate } from '@tp/shared/forms';
 import { ApiError, client } from '../../lib/api.js';
 import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
@@ -20,7 +14,6 @@ import { LoadFailed } from '../../components/LoadFailed.js';
 import { ScopeTabs } from '../../components/ScopeTabs.js';
 import { ShareDialog } from '../../components/ShareDialog.js';
 import { Banner } from '../../components/Banner.js';
-import { Doors } from './builder/guided/Doors.js';
 import { abandonedDrafts } from '../../lib/abandoned-drafts.js';
 
 /**
@@ -56,10 +49,13 @@ export function Forms() {
    */
   const [params] = useSearchParams();
   const door = params.get('new');
-  const [creating, setCreating] = useState<null | 'doors' | 'manual'>(() =>
-    door === 'manual' ? 'manual' : params.has('new') ? 'doors' : null,
-  );
-  const [opening, setOpening] = useState(false);
+  const creating = door === 'manual' ? 'manual' : null;
+  // New form is a page of its own (`/forms/new`); an old `?new=…` address lands there.
+  useEffect(() => {
+    if (params.has('new') && door !== 'manual') {
+      navigate(`/forms/new${door ? `?door=${door}` : ''}`, { replace: true });
+    }
+  }, [params, door, navigate]);
   const [slug, setSlug] = useState('');
   const [title, setTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -93,79 +89,6 @@ export function Forms() {
       .then((result) => setTemplates(result.templates))
       .catch(() => setTemplates([]));
   }, []);
-
-  /**
-   * A new blank form, opened through the door that was chosen: the conversation, or the editor
-   * with the paper import open.
-   *
-   * The slug is derived rather than asked for. A door whose first step is "now invent a URL" has
-   * given back the time it was meant to save, and a slug is editable afterwards like everything
-   * else.
-   */
-  async function openBlank(door: 'questions' | 'paper') {
-    setError(null);
-    if (door === 'questions') {
-      // No form yet: the conversation makes it with the first answer (`GuidedBuilder`), so a start
-      // that goes nowhere leaves nothing in the list.
-      setCreating(null);
-      navigate(`/forms/${crypto.randomUUID()}/guided`, { state: { fresh: true } });
-      return;
-    }
-    setOpening(true);
-    try {
-      const stamp = Date.now().toString(36);
-      const created = await client.createForm({
-        slug: `form-${stamp}`,
-        title: { [locales.default]: t('forms.untitled') },
-      });
-      setCreating(null);
-      navigate(`/forms/${created.id}/import`);
-    } catch (cause) {
-      setError(cause instanceof ApiError ? cause.message : String(cause));
-    } finally {
-      setOpening(false);
-    }
-  }
-
-  /** A typed word led to a template and the person pressed it: straight into the editor, no gallery. */
-  async function openTemplate(id: string) {
-    const template = templates.find((candidate) => candidate.id === id);
-    if (!template) return;
-    setError(null);
-    setOpening(true);
-    try {
-      const created = await client.createForm({
-        slug: `form-${Date.now().toString(36)}`,
-        title: { [locales.default]: pickText(interfaceLocales, template.name, locale).value },
-        templateId: id,
-      });
-      setCreating(null);
-      navigate(`/forms/${created.id}`);
-    } catch (cause) {
-      setError(cause instanceof ApiError ? cause.message : String(cause));
-    } finally {
-      setOpening(false);
-    }
-  }
-
-  /** The AI's draft, after the person pressed "Use this form": saved as a draft and opened to edit. */
-  async function openDraft(draft: DraftForm) {
-    setError(null);
-    setOpening(true);
-    try {
-      const created = await client.createForm({
-        slug: `form-${Date.now().toString(36)}`,
-        title: { [locales.default]: draft.title || t('forms.untitled') },
-      });
-      await client.saveDraft(created.id, { ...emptyDefinition, fields: draft.fields });
-      setCreating(null);
-      navigate(`/forms/${created.id}`);
-    } catch (cause) {
-      setError(cause instanceof ApiError ? cause.message : String(cause));
-    } finally {
-      setOpening(false);
-    }
-  }
 
   async function create(event: FormEvent) {
     event.preventDefault();
@@ -249,36 +172,13 @@ export function Forms() {
           <Link className="button button--quiet" to="/forms/pdf">
             {t('fill.pdfHeading')}
           </Link>
-          <button
-            className="button"
-            onClick={() => setCreating((mode) => (mode === null ? 'doors' : null))}
-          >
+          <button className="button" onClick={() => navigate('/forms/new')}>
             {t('forms.new')}
           </button>
         </span>
       </header>
 
       <ScopeTabs scopes={scopes} current={scope} onChange={setScope} label={t('forms.title')} />
-
-      {creating === 'doors' && (
-        <Doors
-          templates={templates}
-          nameIn={(template) => pickText(interfaceLocales, template.name, locale).value}
-          onTemplate={(id) => void openTemplate(id)}
-          onRoute={(path) => navigate(path)}
-          onDraft={(draft) => void openDraft(draft)}
-          locale={locales.default}
-          onQuestions={() => void openBlank('questions')}
-          onPaper={() => void openBlank('paper')}
-          focus={door === 'paper' ? 'paper' : door === 'questions' ? 'questions' : undefined}
-          onMyself={() => {
-            setError(null);
-            setCreating('manual');
-          }}
-          busy={opening}
-          error={error}
-        />
-      )}
 
       {creating === 'manual' && (
         <form className="card stack" onSubmit={create}>
@@ -383,7 +283,7 @@ export function Forms() {
            */
           action={
             scope === 'trash' ? undefined : (
-              <button className="button" onClick={() => setCreating('doors')}>
+              <button className="button" onClick={() => navigate('/forms/new')}>
                 {t('forms.new')}
               </button>
             )

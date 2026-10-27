@@ -2081,3 +2081,30 @@ a.room__centre:focus-visible {
   margin: 0;
   padding-inline-start: calc(var(--tp-spacing-unit) * 3);
 }
+
+/* ==========================================================================
+ * New form: one question on an empty page.
+ * ========================================================================== */
+
+.newform {
+  display: grid;
+  align-content: start;
+  gap: calc(var(--tp-spacing-unit) * 4);
+  inline-size: min(100% - calc(var(--tp-spacing-unit) * 4), 44rem);
+  min-block-size: 100dvh;
+  margin-inline: auto;
+  padding-block: calc(var(--tp-spacing-unit) * 4) calc(var(--tp-spacing-unit) * 8);
+}
+
+.newform__back {
+  justify-self: start;
+}
+
+.newform .ask__label {
+  font-size: var(--tp-text-2xl, var(--tp-text-xl));
+}
+
+.newform .doors {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 3);
+}

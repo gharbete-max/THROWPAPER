@@ -98,6 +98,10 @@ const Outgoing = lazy(() =>
   import('./screens/send/Outgoing.js').then((m) => ({ default: m.Outgoing })),
 );
 const Send = lazy(() => import('./screens/send/Send.js').then((m) => ({ default: m.Send })));
+const NewForm = lazy(() =>
+  import('./screens/forms/NewForm.js').then((m) => ({ default: m.NewForm })),
+);
+
 /** The room is where a signed-in person arrives (ADR 0022); the rail's screens follow it. */
 const Room = lazy(() => import('./screens/room/Room.js').then((m) => ({ default: m.Room })));
 const UserWorkspace = lazy(() =>
@@ -329,6 +333,15 @@ function Shell() {
     return (
       <Suspense fallback={<main className="room" style={ROOM_STYLE} />}>
         <Room />
+      </Suspense>
+    );
+  }
+
+  /* New form is one question on an empty page: no rail, no top bar (docs/plan/EASY.md). */
+  if (location.pathname === '/forms/new') {
+    return (
+      <Suspense fallback={<Loading />}>
+        <NewForm />
       </Suspense>
     );
   }

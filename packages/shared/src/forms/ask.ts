@@ -322,7 +322,6 @@ export const TEMPLATE_KEYWORDS: Record<string, readonly string[]> = {
     'field notes',
     'fieldwork',
     'laboratorie',
-    'fältanteckning',
     'faltanteckning',
     'forsok',
   ],

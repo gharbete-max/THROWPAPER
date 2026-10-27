@@ -40,7 +40,7 @@ export function Doors({
 }) {
   const t = useT();
   return (
-    <div className="card doors">
+    <div className="doors">
       <Ask
         templates={templates}
         nameIn={nameIn}
@@ -50,6 +50,7 @@ export function Doors({
         onQuestions={onQuestions}
         locale={locale}
         onDraft={onDraft}
+        focusInput={focus === undefined}
       />
       {error && <p className="status-down small">{error}</p>}
       <div className="doors__links">

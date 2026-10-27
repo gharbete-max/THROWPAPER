@@ -108,8 +108,11 @@ const BUDGET_KB = {
    * Every JavaScript and CSS file in the build, loaded or not. A doubling-detector, not a cap.
    * 1262 -> 1270 (2026-10-27): the People screen, Sign's pen mode and their strings in twelve
    * languages measured 1262.2.
+   * 1270 -> 1275 (2026-10-27): New form as its own page with the Ask box (keyword reader, the AI
+   * draft task's reader and its strings in twelve languages) measured 1270.0 on CI's gzip, 0.2 above
+   * a Windows build; the old template-and-doors strip it replaces stays for "Build it myself".
    */
-  total: 1270,
+  total: 1275,
 } as const;
 
 function gzippedKb(path: string): number {
