@@ -1,5 +1,5 @@
 import type { TextEngine, GenerateRequest } from './text-engine.js';
-import { COMPOSE_SYSTEM_START, REPLY_SYSTEM_START } from './prompts.js';
+import { COMPOSE_SYSTEM_START, DRAFT_FORM_SYSTEM_START, REPLY_SYSTEM_START } from './prompts.js';
 
 const between = (text: string, tag: string): string | undefined =>
   new RegExp(`<${tag}>\\n([\\s\\S]*?)\\n</${tag}>`).exec(text)?.[1];
@@ -87,18 +87,20 @@ export class FakeTextEngine implements TextEngine {
         request.user,
       )?.[1] ?? request.user;
     const isTranslation = request.system.startsWith('You are a professional translator');
-    const body = request.system.startsWith(COMPOSE_SYSTEM_START)
-      ? fakeCompose(request, this.behaviour.dropQuotes === true)
-      : request.system.startsWith(REPLY_SYSTEM_START)
-        ? fakeReply(request)
-        : isTranslation
-          ? `[${source}]`
-          : source
-              .split(/\n+/)
-              .filter((line) => line.trim() !== '')
-              .slice(0, 3)
-              .map((line) => `- ${line.slice(0, 60)}`)
-              .join('\n') + (this.behaviour.invent ? `\n- ${this.behaviour.invent}` : '');
+    const body = request.system.startsWith(DRAFT_FORM_SYSTEM_START)
+      ? FAKE_DRAFT
+      : request.system.startsWith(COMPOSE_SYSTEM_START)
+        ? fakeCompose(request, this.behaviour.dropQuotes === true)
+        : request.system.startsWith(REPLY_SYSTEM_START)
+          ? fakeReply(request)
+          : isTranslation
+            ? `[${source}]`
+            : source
+                .split(/\n+/)
+                .filter((line) => line.trim() !== '')
+                .slice(0, 3)
+                .map((line) => `- ${line.slice(0, 60)}`)
+                .join('\n') + (this.behaviour.invent ? `\n- ${this.behaviour.invent}` : '');
 
     const pieces = this.behaviour.loop
       ? Array.from({ length: 400 }, (_, i) => ['aðeins ', 'aðeins '][i % 2]!)
@@ -122,3 +124,12 @@ export class FakeTextEngine implements TextEngine {
     return Promise.resolve();
   }
 }
+
+const FAKE_DRAFT = JSON.stringify({
+  title: 'Fake form',
+  fields: [
+    { label: 'Name', type: 'short_text', required: true },
+    { label: 'Email', type: 'email', required: true },
+    { label: 'Coming?', type: 'single_select', required: false, options: ['Yes', 'No'] },
+  ],
+});

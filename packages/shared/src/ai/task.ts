@@ -1,6 +1,7 @@
 import type { ModelJob } from '../summary/bridge.js';
 import type { ReplyTask } from '../summary/reply.js';
 import type { ComposeTask, ProofreadTask } from '../summary/proofread.js';
+import type { DraftFormTask } from './draft-form.js';
 import type { Capability } from './capability.js';
 
 /**
@@ -13,7 +14,7 @@ import type { Capability } from './capability.js';
  * The text kinds: the summary centre's jobs, unchanged (ADR 0023), and the email reply helper's
  * four (docs/plan/AI-SYSTEM.md D6). Every one needs the text model and nothing else.
  */
-export type TextTask = ModelJob | ReplyTask | ProofreadTask | ComposeTask;
+export type TextTask = ModelJob | ReplyTask | ProofreadTask | ComposeTask | DraftFormTask;
 
 /**
  * Read one page of a document from a picture of it (docs/plan/AI-SYSTEM.md D4). The picture travels
@@ -49,6 +50,7 @@ export const TASK_CAPABILITY = {
   'revise-reply': 'text',
   proofread: 'text',
   'compose-email': 'text',
+  'draft-form': 'text',
   'read-page': 'vision',
 } as const satisfies Record<AiTaskKind, Capability>;
 

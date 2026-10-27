@@ -1,6 +1,6 @@
 import { ConsentRequest, type AiConsent } from '@tp/shared/ai';
 import type { Coordinator } from './coordinator.js';
-import { isReadPageTask } from '@tp/shared/ai';
+import { isDraftFormTask, isReadPageTask } from '@tp/shared/ai';
 import { isComposeTask, isProofreadTask, isReplyTask } from '@tp/shared/summary';
 import { AI_CHANNELS } from './channels.js';
 import { isModelJob } from './model-ipc.js';
@@ -85,6 +85,7 @@ export function registerAiIpc(
         !isReplyTask(task) &&
         !isProofreadTask(task) &&
         !isComposeTask(task) &&
+        !isDraftFormTask(task) &&
         !isReadPageTask(task)
       ) {
         return refused;

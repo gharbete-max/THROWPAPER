@@ -592,30 +592,15 @@
   }
 }
 
-.doors__title {
-  margin: 0;
-  font-size: var(--tp-text-xl);
-}
-
-.doors__cards {
-  display: grid;
-  gap: var(--tp-spacing-unit);
-}
-
-.doors__door {
-  align-items: flex-start;
-  padding: calc(var(--tp-spacing-unit) * 2.5);
+.doors__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
 }
 
 .doors__myself {
-  display: flex;
-  justify-content: flex-end;
-}
-
-@media (min-width: 720px) {
-  .doors__cards {
-    grid-template-columns: 1fr 1fr;
-  }
+  margin-inline-start: auto;
 }
 
 /* ==========================================================================
@@ -1984,4 +1969,142 @@ a.room__centre:focus-visible {
   display: inline-block;
   min-block-size: 24px;
   line-height: 24px;
+}
+
+/* ==========================================================================
+ * Ask: "What do you want to make?" — the first thing on New form.
+ * ========================================================================== */
+
+.ask {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.ask__label {
+  display: block;
+  margin-block-end: var(--tp-spacing-unit);
+  font-size: var(--tp-text-xl);
+  font-weight: 600;
+}
+
+.ask__row {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+}
+
+.ask__input {
+  flex: 1;
+  min-inline-size: 0;
+  min-block-size: 56px;
+  padding: 0 calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  font: inherit;
+  font-size: var(--tp-text-lg);
+}
+
+.ask__chat {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+}
+
+.ask__you {
+  justify-self: end;
+  margin: 0;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.ask__loppa {
+  justify-self: start;
+  max-inline-size: 100%;
+}
+
+.ask__loppa p {
+  margin: 0;
+}
+
+.ask__ai input[role='switch'] {
+  appearance: none;
+  position: relative;
+  inline-size: 44px;
+  block-size: 26px;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--tp-colour-border);
+  cursor: pointer;
+  transition: background var(--tp-motion-fast) var(--tp-ease);
+}
+
+.ask__ai input[role='switch']::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-start: 3px;
+  inline-size: 20px;
+  block-size: 20px;
+  border-radius: 50%;
+  background: var(--tp-colour-surface);
+  transition: transform var(--tp-motion-fast) var(--tp-ease);
+}
+
+.ask__ai input[role='switch']:checked {
+  background: var(--tp-colour-primary);
+}
+
+.ask__ai input[role='switch']:checked::before {
+  transform: translateX(18px);
+}
+
+[dir='rtl'] .ask__ai input[role='switch']:checked::before {
+  transform: translateX(-18px);
+}
+
+.ask__ai input[role='switch']:focus-visible {
+  outline: 2px solid var(--tp-colour-primary);
+  outline-offset: 2px;
+}
+
+.ask__ai {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  margin-block-start: var(--tp-spacing-unit);
+  cursor: pointer;
+}
+
+.ask__draft {
+  margin: 0;
+  padding-inline-start: calc(var(--tp-spacing-unit) * 3);
+}
+
+/* ==========================================================================
+ * New form: one question on an empty page.
+ * ========================================================================== */
+
+.newform {
+  display: grid;
+  align-content: start;
+  gap: calc(var(--tp-spacing-unit) * 4);
+  inline-size: min(100% - calc(var(--tp-spacing-unit) * 4), 44rem);
+  min-block-size: 100dvh;
+  margin-inline: auto;
+  padding-block: calc(var(--tp-spacing-unit) * 4) calc(var(--tp-spacing-unit) * 8);
+}
+
+.newform__back {
+  justify-self: start;
+}
+
+.newform .ask__label {
+  font-size: var(--tp-text-2xl, var(--tp-text-xl));
+}
+
+.newform .doors {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 3);
 }

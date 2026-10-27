@@ -29,10 +29,12 @@ import {
   type ModelJob,
   type ReplyTask,
 } from '@tp/shared/summary';
-import type { TextTask } from '@tp/shared/ai';
+import { DRAFT_FORM_LIMITS, needsAHuman, type DraftFormTask, type TextTask } from '@tp/shared/ai';
 import { JobError, type TextEngine } from './text-engine.js';
 import {
   composeSystem,
+  draftFormSystem,
+  draftFormUser,
   composeUser,
   proofreadSystem,
   spellingSystem,
@@ -133,6 +135,10 @@ export async function runJob(
   }
   if (job.kind === 'compose-email') {
     await compose(engine, job, sink, signal, warnings);
+    return { warnings };
+  }
+  if (job.kind === 'draft-form') {
+    await draftForm(engine, job, sink, signal, warnings);
     return { warnings };
   }
   if (job.kind === 'select') {
@@ -378,6 +384,37 @@ async function proofread(
   sink.step('reading', pieces.length * 2, pieces.length * 2);
   const merged = mergeIssues(text, verifyIssues(text, { issues: raw }, source), source);
   sink.text('replace', JSON.stringify(merged));
+}
+
+const DRAFT_FORM_CAP = 900;
+
+/**
+ * A form's question labels from a few words (docs/plan/EASY.md, E4). The request is quoted data;
+ * one that names a contract, consent or declaration is refused (rule 8, ADR 0012): such a form is
+ * a person's to write. The window checks the answer against the form schema.
+ */
+async function draftForm(
+  engine: TextEngine,
+  job: DraftFormTask,
+  sink: Sink,
+  signal: AbortSignal,
+  warnings: JobWarning[],
+): Promise<void> {
+  if (job.request.length > DRAFT_FORM_LIMITS.request) throw new JobError('too-long');
+  if (translateInto(job.into) === 'no') throw new JobError('language-refused');
+  if (needsAHuman(job.request) || mustQuote(job.request).quoteOnly)
+    throw new JobError('quote-only');
+  const request = quoteAsData(job.request);
+  if (request === '') throw new JobError('failed', 'nothing to draft');
+  sink.step('writing', 0, 1);
+  const result = await ask(engine, signal, {
+    system: draftFormSystem(job.into),
+    user: draftFormUser(request),
+    maxTokens: DRAFT_FORM_CAP,
+  });
+  sink.text('replace', result.text);
+  sink.step('writing', 1, 1);
+  if (result.looped) warnings.push({ kind: 'repetition' });
 }
 
 const COMPOSE_CAP = 700;
