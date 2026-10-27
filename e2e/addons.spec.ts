@@ -443,7 +443,7 @@ test.describe('the first-run note in the room', () => {
     await page.addInitScript(fakeBridge);
     await signInAs(page, sql, 'admin@example.com', 'en-GB');
     await page.goto('/room');
-    await expect(page.locator('.room__bar')).toBeVisible();
+    await expect(page.locator('.home')).toBeVisible();
     await expect(page.locator('[data-ai-hint]')).toHaveCount(0);
   });
 });

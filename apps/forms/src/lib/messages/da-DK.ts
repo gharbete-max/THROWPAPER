@@ -342,7 +342,6 @@ export const daDK: Record<MessageKey, string> = {
 
   'nav.checkin': 'Check-in',
   'nav.brand': 'Udseende',
-  'nav.earlier': 'Tidligere funktioner',
 
   'problem.duplicate-key': 'Feltnøglen "{key}" bruges mere end én gang.',
   'problem.no-answerable-fields': 'Formularen indsamler endnu ingen svar.',
@@ -1424,6 +1423,16 @@ export const daDK: Record<MessageKey, string> = {
   'conversation.showMe': 'Vis mig',
   'conversation.rebased':
     'Formularen er ændret i editoren. Dine ændringer bevares, og spørgsmålene fortsætter, hvor du var.',
+  'home.title': 'Hvad vil du gøre?',
+  'home.forms': 'Lav eller udfyld skemaer',
+  'home.formsHint': 'Byg, del og se svarene',
+  'home.scan': 'Scan et papir',
+  'home.scanHint': 'Et foto eller en PDF ind, pæne sider ud',
+  'home.sign': 'Få noget underskrevet',
+  'home.signHint': 'De skriver under på telefonen eller computeren',
+  'home.send': 'Send en fil',
+  'home.sendHint': 'Mail til én eller mange',
+  'nav.more': 'Mere',
   'room.back': 'Tilbage til rummet',
   'room.documents': 'Dokumenter',
   'room.spreadsheets': 'Regneark',
@@ -1435,9 +1444,6 @@ export const daDK: Record<MessageKey, string> = {
   'room.centre': 'Resumé og oversættelse',
   'room.centreLater': 'Ikke på denne computer endnu',
   'room.centreNone': 'Ikke i denne udgave',
-  'room.pause': 'Sæt bevægelsen på pause',
-  'room.play': 'Start bevægelsen',
-  'room.opened': '{name} er åben',
   'room.centreOpen': 'Åbn den',
   'ai.models.heading': 'AI-modeller på denne computer',
   'ai.models.intro':

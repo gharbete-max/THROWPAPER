@@ -3,8 +3,8 @@ import { db, signInAs } from './support.js';
 
 /**
  * The rail follows the room (`docs/plan/SIMPLIFY.md`, proposal 3): the four parts first, and the
- * first product's screens (events, responses, invoices, users, brand) folded under one
- * "Earlier features" disclosure. Nothing is removed: every route still works and the command
+ * first product's screens (events, responses, invoices, users, brand) with People, To send and
+ * the AI centre folded under one "More" disclosure. Nothing is removed: every route still works and the command
  * palette still finds it.
  */
 const sql = db();
@@ -24,11 +24,11 @@ test('the rail lists the four parts; the earlier features fold, remember and sta
   await expect(rail.getByRole('link', { name: 'Back to the room', exact: false })).toBeVisible();
 
   // Closed to start with; the keyboard opens it and the choice is remembered.
-  const earlier = rail.getByText('Earlier features');
+  const earlier = rail.getByText('More', { exact: true });
   await expect(rail.getByRole('link', { name: 'Events' })).toBeHidden();
   await rail.locator('summary').focus();
   await page.keyboard.press('Enter');
-  for (const name of ['Events', 'Responses', 'Invoices', 'Users', 'Brand']) {
+  for (const name of ['People', 'Events', 'Responses', 'Invoices', 'Users', 'Brand']) {
     await expect(rail.getByRole('link', { name, exact: true })).toBeVisible();
   }
   await page.reload();

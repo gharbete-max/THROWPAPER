@@ -7,7 +7,6 @@ import {
   type CSSProperties,
   type ReactNode,
 } from 'react';
-import { roomCssVariables } from '@tp/tokens';
 import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
@@ -103,11 +102,12 @@ const NewForm = lazy(() =>
 );
 
 /** The room is where a signed-in person arrives (ADR 0022); the rail's screens follow it. */
-const Room = lazy(() => import('./screens/room/Room.js').then((m) => ({ default: m.Room })));
+const Home = lazy(() => import('./screens/room/Home.js').then((m) => ({ default: m.Home })));
 const UserWorkspace = lazy(() =>
   import('./screens/earlier/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
 );
 import { Loading } from './components/Loading.js';
+import { PART_STYLE } from './lib/part-style.js';
 import { foldOnPress } from './lib/fold.js';
 import { radioArrows } from './lib/radio-keys.js';
 import './styles/app.css';
@@ -187,11 +187,14 @@ export function App() {
 function NavSection({
   to,
   icon,
+  part,
   label,
   count,
 }: {
   to: string;
   icon: IconName;
+  /** One of the four parts: its colour sits behind the icon. */
+  part?: 'forms' | 'scan' | 'sign' | 'send';
   label: string;
   /** How many are waiting there, when that is the point of the section. */
   count?: number;
@@ -205,7 +208,21 @@ function NavSection({
       }
       to={to}
     >
-      <Icon name={icon} className="icon--lead" />
+      {part ? (
+        <span
+          className="nav-link__chip"
+          style={
+            {
+              background: `var(--tp-part-${part})`,
+              color: `var(--tp-part-${part}-ink)`,
+            } as CSSProperties
+          }
+        >
+          <Icon name={icon} />
+        </span>
+      ) : (
+        <Icon name={icon} className="icon--lead" />
+      )}
       <span className="nav-link__label">{label}</span>
       {count ? <span className="badge nav-link__count">{count}</span> : null}
     </NavLink>
@@ -290,9 +307,6 @@ function useWaitingCount(enabled: boolean, path: string): number {
   return count;
 }
 
-/** The room's own grey while its screen loads, so the light page never flashes in between. */
-const ROOM_STYLE = roomCssVariables() as CSSProperties;
-
 /** Everything behind the bearer token. */
 function Shell() {
   const t = useT();
@@ -324,18 +338,6 @@ function Shell() {
   }
 
   if (!user) return <Navigate to="/login" replace />;
-
-  /*
-   * The room is its own world: full screen, dark grey, no rail and no session row (ADR 0022). It
-   * carries its own corner controls, so none of the shell's chrome is drawn around it.
-   */
-  if (/^\/room(\/documents)?$/.test(location.pathname)) {
-    return (
-      <Suspense fallback={<main className="room" style={ROOM_STYLE} />}>
-        <Room />
-      </Suspense>
-    );
-  }
 
   /* New form is one question on an empty page: no rail, no top bar (docs/plan/EASY.md). */
   if (location.pathname === '/forms/new') {
@@ -424,7 +426,7 @@ function Shell() {
            * On a narrow screen this becomes a bottom bar — the sections stay reachable by thumb, and
            * `.topline` picks up the mark.
            */}
-          <nav className="sidebar" aria-label={t('nav.sections')}>
+          <nav className="sidebar" aria-label={t('nav.sections')} style={PART_STYLE}>
             {/* The way back to the room from every part (ADR 0022), where a logo usually leads home. */}
             <Link
               className="sidebar__mark"
@@ -441,10 +443,17 @@ function Shell() {
 
             {/* The four parts of Documents, then the AI centre; the first product's screens fold below. */}
             <div className="sidebar__sections">
-              <NavSection to="/forms" icon="forms" label={t('nav.forms')} />
-              <NavSection to="/scan" icon="upload" label={t('room.scan')} />
-              <NavSection to="/signing" icon="signature" label={t('room.sign')} />
-              <NavSection to="/send" icon="email" label={t('room.send')} />
+              <NavSection to="/forms" icon="forms" part="forms" label={t('nav.forms')} />
+              <NavSection to="/scan" icon="upload" part="scan" label={t('room.scan')} />
+              <NavSection to="/signing" icon="signature" part="sign" label={t('room.sign')} />
+              <NavSection to="/send" icon="email" part="send" label={t('room.send')} />
+            </div>
+
+            {/* Nothing here is removed; these wait for the catchers they belong to. */}
+            <EarlierFeatures
+              label={t('nav.more')}
+              current={EARLIER.some((to) => location.pathname.startsWith(to))}
+            >
               <NavSection to="/people" icon="people" label={t('nav.people')} />
               {/* The desktop sends nothing by itself: its mail waits here for somebody to send it. */}
               {edition === 'desktop' && (
@@ -453,13 +462,6 @@ function Shell() {
               {edition === 'desktop' && modelBridge() && (
                 <NavSection to="/summary" icon="globe" label={t('room.centre')} />
               )}
-            </div>
-
-            {/* Nothing here is removed; these wait for the catchers they belong to. */}
-            <EarlierFeatures
-              label={t('nav.earlier')}
-              current={EARLIER.some((to) => location.pathname.startsWith(to))}
-            >
               <NavSection to="/events" icon="events" label={t('nav.events')} />
               <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
               <NavSection to="/invoices" icon="file" label={t('nav.invoices')} />
@@ -538,6 +540,8 @@ function Shell() {
           <Suspense fallback={<Loading />}>
             <Routes>
               <Route path="/" element={<Navigate to="/room" replace />} />
+              <Route path="/room" element={<Home />} />
+              <Route path="/room/documents" element={<Navigate to="/room" replace />} />
               <Route path="/events" element={<Events />} />
               <Route path="/events/new" element={<EventForm />} />
               <Route path="/events/:id" element={<EventForm />} />

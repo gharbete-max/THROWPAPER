@@ -37,7 +37,7 @@ async function openPaperDoor(page: Page) {
   await page.addInitScript(() => window.localStorage.setItem('tp.locale', 'sv-SE'));
   await page.goto(`/auth/callback?token=${secret}`);
   // Signing in lands in the room (ADR 0022).
-  await expect(page.getByRole('link', { name: 'Dokument' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Vad vill du göra?' })).toBeVisible();
 
   await page.goto('/forms');
   await page.getByRole('button', { name: 'Nytt formulär' }).first().click();
