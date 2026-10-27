@@ -141,3 +141,58 @@ task. Every outward action still confirms and has a test mode (rule 7).
    bronze/gold-led look for the in-app screens? (Gold stays the brand mark.)
 4. **Order**: E1 → E2 → E3 → E6 → E5 → E4 → E7 → E8 (home first so the look is judged early, then the
    two complaints, then the questions, AI last). Change?
+
+## E1 in detail — Home and the shell (planned 2026-10-27, read at `0be71ffb`)
+
+**What is there.** `screens/room/Room.tsx` (358 lines): a dark-grey room with three floating
+catchers; Documents zooms open into four parts around a rosette (`Part`, `Rosette`, `zoom()`), plus a
+"Summary and translation" centre, `RecentDocuments`, a pause button, `AiHint`. The rail is `Shell` in
+`App.tsx` (`NavSection` ×5 + Outgoing + AI centre + a folding "Earlier features" group). Room colours
+are three fixed hues in `packages/tokens/src/room.ts`, held by `room.test.ts`. Specs that pin this:
+`e2e/room.spec.ts` (6 tests: catchers, placeholders not controls, keyboard open + Escape, parts lead
+to screens, pause/reduced motion, 360 × 640 in German) and `e2e/rail.spec.ts`.
+
+**Change.**
+1. **Home replaces the two-step room.** `/room` shows the four tiles directly (no catcher to open
+   first); `/room/documents` redirects to `/room` so old links and Back keep working. Each tile is a
+   real `<Link>`: icon, verb ("Fill in a form"), one-line promise, own colour. Spreadsheets and
+   Presentation & planning shrink to one quiet row of two labelled "Coming later" (still not
+   focusable, still not controls). `RecentDocuments` stays under the tiles. The centre (summary and
+   translation) becomes a fifth, smaller tile on desktop with a model; that is the max-five rule.
+2. **Delete what the zoom needed**: `Rosette`, `zoom()`, `zoomFrom`, the pause button and the
+   floating animation. This removes code and CSS (helps the bundle cap); a soft entrance fade stays,
+   off under reduced motion.
+3. **Colours.** New `PART_HUES` in `packages/tokens` (forms, scan, sign, send; strong, friendly, each
+   with a ≥3:1 boundary and ≥4.5:1 label ink on both the light page and the dark room), tested like
+   `room.test.ts`. Light, warm page background for home (the dark grey stays only if you ask for it);
+   gold stays a fill, never text. Applied as `--tp-part-<name>` on tiles, then reused as the page
+   head colour on each part's screen (small follow-up inside E1: a coloured strip, nothing more).
+4. **Rail.** Four coloured icon entries + Home + More. "More" is a small popover/page listing People,
+   Outgoing (with its count), Add-ons and updates, language, Earlier features (events, responses,
+   invoices, users, brand: unchanged routes, folded exactly as now). Below 720 px the rail becomes a
+   bottom bar of the same six.
+5. **Words.** New keys in all twelve catalogues: `home.forms|scan|sign|send` + `…Hint`,
+   `home.comingLater`, `nav.more`, `nav.home`. Old `room.*` keys that nothing uses are removed in the
+   same PR (the i18n test shows which).
+
+**Not in E1.** The tour (E2), any screen inside the parts, the web edition's login screen, the
+second and third catchers' content.
+
+**Specs to rewrite in the same PR.** `room.spec.ts`: the six tests become: home shows four named
+links (@smoke); placeholders are not controls; keyboard reaches all four, Enter opens; each tile leads
+to its screen and Home leads back; reduced motion = no entrance animation; 360 × 640 German fits.
+`rail.spec.ts`: six entries, More opens, earlier features still reachable and remembered. Plus a
+`tokens` test for the part hues and an axe pass on home in sv/en/ja.
+
+**Steps (one branch `easy-e1-home`, from `main` once #250 is merged).**
+1. Tokens + test (`PART_HUES`). 2. Catalogue keys ×12. 3. `Home` component + CSS, route `/room`,
+redirect `/room/documents`; delete the zoom/rosette/pause code. 4. Rail + More + bottom bar.
+5. Rewrite the two specs; update `docs/MAP.md` (Room row), `DESIGN-LANGUAGE.md` (the room section),
+ADR 0022 amendment ("the room is now home"). 6. `pnpm verify` (individually if red), `contract:check`,
+`pnpm bundle:budget` (must not rise), `pnpm test:e2e:smoke`, one full e2e run at the end.
+7. Screenshots (desktop, 360 px, German, dark) to the owner before merge.
+
+**Risks specific to E1.** ADR 0022 and `DOCUMENTS.md` §2 describe the zoom as the brand's
+arrival; removing it changes the owner's own idea of the room, so the ADR amendment says so and the
+owner approves the screenshots first. `introSeen`/`shouldPlayIntro` in `lib/motion.ts` is tied to the
+rail; check it still fires once on home.
