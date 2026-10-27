@@ -198,6 +198,10 @@ describe('the doors', () => {
   it('are two large cards, with "Build it myself" beneath', () => {
     const html = renderToStaticMarkup(
       <Doors
+        templates={[]}
+        nameIn={() => ''}
+        onTemplate={() => {}}
+        onRoute={() => {}}
         onQuestions={() => {}}
         onPaper={() => {}}
         onMyself={() => {}}
@@ -209,5 +213,6 @@ describe('the doors', () => {
     expect(html).toContain(en('conversation.doors.questions'));
     expect(html).toContain(en('conversation.doors.paper'));
     expect(html).toContain(en('wizard.advanced'));
+    expect(html).toContain(en('ask.label'));
   });
 });

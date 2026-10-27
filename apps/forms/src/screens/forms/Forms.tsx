@@ -121,6 +121,27 @@ export function Forms() {
     }
   }
 
+  /** A typed word led to a template and the person pressed it: straight into the editor, no gallery. */
+  async function openTemplate(id: string) {
+    const template = templates.find((candidate) => candidate.id === id);
+    if (!template) return;
+    setError(null);
+    setOpening(true);
+    try {
+      const created = await client.createForm({
+        slug: `form-${Date.now().toString(36)}`,
+        title: { [locales.default]: pickText(interfaceLocales, template.name, locale).value },
+        templateId: id,
+      });
+      setCreating(null);
+      navigate(`/forms/${created.id}`);
+    } catch (cause) {
+      setError(cause instanceof ApiError ? cause.message : String(cause));
+    } finally {
+      setOpening(false);
+    }
+  }
+
   async function create(event: FormEvent) {
     event.preventDefault();
     setError(null);
@@ -216,6 +237,10 @@ export function Forms() {
 
       {creating === 'doors' && (
         <Doors
+          templates={templates}
+          nameIn={(template) => pickText(interfaceLocales, template.name, locale).value}
+          onTemplate={(id) => void openTemplate(id)}
+          onRoute={(path) => navigate(path)}
           onQuestions={() => void openBlank('questions')}
           onPaper={() => void openBlank('paper')}
           focus={door === 'paper' ? 'paper' : door === 'questions' ? 'questions' : undefined}

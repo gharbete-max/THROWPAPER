@@ -1985,3 +1985,60 @@ a.room__centre:focus-visible {
   min-block-size: 24px;
   line-height: 24px;
 }
+
+/* ==========================================================================
+ * Ask: "What do you want to make?" — the first thing on New form.
+ * ========================================================================== */
+
+.ask {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+}
+
+.ask__label {
+  display: block;
+  margin-block-end: var(--tp-spacing-unit);
+  font-size: var(--tp-text-xl);
+  font-weight: 600;
+}
+
+.ask__row {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+}
+
+.ask__input {
+  flex: 1;
+  min-inline-size: 0;
+  min-block-size: 56px;
+  padding: 0 calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+  color: var(--tp-colour-text);
+  font: inherit;
+  font-size: var(--tp-text-lg);
+}
+
+.ask__chat {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+}
+
+.ask__you {
+  justify-self: end;
+  margin: 0;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 2);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-surface);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+}
+
+.ask__loppa {
+  justify-self: start;
+  max-inline-size: 100%;
+}
+
+.ask__loppa p {
+  margin: 0;
+}

@@ -1,5 +1,7 @@
+import type { FormTemplate } from '@tp/shared/forms';
 import { Icon } from '../../../../components/Icon.js';
 import { useT } from '../../../../lib/i18n.js';
+import { Ask } from './Ask.js';
 
 /**
  * The two doors — `PREDICTIVE-BUILDER.md`, "The two doors": after **New form**, two large cards and
@@ -8,6 +10,10 @@ import { useT } from '../../../../lib/i18n.js';
  * its own link address — is not a third door but the way out every screen has.
  */
 export function Doors({
+  templates,
+  nameIn,
+  onTemplate,
+  onRoute,
   onQuestions,
   onPaper,
   onMyself,
@@ -15,6 +21,10 @@ export function Doors({
   error,
   focus,
 }: {
+  templates: readonly FormTemplate[];
+  nameIn: (template: FormTemplate) => string;
+  onTemplate: (id: string) => void;
+  onRoute: (path: string) => void;
   onQuestions: () => void;
   onPaper: () => void;
   onMyself: () => void;
@@ -26,7 +36,14 @@ export function Doors({
   const t = useT();
   return (
     <div className="card doors">
-      <h2 className="doors__title">{t('conversation.doors.title')}</h2>
+      <Ask
+        templates={templates}
+        nameIn={nameIn}
+        busy={busy}
+        onTemplate={onTemplate}
+        onRoute={onRoute}
+        onQuestions={onQuestions}
+      />
       <div className="doors__cards">
         <button
           type="button"
