@@ -57,3 +57,6 @@ export {
  */
 
 export const defaultTokens = defaults as TokenSet;
+
+/** The four parts' colours: the home tiles and the rail's chips (docs/plan/EASY.md, E1). */
+export { PARTS, PART_HUES, partCssVariables, type Part } from './parts.js';

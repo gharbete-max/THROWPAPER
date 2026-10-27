@@ -110,9 +110,9 @@ test('one person: signs in, builds an event and a form, and admits a stranger at
   // first load, or every assertion below looks for Swedish that was never rendered.
   await page.addInitScript(() => window.localStorage.setItem('tp.locale', 'sv-SE'));
   await page.goto(`/auth/callback?token=${secret}`);
-  // Signing in lands in the room (ADR 0022), with Documents among its three catchers.
+  // Signing in lands on home (ADR 0022, amended).
   await expect(page).toHaveURL(/\/room$/);
-  await expect(page.getByRole('link', { name: 'Dokument' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Vad vill du göra?' })).toBeVisible();
 
   // ── 2. Create an event ────────────────────────────────────────────────────────────────────
   const eventName = `S3 ${Date.now().toString(36)}`;

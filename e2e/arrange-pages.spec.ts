@@ -32,7 +32,7 @@ test('arrange: pages from three PDFs are reordered, turned and removed into one 
 }) => {
   const secret = await plantLoginToken(sql, 'admin@example.com');
   await page.goto(`/auth/callback?token=${secret}`);
-  await expect(page.getByRole('link', { name: 'Documents' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'What do you want to do?' })).toBeVisible();
 
   await page.goto('/scan');
   await expect(page.getByRole('heading', { name: 'Arrange pages' })).toBeVisible();

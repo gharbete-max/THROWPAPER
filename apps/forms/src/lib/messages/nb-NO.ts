@@ -344,7 +344,6 @@ export const nbNO: Record<MessageKey, string> = {
 
   'nav.checkin': 'Innsjekk',
   'nav.brand': 'Merkevare',
-  'nav.earlier': 'Tidligere funksjoner',
 
   'problem.duplicate-key': 'Feltnøkkelen "{key}" brukes mer enn én gang.',
   'problem.no-answerable-fields': 'Skjemaet samler ikke inn noen svar ennå.',
@@ -1420,6 +1419,16 @@ export const nbNO: Record<MessageKey, string> = {
   'conversation.showMe': 'Vis meg',
   'conversation.rebased':
     'Skjemaet er endret i editoren. Endringene dine beholdes, og spørsmålene fortsetter der du var.',
+  'home.title': 'Hva vil du gjøre?',
+  'home.forms': 'Lag eller fyll ut skjemaer',
+  'home.formsHint': 'Bygg, del og se svarene',
+  'home.scan': 'Skann et papir',
+  'home.scanHint': 'Et bilde eller en PDF inn, ryddige sider ut',
+  'home.sign': 'Få noe signert',
+  'home.signHint': 'De signerer på mobilen eller datamaskinen',
+  'home.send': 'Send en fil',
+  'home.sendHint': 'Send e-post til én eller mange',
+  'nav.more': 'Mer',
   'room.back': 'Tilbake til rommet',
   'room.documents': 'Dokumenter',
   'room.spreadsheets': 'Regneark',
@@ -1431,9 +1440,6 @@ export const nbNO: Record<MessageKey, string> = {
   'room.centre': 'Sammendrag og oversettelse',
   'room.centreLater': 'Ikke på denne datamaskinen ennå',
   'room.centreNone': 'Ikke i denne utgaven',
-  'room.pause': 'Sett bevegelsen på pause',
-  'room.play': 'Start bevegelsen',
-  'room.opened': '{name} er åpen',
   'room.centreOpen': 'Åpne den',
   'ai.models.heading': 'AI-modeller på denne datamaskinen',
   'ai.models.intro':

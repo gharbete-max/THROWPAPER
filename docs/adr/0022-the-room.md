@@ -3,6 +3,8 @@
 **Status:** accepted 2026-10-07 by the owner ("Let's go!"), with `docs/plan/DOCUMENTS.md`
 **Vision:** `docs/VISION.md` · **Plan:** `docs/plan/DOCUMENTS.md`
 
+**Amended 2026-10-27 (docs/plan/EASY.md, E1, owner's decision):** the dark room, its floating catchers, the zoom and the rosette were replaced by a plain **home**: four coloured tiles (Forms, Scan, Sign, Send) as verbs, the two placeholders named once, quietly, as non-controls. `/room` is home, `/room/documents` redirects to it. The three-independent-catchers decision stands; only its arrival is simpler.
+
 ## Context
 
 The owner re-set what Loppa is (`docs/VISION.md`). You arrive in an empty dark grey room, where

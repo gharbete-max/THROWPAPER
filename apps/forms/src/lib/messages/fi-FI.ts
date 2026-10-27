@@ -346,7 +346,6 @@ export const fiFI: Record<MessageKey, string> = {
 
   'nav.checkin': 'Sisäänkirjaus',
   'nav.brand': 'Ilme',
-  'nav.earlier': 'Aiemmat toiminnot',
 
   'problem.duplicate-key': 'Kentän avainta "{key}" käytetään useammin kuin kerran.',
   'problem.no-answerable-fields': 'Lomake ei vielä kerää yhtään vastausta.',
@@ -1435,6 +1434,16 @@ export const fiFI: Record<MessageKey, string> = {
   'conversation.showMe': 'Näytä',
   'conversation.rebased':
     'Lomaketta muutettiin muokkaimessa. Muutoksesi säilyvät, ja kysymykset jatkuvat siitä, mihin jäit.',
+  'home.title': 'Mitä haluat tehdä?',
+  'home.forms': 'Tee tai täytä lomakkeita',
+  'home.formsHint': 'Rakenna, jaa ja katso vastaukset',
+  'home.scan': 'Skannaa paperi',
+  'home.scanHint': 'Kuva tai PDF sisään, siistit sivut ulos',
+  'home.sign': 'Hanki jotain allekirjoitettua',
+  'home.signHint': 'He allekirjoittavat puhelimella tai tietokoneella',
+  'home.send': 'Lähetä tiedosto',
+  'home.sendHint': 'Lähetä sähköpostina yhdelle tai usealle',
+  'nav.more': 'Lisää',
   'room.back': 'Takaisin huoneeseen',
   'room.documents': 'Asiakirjat',
   'room.spreadsheets': 'Laskentataulukot',
@@ -1446,9 +1455,6 @@ export const fiFI: Record<MessageKey, string> = {
   'room.centre': 'Tiivistelmä ja käännös',
   'room.centreLater': 'Ei vielä tällä tietokoneella',
   'room.centreNone': 'Ei tässä versiossa',
-  'room.pause': 'Pysäytä liike',
-  'room.play': 'Käynnistä liike',
-  'room.opened': '{name} on auki',
   'room.centreOpen': 'Avaa se',
   'ai.models.heading': 'Tekoälymallit tällä tietokoneella',
   'ai.models.intro':

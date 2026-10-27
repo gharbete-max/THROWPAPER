@@ -63,7 +63,7 @@ const pdf = (name = 'letter.txt'): Dropped => ({
 async function signIn(page: Page) {
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   await page.goto('/room');
-  await expect(page.getByRole('link', { name: 'Documents' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'What do you want to do?' })).toBeVisible();
 }
 
 test('dropping a Word file and a PDF on the room opens each in the right part, and the room remembers names', async ({
@@ -71,13 +71,13 @@ test('dropping a Word file and a PDF on the room opens each in the right part, a
 }) => {
   await signIn(page);
 
-  await dropOn(page, '.room__floor', [word('Protokoll')]);
+  await dropOn(page, '.home', [word('Protokoll')]);
   await expect(page).toHaveURL(/\/scan$/);
   await expect(page.getByTestId('opened-notice')).toContainText('Opened as a Word file');
   await expect(page.locator('.scan__page')).toHaveCount(1);
 
   await page.goto('/room');
-  await dropOn(page, '.room__floor', [pdf()]);
+  await dropOn(page, '.home', [pdf()]);
   await expect(page).toHaveURL(/\/scan$/);
   await expect(page.getByTestId('opened-notice')).toContainText('Opened as a PDF');
   await expect(page.locator('.scan__page')).toHaveCount(1);
@@ -125,7 +125,7 @@ test('a PDF with its own fields offers Fill it in, and a file can be opened as a
     .addToPage(sheet, { x: 10, y: 250, width: 200, height: 20 });
   const own = Buffer.from(await doc.save());
 
-  await dropOn(page, '.room__floor', [{ name: 'own.pdf', type: 'application/pdf', buffer: own }]);
+  await dropOn(page, '.home', [{ name: 'own.pdf', type: 'application/pdf', buffer: own }]);
   await expect(page.getByTestId('opened-notice')).toContainText('has fields to fill in');
   await scanStep(page, 'keep');
   await page.getByTestId('handoff-fill').click();
@@ -134,7 +134,7 @@ test('a PDF with its own fields offers Fill it in, and a file can be opened as a
 
   // A plain PDF has no offer, but "Choose differently" lists the other ways.
   await page.goto('/room');
-  await dropOn(page, '.room__floor', [pdf('plain.pdf')]);
+  await dropOn(page, '.home', [pdf('plain.pdf')]);
   await expect(page.getByTestId('opened-fill')).toHaveCount(0);
   await page.getByText('Choose differently').click();
   await expect(page.getByRole('button', { name: 'Read as an invoice' })).toBeVisible();

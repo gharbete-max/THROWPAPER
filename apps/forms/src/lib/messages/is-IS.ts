@@ -345,7 +345,6 @@ export const isIS: Record<MessageKey, string> = {
 
   'nav.checkin': 'Innritun',
   'nav.brand': 'Útlit',
-  'nav.earlier': 'Eldri aðgerðir',
 
   'problem.duplicate-key': 'Reitalykillinn "{key}" er notaður oftar en einu sinni.',
   'problem.no-answerable-fields': 'Eyðublaðið safnar engum svörum enn.',
@@ -1433,6 +1432,16 @@ export const isIS: Record<MessageKey, string> = {
   'conversation.showMe': 'Sýndu mér',
   'conversation.rebased':
     'Eyðublaðinu var breytt í ritlinum. Breytingarnar þínar haldast, og spurningarnar halda áfram þar sem þú varst.',
+  'home.title': 'Hvað viltu gera?',
+  'home.forms': 'Búa til eða fylla út eyðublöð',
+  'home.formsHint': 'Smíða, deila og sjá svörin',
+  'home.scan': 'Skanna blað',
+  'home.scanHint': 'Mynd eða PDF inn, snyrtilegar síður út',
+  'home.sign': 'Fá eitthvað undirritað',
+  'home.signHint': 'Þau undirrita í síma eða tölvu',
+  'home.send': 'Senda skrá',
+  'home.sendHint': 'Senda í tölvupósti til eins eða margra',
+  'nav.more': 'Meira',
   'room.back': 'Aftur í herbergið',
   'room.documents': 'Skjöl',
   'room.spreadsheets': 'Töflureiknar',
@@ -1444,9 +1453,6 @@ export const isIS: Record<MessageKey, string> = {
   'room.centre': 'Samantekt og þýðing',
   'room.centreLater': 'Ekki á þessari tölvu enn',
   'room.centreNone': 'Ekki í þessari útgáfu',
-  'room.pause': 'Gera hlé á hreyfingunni',
-  'room.play': 'Setja hreyfinguna af stað',
-  'room.opened': '{name} er opið',
   'room.centreOpen': 'Opna það',
   'ai.models.heading': 'Gervigreindarlíkön á þessari tölvu',
   'ai.models.intro':

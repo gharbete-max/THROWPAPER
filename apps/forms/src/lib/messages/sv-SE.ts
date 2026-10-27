@@ -344,7 +344,6 @@ export const svSE: Record<MessageKey, string> = {
 
   'nav.checkin': 'Incheckning',
   'nav.brand': 'Utseende',
-  'nav.earlier': 'Tidigare funktioner',
 
   'problem.duplicate-key': 'Fältnyckeln "{key}" används mer än en gång.',
   'problem.no-answerable-fields': 'Formuläret samlar inte in några svar än.',
@@ -1426,6 +1425,16 @@ export const svSE: Record<MessageKey, string> = {
   'conversation.showMe': 'Visa mig',
   'conversation.rebased':
     'Formuläret har ändrats i redigeraren. Dina ändringar behålls, och frågorna fortsätter där du var.',
+  'home.title': 'Vad vill du göra?',
+  'home.forms': 'Skapa eller fyll i formulär',
+  'home.formsHint': 'Bygg, dela och se svaren',
+  'home.scan': 'Skanna ett papper',
+  'home.scanHint': 'Ett foto eller en PDF in, rena sidor ut',
+  'home.sign': 'Få något signerat',
+  'home.signHint': 'De signerar på mobilen eller datorn',
+  'home.send': 'Skicka en fil',
+  'home.sendHint': 'Mejla till en eller många',
+  'nav.more': 'Mer',
   'room.back': 'Tillbaka till rummet',
   'room.documents': 'Dokument',
   'room.spreadsheets': 'Kalkylark',
@@ -1437,9 +1446,6 @@ export const svSE: Record<MessageKey, string> = {
   'room.centre': 'Sammanfattning och översättning',
   'room.centreLater': 'Inte på den här datorn än',
   'room.centreNone': 'Inte i den här utgåvan',
-  'room.pause': 'Pausa rörelsen',
-  'room.play': 'Starta rörelsen',
-  'room.opened': '{name} är öppet',
   'room.centreOpen': 'Öppna den',
   'ai.models.heading': 'AI-modeller på den här datorn',
   'ai.models.intro':

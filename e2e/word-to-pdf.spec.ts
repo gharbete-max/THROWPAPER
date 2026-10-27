@@ -21,7 +21,7 @@ test('a Word file with a footer becomes a labelled PDF page, and the footer is n
 }) => {
   const secret = await plantLoginToken(sql, 'admin@example.com');
   await page.goto(`/auth/callback?token=${secret}`);
-  await expect(page.getByRole('link', { name: 'Documents' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'What do you want to do?' })).toBeVisible();
   await page.goto('/scan');
 
   const word = docxBytes({

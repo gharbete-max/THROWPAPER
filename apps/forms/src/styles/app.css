@@ -1154,40 +1154,12 @@
   stroke-width: 1.5;
 }
 
-.room__bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tp-spacing-unit);
-  padding: calc(var(--tp-spacing-unit) * 1.5) calc(var(--tp-spacing-unit) * 2);
-}
-
-.room__bar .wordmark {
-  min-inline-size: 0;
-}
-
-.room__bar .wordmark strong {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.room__session {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: var(--tp-spacing-unit);
-}
-
-.room__hint {
+.home__hint {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
   gap: var(--tp-spacing-unit);
   margin: 0;
-  padding-inline: calc(var(--tp-spacing-unit) * 2);
-  color: var(--tp-room-quiet);
 }
 
 /* Add-ons and updates (screens/ai/AddOns.tsx): one row each, the text first, its button after. */
@@ -1219,249 +1191,6 @@
   margin: 0;
   overflow: auto;
   white-space: pre-wrap;
-}
-
-.room__who {
-  color: var(--tp-room-quiet);
-}
-
-.room__floor {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: calc(var(--tp-spacing-unit) * 3);
-  padding: calc(var(--tp-spacing-unit) * 2);
-  /* A glow is wider than its catcher; it may not push the page sideways. */
-  overflow: hidden;
-}
-
-.room__catchers {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(0.5rem, 4vw, 4rem);
-  inline-size: min(100%, 60rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.catcher--gold {
-  --catcher-hue: var(--tp-room-gold);
-}
-
-.catcher--platinum {
-  --catcher-hue: var(--tp-room-platinum);
-}
-
-.catcher--bronze {
-  --catcher-hue: var(--tp-room-bronze);
-}
-
-.catcher__art .mark {
-  inline-size: 100%;
-}
-
-.catcher__name {
-  position: relative;
-  margin-block-start: calc(var(--tp-spacing-unit) * 1.5);
-  font-size: var(--tp-text-lg);
-  font-weight: var(--tp-type-weight-bold);
-  line-height: 1.2;
-}
-
-.catcher__note {
-  color: var(--tp-room-quiet);
-}
-
-/* A placeholder floats like the others and is plainly not ready: dimmer, and it says so. */
-
-.catcher--idle .catcher__art {
-  opacity: 0.55;
-}
-
-.room__catchers > li:nth-child(2) :is(.catcher__art, .catcher__glow) {
-  animation-delay: -1.2s;
-}
-
-.room__catchers > li:nth-child(3) :is(.catcher__art, .catcher__glow) {
-  animation-delay: -2.4s;
-}
-
-.room--still :is(.catcher__art, .catcher__glow) {
-  animation-play-state: paused;
-}
-
-.catcher--documents {
-  transition: background-color var(--tp-motion) var(--tp-ease);
-}
-
-.catcher--documents:hover {
-  background: color-mix(in srgb, var(--tp-room-shade) 70%, transparent);
-}
-
-.catcher--documents:hover .catcher__name {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.catcher--documents:focus-visible {
-  outline: 2px solid var(--tp-room-gold);
-  outline-offset: 4px;
-}
-
-.room__pause {
-  color: var(--tp-room-quiet);
-}
-
-/* --- The opened catcher --- */
-
-.room__open {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: calc(var(--tp-spacing-unit) * 1.5);
-  inline-size: 100%;
-}
-
-.room__back {
-  align-self: flex-start;
-}
-
-.room__title {
-  margin: 0;
-  font-size: var(--tp-text-2xl);
-}
-
-.rosette__heart {
-  fill: var(--tp-room-shade);
-}
-
-.rosette__facet--face {
-  fill: var(--tp-room-gold);
-}
-
-.rosette__facet--fold {
-  fill: color-mix(in srgb, var(--tp-room-gold) 70%, var(--tp-room-shade));
-}
-
-.rosette__facet--warm {
-  fill: var(--tp-room-platinum);
-}
-
-.rosette__facet--glow {
-  fill: color-mix(in srgb, var(--tp-room-platinum) 70%, var(--tp-room-shade));
-}
-
-.rosette__pocket--north {
-  transform: translateY(-14px);
-}
-
-.rosette__pocket--east {
-  transform: translateX(14px);
-}
-
-.rosette__pocket--south {
-  transform: translateY(14px);
-}
-
-.rosette__pocket--west {
-  transform: translateX(-14px);
-}
-
-.room__part--forms {
-  grid-area: forms;
-}
-
-.room__part--scan {
-  grid-area: scan;
-}
-
-.room__part--sign {
-  grid-area: sign;
-}
-
-.room__part--send {
-  grid-area: send;
-}
-
-a.room__part {
-  transition: background-color var(--tp-motion-fast) var(--tp-ease);
-}
-
-a.room__part:hover {
-  background: color-mix(in srgb, var(--tp-room-shade) 80%, var(--tp-room-ink));
-}
-
-a.room__part:focus-visible {
-  outline: 2px solid var(--tp-room-gold);
-  outline-offset: 3px;
-}
-
-.room__part--idle {
-  color: var(--tp-room-quiet);
-  font-weight: inherit;
-}
-
-.room__partNote {
-  display: block;
-}
-
-a.room__centre {
-  color: inherit;
-  text-decoration: none;
-}
-
-a.room__centre:hover,
-a.room__centre:focus-visible {
-  outline: var(--tp-border-width) solid var(--tp-room-quiet);
-}
-
-.room__centre span {
-  color: var(--tp-room-quiet);
-}
-
-@media (max-width: 40rem) {
-  .room__who {
-    display: none;
-  }
-
-  /* The organisation's name gives way before the language or Sign out does; the mark stays. */
-
-  .room__bar .wordmark strong {
-    display: none;
-  }
-
-  .room__catchers {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: var(--tp-spacing-unit);
-  }
-
-  .room__catchers > li:first-child {
-    grid-column: 1 / -1;
-  }
-
-  .room__catchers > li:first-child .catcher {
-    --catcher-size: 8rem;
-  }
-
-  .room__part {
-    justify-self: stretch;
-    justify-content: center;
-    min-block-size: 3.5rem;
-    border-radius: var(--tp-radius-lg);
-    text-align: center;
-  }
-
-  .room__centre {
-    justify-self: stretch;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .room__pause {
-    display: none;
-  }
 }
 
 /* Summary and translation (the room's centre): text is shown as written, line breaks kept. */
@@ -2107,4 +1836,106 @@ a.room__centre:focus-visible {
 .newform .doors {
   display: grid;
   gap: calc(var(--tp-spacing-unit) * 3);
+}
+
+/* ==========================================================================
+ * Home: four big coloured tiles, each a verb and one line (docs/plan/EASY.md, E1).
+ * ========================================================================== */
+
+.home {
+  display: grid;
+  justify-items: center;
+  gap: calc(var(--tp-spacing-unit) * 3);
+  padding-block: calc(var(--tp-spacing-unit) * 3);
+}
+
+.home__title {
+  margin: 0;
+  font-size: var(--tp-text-2xl, var(--tp-text-xl));
+  text-align: center;
+}
+
+.home__tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--tp-spacing-unit) * 2);
+  inline-size: min(100%, 44rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  display: grid;
+  align-content: start;
+  gap: calc(var(--tp-spacing-unit) / 2);
+  block-size: 100%;
+  min-block-size: 9rem;
+  padding: calc(var(--tp-spacing-unit) * 2.5);
+  border-radius: calc(var(--tp-radius-lg) * 1.5);
+  background: var(--tile);
+  color: var(--tile-ink);
+  text-decoration: none;
+  transition: transform var(--tp-motion-fast) var(--tp-ease);
+}
+
+.tile:hover {
+  transform: translateY(-2px);
+}
+
+.tile:focus-visible {
+  outline: 3px solid var(--tp-colour-text);
+  outline-offset: 3px;
+}
+
+.tile__icon {
+  inline-size: 2rem;
+  block-size: 2rem;
+}
+
+.tile__name {
+  font-size: var(--tp-text-xl);
+  line-height: 1.2;
+}
+
+.tile__hint {
+  font-size: var(--tp-text-base);
+  opacity: 0.85;
+}
+
+.home__centre {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) / 2);
+  inline-size: min(100%, 44rem);
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  color: inherit;
+  text-decoration: none;
+}
+
+.home__later {
+  margin: 0;
+  color: var(--tp-colour-text-muted, var(--tp-colour-text));
+  text-align: center;
+}
+
+@media (max-width: 30rem) {
+  .home__tiles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tile {
+    min-block-size: 6.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    transition: none;
+  }
+
+  .tile:hover {
+    transform: none;
+  }
 }

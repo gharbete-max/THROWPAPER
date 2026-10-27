@@ -352,7 +352,6 @@ export const frFR: Record<MessageKey, string> = {
 
   'nav.checkin': 'Accueil',
   'nav.brand': 'Identité',
-  'nav.earlier': 'Fonctions précédentes',
 
   'problem.duplicate-key': 'La clé de champ « {key} » est utilisée plus d’une fois.',
   'problem.no-answerable-fields': 'Le formulaire ne recueille encore aucune réponse.',
@@ -1463,6 +1462,16 @@ export const frFR: Record<MessageKey, string> = {
   'conversation.showMe': 'Montrez-moi',
   'conversation.rebased':
     'Ce formulaire a été modifié dans l’éditeur. Vos modifications sont conservées, et les questions reprennent là où vous en étiez.',
+  'home.title': 'Que voulez-vous faire ?',
+  'home.forms': 'Créer ou remplir des formulaires',
+  'home.formsHint': 'Créez, partagez, consultez les réponses',
+  'home.scan': 'Numériser un papier',
+  'home.scanHint': 'Une photo ou un PDF en entrée, des pages nettes en sortie',
+  'home.sign': 'Faire signer quelque chose',
+  'home.signHint': 'Ils signent sur leur téléphone ou ordinateur',
+  'home.send': 'Envoyer un fichier',
+  'home.sendHint': 'Par e-mail à une ou plusieurs personnes',
+  'nav.more': 'Plus',
   'room.back': 'Retour à la pièce',
   'room.documents': 'Documents',
   'room.spreadsheets': 'Tableurs',
@@ -1474,9 +1483,6 @@ export const frFR: Record<MessageKey, string> = {
   'room.centre': 'Résumé et traduction',
   'room.centreLater': 'Pas encore sur cet ordinateur',
   'room.centreNone': 'Pas dans cette édition',
-  'room.pause': 'Mettre le mouvement en pause',
-  'room.play': 'Relancer le mouvement',
-  'room.opened': '{name} est ouvert',
   'room.centreOpen': 'L’ouvrir',
   'ai.models.heading': 'Modèles d’IA sur cet ordinateur',
   'ai.models.intro':

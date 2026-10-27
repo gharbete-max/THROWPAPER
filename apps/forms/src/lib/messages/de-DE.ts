@@ -353,7 +353,6 @@ export const deDE: Record<MessageKey, string> = {
 
   'nav.checkin': 'Check-in',
   'nav.brand': 'Marke',
-  'nav.earlier': 'Frühere Funktionen',
 
   'problem.duplicate-key': 'Der Feldschlüssel „{key}“ wird mehr als einmal verwendet.',
   'problem.no-answerable-fields': 'Das Formular erfasst noch keine Antworten.',
@@ -1477,6 +1476,16 @@ export const deDE: Record<MessageKey, string> = {
   'conversation.showMe': 'Zeig es mir',
   'conversation.rebased':
     'Dieses Formular wurde im Editor geändert. Ihre Änderungen bleiben erhalten, und die Fragen gehen dort weiter, wo Sie waren.',
+  'home.title': 'Was möchten Sie tun?',
+  'home.forms': 'Formulare erstellen oder ausfüllen',
+  'home.formsHint': 'Bauen, teilen, Antworten ansehen',
+  'home.scan': 'Papier scannen',
+  'home.scanHint': 'Foto oder PDF rein, saubere Seiten raus',
+  'home.sign': 'Etwas unterschreiben lassen',
+  'home.signHint': 'Unterschrift am Handy oder Computer',
+  'home.send': 'Datei senden',
+  'home.sendHint': 'Per E-Mail an eine oder viele Personen',
+  'nav.more': 'Mehr',
   'room.back': 'Zurück in den Raum',
   'room.documents': 'Dokumente',
   'room.spreadsheets': 'Tabellen',
@@ -1488,9 +1497,6 @@ export const deDE: Record<MessageKey, string> = {
   'room.centre': 'Zusammenfassung und Übersetzung',
   'room.centreLater': 'Noch nicht auf diesem Computer',
   'room.centreNone': 'Nicht in dieser Ausgabe',
-  'room.pause': 'Bewegung anhalten',
-  'room.play': 'Bewegung abspielen',
-  'room.opened': '{name} ist geöffnet',
   'room.centreOpen': 'Öffnen',
   'ai.models.heading': 'KI-Modelle auf diesem Computer',
   'ai.models.intro':

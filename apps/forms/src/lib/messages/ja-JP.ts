@@ -349,7 +349,6 @@ export const jaJP: Record<MessageKey, string> = {
 
   'nav.checkin': '受付',
   'nav.brand': 'ブランド',
-  'nav.earlier': '以前の機能',
 
   'problem.duplicate-key': '項目キー「{key}」が複数回使われています。',
   'problem.no-answerable-fields': 'このフォームはまだ何も回答を集めていません。',
@@ -1424,6 +1423,16 @@ export const jaJP: Record<MessageKey, string> = {
   'conversation.showMe': '見せて',
   'conversation.rebased':
     'このフォームはエディターで変更されました。変更は保持され、質問は前回の続きから進みます。',
+  'home.title': '何をしますか？',
+  'home.forms': 'フォームを作る・入力する',
+  'home.formsHint': '作成して共有し、回答を見る',
+  'home.scan': '紙をスキャン',
+  'home.scanHint': '写真やPDFを入れると整ったページに',
+  'home.sign': '署名してもらう',
+  'home.signHint': 'スマホやパソコンで署名できます',
+  'home.send': 'ファイルを送る',
+  'home.sendHint': '一人にも大勢にもメールで',
+  'nav.more': 'その他',
   'room.back': '部屋に戻る',
   'room.documents': '文書',
   'room.spreadsheets': 'スプレッドシート',
@@ -1435,9 +1444,6 @@ export const jaJP: Record<MessageKey, string> = {
   'room.centre': '要約と翻訳',
   'room.centreLater': 'このコンピューターにはまだありません',
   'room.centreNone': 'この版にはありません',
-  'room.pause': '動きを止める',
-  'room.play': '動きを再開する',
-  'room.opened': '{name}を開きました',
   'room.centreOpen': '開く',
   'ai.models.heading': 'このコンピューターのAIモデル',
   'ai.models.intro':

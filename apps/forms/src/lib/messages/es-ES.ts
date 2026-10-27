@@ -350,7 +350,6 @@ export const esES: Record<MessageKey, string> = {
 
   'nav.checkin': 'Registro de entrada',
   'nav.brand': 'Marca',
-  'nav.earlier': 'Funciones anteriores',
 
   'problem.duplicate-key': 'La clave de campo «{key}» se usa más de una vez.',
   'problem.no-answerable-fields': 'El formulario todavía no recoge ninguna respuesta.',
@@ -1445,6 +1444,16 @@ export const esES: Record<MessageKey, string> = {
   'conversation.showMe': 'Muéstramelo',
   'conversation.rebased':
     'Este formulario se cambió en el editor. Tus cambios se mantienen y las preguntas siguen donde estabas.',
+  'home.title': '¿Qué quieres hacer?',
+  'home.forms': 'Crear o rellenar formularios',
+  'home.formsHint': 'Crea, comparte y mira las respuestas',
+  'home.scan': 'Escanear un papel',
+  'home.scanHint': 'Entra una foto o PDF, salen páginas limpias',
+  'home.sign': 'Conseguir una firma',
+  'home.signHint': 'Firman desde el móvil o el ordenador',
+  'home.send': 'Enviar un archivo',
+  'home.sendHint': 'Por correo a una o a muchas personas',
+  'nav.more': 'Más',
   'room.back': 'Volver a la sala',
   'room.documents': 'Documentos',
   'room.spreadsheets': 'Hojas de cálculo',
@@ -1456,9 +1465,6 @@ export const esES: Record<MessageKey, string> = {
   'room.centre': 'Resumen y traducción',
   'room.centreLater': 'Aún no está en este ordenador',
   'room.centreNone': 'No está en esta edición',
-  'room.pause': 'Pausar el movimiento',
-  'room.play': 'Reanudar el movimiento',
-  'room.opened': '{name} está abierto',
   'room.centreOpen': 'Abrirlo',
   'ai.models.heading': 'Modelos de IA en este ordenador',
   'ai.models.intro':

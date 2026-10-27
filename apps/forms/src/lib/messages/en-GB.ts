@@ -348,7 +348,6 @@ export const enGB = {
 
   'nav.checkin': 'Check-in',
   'nav.brand': 'Brand',
-  'nav.earlier': 'Earlier features',
 
   'problem.duplicate-key': 'The field key "{key}" is used more than once.',
   'problem.no-answerable-fields': 'The form does not collect any answers yet.',
@@ -1441,6 +1440,16 @@ export const enGB = {
   'conversation.showMe': 'Show me',
   'conversation.rebased':
     'This form was changed in the editor. Your changes are kept, and the questions carry on from where you were.',
+  'home.title': 'What do you want to do?',
+  'home.forms': 'Make or fill in forms',
+  'home.formsHint': 'Build a form, share it, see the answers',
+  'home.scan': 'Scan a paper',
+  'home.scanHint': 'A photo or PDF in, tidy pages out',
+  'home.sign': 'Get something signed',
+  'home.signHint': 'They sign on their phone or computer',
+  'home.send': 'Send a file',
+  'home.sendHint': 'Email it to one person or many',
+  'nav.more': 'More',
   'room.back': 'Back to the room',
   'room.documents': 'Documents',
   'room.spreadsheets': 'Spreadsheets',
@@ -1452,9 +1461,6 @@ export const enGB = {
   'room.centre': 'Summary and translation',
   'room.centreLater': 'Not on this computer yet',
   'room.centreNone': 'Not in this edition',
-  'room.pause': 'Pause the motion',
-  'room.play': 'Play the motion',
-  'room.opened': '{name} is open',
   'room.centreOpen': 'Open it',
   'ai.models.heading': 'AI models on this computer',
   'ai.models.intro':

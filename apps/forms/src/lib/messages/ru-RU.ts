@@ -353,7 +353,6 @@ export const ruRU: Record<MessageKey, string> = {
 
   'nav.checkin': 'Регистрация',
   'nav.brand': 'Оформление',
-  'nav.earlier': 'Прежние функции',
 
   'problem.duplicate-key': 'Ключ поля «{key}» используется больше одного раза.',
   'problem.no-answerable-fields': 'Форма пока не собирает ни одного ответа.',
@@ -1461,6 +1460,16 @@ export const ruRU: Record<MessageKey, string> = {
   'conversation.showMe': 'Показать',
   'conversation.rebased':
     'Форма была изменена в редакторе. Ваши изменения сохранены, и вопросы продолжаются с того места, где вы остановились.',
+  'home.title': 'Что вы хотите сделать?',
+  'home.forms': 'Создать или заполнить формы',
+  'home.formsHint': 'Создавайте, делитесь, смотрите ответы',
+  'home.scan': 'Сканировать бумагу',
+  'home.scanHint': 'Фото или PDF на входе, аккуратные страницы на выходе',
+  'home.sign': 'Подписать документ',
+  'home.signHint': 'Подпись на телефоне или компьютере',
+  'home.send': 'Отправить файл',
+  'home.sendHint': 'По почте одному или многим',
+  'nav.more': 'Ещё',
   'room.back': 'Обратно в комнату',
   'room.documents': 'Документы',
   'room.spreadsheets': 'Таблицы',
@@ -1472,9 +1481,6 @@ export const ruRU: Record<MessageKey, string> = {
   'room.centre': 'Сводка и перевод',
   'room.centreLater': 'Пока нет на этом компьютере',
   'room.centreNone': 'Нет в этой версии',
-  'room.pause': 'Остановить движение',
-  'room.play': 'Возобновить движение',
-  'room.opened': 'Открыто: {name}',
   'room.centreOpen': 'Открыть',
   'ai.models.heading': 'Модели ИИ на этом компьютере',
   'ai.models.intro':
