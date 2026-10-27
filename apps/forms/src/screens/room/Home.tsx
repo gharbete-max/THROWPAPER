@@ -8,6 +8,7 @@ import { PART_STYLE } from '../../lib/part-style.js';
 import { Icon, type IconName } from '../../components/Icon.js';
 import { RecentDocuments } from './documents/RecentDocuments.js';
 import { AiHint } from './AiHint.js';
+import { Coach } from '../../components/Coach.js';
 
 /**
  * Home: where a signed-in person arrives (`docs/plan/EASY.md`, E1; it replaces the room of ADR
@@ -57,6 +58,7 @@ export function Home() {
         </Link>
       ) : null}
       <RecentDocuments />
+      <Coach />
       <p className="home__later small">
         {t('room.spreadsheets')} · {t('room.presentation')} — {t('room.notBuilt')}
       </p>
@@ -80,7 +82,7 @@ function Tile({
   } as CSSProperties;
   return (
     <li>
-      <Link className="tile" to={to} style={colours}>
+      <Link className="tile" to={to} style={colours} data-tour={part}>
         <Icon name={icon} className="tile__icon" />
         <strong className="tile__name">{t(`home.${part}`)}</strong>
         <span className="tile__hint">{t(`home.${part}Hint`)}</span>

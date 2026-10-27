@@ -104,6 +104,8 @@ export async function signInAs(
         window.localStorage.setItem('tp.refresh', token);
       }
       window.localStorage.setItem('tp.locale', chosen);
+      // The first-run tour is its own spec's business; elsewhere it would sit over the page.
+      window.localStorage.setItem('tp.tour.seen', '1');
     },
     { token: secret, locale },
   );

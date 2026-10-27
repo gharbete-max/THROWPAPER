@@ -1939,3 +1939,61 @@
     transform: none;
   }
 }
+
+/* The first-run tour (E2): a speech bubble beside the real thing, nothing dimmed. */
+.coach {
+  position: fixed;
+  z-index: 60;
+  inline-size: min(18rem, calc(100vw - 16px));
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-text);
+  color: var(--tp-colour-background);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.25);
+}
+
+.coach::before {
+  content: '';
+  position: absolute;
+  inline-size: 14px;
+  block-size: 14px;
+  background: inherit;
+  transform: rotate(45deg);
+  inset-inline-start: 24px;
+  inset-block-start: -7px;
+}
+
+.coach--right::before {
+  inset-inline-start: -7px;
+  inset-block-start: 20px;
+}
+
+.coach__text {
+  margin: 0;
+  font-size: var(--tp-text-base);
+  line-height: 1.4;
+}
+
+.coach__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--tp-spacing-unit) * 1.5);
+}
+
+.coach .button--quiet {
+  color: inherit;
+}
+
+.coach .button:not(.button--quiet):not(.button--danger):not(.button--bare) {
+  border-color: var(--tp-colour-background);
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+}
+
+.coach-on {
+  outline: 3px solid var(--tp-colour-text);
+  outline-offset: 3px;
+}
