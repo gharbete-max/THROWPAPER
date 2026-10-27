@@ -29,6 +29,6 @@
     "electron": "^44.9.1",
     "electron-builder": "^26",
     "esbuild": "^0.28.2",
-    "vite": "^6.4.4"
+    "vite": "^6.4.5"
   }
 }
