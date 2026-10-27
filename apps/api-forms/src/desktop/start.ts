@@ -1,8 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { buildServer } from '../server.js';
 import { openLocalDatabase, type LocalDatabase } from '../db/pglite.js';
-import { seedDemo } from '../db/seed-demo.js';
-import { demoToSend } from '../demo/documents.js';
 import { createLocalDocumentStore } from '../documents/store.js';
 import { createLocalAssetStore } from '../uploads/store.js';
 import { createLocalUploadStore } from '../uploads/private-store.js';
@@ -79,11 +77,9 @@ export interface DesktopServer {
   paths: WorkspacePaths;
   settings: DesktopSettings;
   app: FastifyInstance;
-  /** Whether an organisation exists yet. False on first run, until `bootstrap` or `loadDemo`. */
+  /** Whether an organisation exists yet. False on first run, until `bootstrap`. */
   isSetUp(): Promise<boolean>;
   bootstrap(owner: WorkspaceOwner): Promise<boolean>;
-  /** The demo dataset from `pnpm db:seed`, into this workspace. Only ever on an empty one. */
-  loadDemo(): Promise<boolean>;
   signInLink(): Promise<string | null>;
   /** Whether this start found an organisation and connected it to Sign. */
   signingConnected: boolean;
@@ -275,13 +271,6 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
     app,
     isSetUp,
     bootstrap: (owner) => bootstrapWorkspace(local.db, owner),
-    async loadDemo() {
-      if (await isSetUp()) return false;
-      await seedDemo(local.db);
-      // Desktop only: To send is the desktop's mail. One message waits there, unopened.
-      await createOutgoingStore(paths.toSend).add(await demoToSend());
-      return true;
-    },
     signInLink: () => mintLocalSignInLink(local.repos, url),
     signingConnected: signing !== null,
     async close() {

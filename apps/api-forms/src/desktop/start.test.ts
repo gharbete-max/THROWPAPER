@@ -56,7 +56,6 @@ describe('the desktop server', { timeout: 60_000 }, () => {
           email: 'ake@example.com',
         }),
       ).toBe(true);
-      expect(await server.loadDemo()).toBe(false);
 
       // A sign-in link asked for on the login page is kept nowhere: To send is for somebody
       // already signed in, so it would wait where nobody could reach it. The menu signs in.

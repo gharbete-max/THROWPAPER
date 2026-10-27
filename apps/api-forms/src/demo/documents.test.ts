@@ -1,10 +1,8 @@
-import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { PDFDocument } from 'pdf-lib';
 import { afterAll, describe, expect, it } from 'vitest';
-import { startDesktopServer } from '../desktop/start.js';
-import type { PdfRenderer } from '../documents/render.js';
 import { pdfFields } from '../pdf/fill.js';
 import { demoArrangedPdf, demoFormPdf, demoToSend, FILLED_FORM } from './documents.js';
 import { DEMO_DOCUMENT_FORMS } from './dataset.js';
@@ -41,36 +39,5 @@ describe('the demo documents', () => {
       'medlemsansokan-pdf',
       'besiktning-word',
     ]);
-  });
-});
-
-/** No Chromium in a unit test. */
-const fakeRenderer: PdfRenderer = {
-  render: async () => Buffer.from('%PDF-fake'),
-  renderPages: async () => Buffer.from('%PDF-fake'),
-  close: async () => {},
-};
-
-describe('the desktop demo', { timeout: 60_000 }, () => {
-  it('puts one message in To send, and only on an empty workspace', async () => {
-    const webDir = join(scratch, 'web');
-    await mkdir(webDir, { recursive: true });
-    await writeFile(join(webDir, 'index.html'), '<!doctype html><div id="root"></div>');
-    const dataDir = join(scratch, 'data');
-    const server = await startDesktopServer({
-      dataDir,
-      webDir,
-      migrationsFolder: join(import.meta.dirname, '..', '..', 'drizzle'),
-      port: 0,
-      renderer: fakeRenderer,
-    });
-    try {
-      expect(await server.loadDemo()).toBe(true);
-      expect(await readdir(join(dataDir, 'to-send'))).toHaveLength(1);
-      expect(await server.loadDemo()).toBe(false);
-      expect(await readdir(join(dataDir, 'to-send'))).toHaveLength(1);
-    } finally {
-      await server.close();
-    }
   });
 });
