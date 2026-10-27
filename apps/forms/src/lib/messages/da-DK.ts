@@ -1203,6 +1203,16 @@ export const daDK: Record<MessageKey, string> = {
   'ask.questions': 'Stil mig spørgsmål',
   'ask.route': 'Det hører hjemme i {name}.',
   'ask.open': 'Åbn {name}',
+  'ask.ai': "Lad AI'en lave et udkast",
+  'ask.aiThinking': 'Laver et udkast på denne computer …',
+  'ask.aiCancel': 'Afbryd',
+  'ask.aiIntro': 'Her er et udkast med {count} spørgsmål. Tjek det, før du deler det.',
+  'ask.aiUse': 'Brug dette skema',
+  'ask.aiRetry': 'Prøv igen',
+  'ask.aiFailed':
+    'Jeg kunne ikke lave et skema ud af det. Du kan svare på nogle spørgsmål i stedet.',
+  'ask.aiQuoteOnly':
+    'Den slags skema har ord, et menneske skal skrive, så jeg laver ikke et udkast. Brug en skabelon eller spørgsmålene.',
   'conversation.doors.title': 'Hvordan vil du starte?',
   'conversation.doors.questions': 'Start med spørgsmål',
   'conversation.doors.questionsDetail': 'Svar på nogle få spørgsmål, og se formularen tage form.',

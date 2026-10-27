@@ -1231,6 +1231,15 @@ export const ruRU: Record<MessageKey, string> = {
   'ask.questions': 'Задайте мне вопросы',
   'ask.route': 'Это относится к разделу «{name}».',
   'ask.open': 'Открыть «{name}»',
+  'ask.ai': 'Поручить черновик ИИ',
+  'ask.aiThinking': 'Составляю черновик на этом компьютере…',
+  'ask.aiCancel': 'Остановить',
+  'ask.aiIntro': 'Вот черновик из {count} вопросов. Проверьте его, прежде чем делиться.',
+  'ask.aiUse': 'Использовать эту форму',
+  'ask.aiRetry': 'Попробовать снова',
+  'ask.aiFailed': 'Не удалось сделать из этого форму. Можно ответить на несколько вопросов.',
+  'ask.aiQuoteOnly':
+    'Формулировки такой формы должен писать человек, поэтому я не составляю черновик. Возьмите шаблон или ответьте на вопросы.',
   'conversation.doors.title': 'Как вы хотите начать?',
   'conversation.doors.questions': 'Начать с вопросов',
   'conversation.doors.questionsDetail':

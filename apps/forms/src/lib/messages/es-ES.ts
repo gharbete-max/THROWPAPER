@@ -1221,6 +1221,16 @@ export const esES: Record<MessageKey, string> = {
   'ask.questions': 'Hazme preguntas',
   'ask.route': 'Eso va en {name}.',
   'ask.open': 'Abrir {name}',
+  'ask.ai': 'Dejar que la IA haga un borrador',
+  'ask.aiThinking': 'Redactando un borrador en este equipo…',
+  'ask.aiCancel': 'Detener',
+  'ask.aiIntro': 'Aquí tienes un borrador con {count} preguntas. Revísalo antes de compartirlo.',
+  'ask.aiUse': 'Usar este formulario',
+  'ask.aiRetry': 'Intentar de nuevo',
+  'ask.aiFailed':
+    'No pude hacer un formulario con eso. Puedes responder unas preguntas en su lugar.',
+  'ask.aiQuoteOnly':
+    'Ese tipo de formulario tiene un texto que debe escribir una persona, así que no lo redacto. Usa una plantilla o las preguntas.',
   'conversation.doors.title': '¿Cómo quieres empezar?',
   'conversation.doors.questions': 'Empezar con preguntas',
   'conversation.doors.questionsDetail':

@@ -1241,6 +1241,16 @@ export const deDE: Record<MessageKey, string> = {
   'ask.questions': 'Stellen Sie mir Fragen',
   'ask.route': 'Das gehört zu {name}.',
   'ask.open': '{name} öffnen',
+  'ask.ai': 'KI einen Entwurf machen lassen',
+  'ask.aiThinking': 'Entwurf wird auf diesem Computer erstellt …',
+  'ask.aiCancel': 'Stopp',
+  'ask.aiIntro': 'Hier ist ein Entwurf mit {count} Fragen. Prüfen Sie ihn, bevor Sie ihn teilen.',
+  'ask.aiUse': 'Dieses Formular verwenden',
+  'ask.aiRetry': 'Noch einmal versuchen',
+  'ask.aiFailed':
+    'Daraus konnte ich kein Formular machen. Sie können stattdessen ein paar Fragen beantworten.',
+  'ask.aiQuoteOnly':
+    'Bei dieser Art von Formular muss ein Mensch den Wortlaut schreiben, deshalb entwerfe ich es nicht. Nehmen Sie eine Vorlage oder die Fragen.',
   'conversation.doors.title': 'Wie möchten Sie beginnen?',
   'conversation.doors.questions': 'Mit Fragen beginnen',
   'conversation.doors.questionsDetail':

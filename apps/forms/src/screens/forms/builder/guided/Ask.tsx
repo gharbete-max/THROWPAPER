@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import {
   ROUTE_PATHS,
   readAsk,
@@ -6,7 +6,10 @@ import {
   type AskRoute,
   type FormTemplate,
 } from '@tp/shared/forms';
+import type { DraftForm } from '@tp/shared/ai';
+import { aiBridge } from '../../../../lib/ai-bridge.js';
 import { useT } from '../../../../lib/i18n.js';
+import { AskAi } from './AskAi.js';
 
 /**
  * "What do you want to make?" — the first thing on New form: a box and a short chat, not a
@@ -20,6 +23,8 @@ export function Ask({
   onTemplate,
   onRoute,
   onQuestions,
+  locale,
+  onDraft,
 }: {
   templates: readonly FormTemplate[];
   /** A template's name in the interface language. */
@@ -28,10 +33,35 @@ export function Ask({
   onTemplate: (id: string) => void;
   onRoute: (path: string) => void;
   onQuestions: () => void;
+  /** The form's default language, for a draft by the AI. */
+  locale: string;
+  onDraft: (draft: DraftForm) => void;
 }) {
   const t = useT();
   const [text, setText] = useState('');
-  const [said, setSaid] = useState<{ words: string; reading: AskReading } | null>(null);
+  const [said, setSaid] = useState<{ words: string; reading: AskReading; run: number } | null>(
+    null,
+  );
+  // The AI switch exists only where a text model is installed (desktop); off until pressed.
+  const bridge = aiBridge();
+  const [aiReady, setAiReady] = useState(false);
+  const [ai, setAi] = useState(false);
+  useEffect(() => {
+    if (!bridge) return;
+    void bridge
+      .status()
+      .then((status) =>
+        setAiReady(
+          status.models.some(
+            (model) =>
+              model.available &&
+              model.capabilities.includes('text') &&
+              (model.state === 'installed' || model.state === 'busy'),
+          ),
+        ),
+      )
+      .catch(() => setAiReady(false));
+  }, [bridge]);
   const nameOf = (id: string) => {
     const template = templates.find((candidate) => candidate.id === id);
     return template ? nameIn(template) : id;
@@ -42,7 +72,7 @@ export function Ask({
     event.preventDefault();
     const words = text.trim();
     if (!words) return;
-    setSaid({ words, reading: readAsk(words, templates) });
+    setSaid({ words, reading: readAsk(words, templates), run: (said?.run ?? 0) + 1 });
   }
 
   return (
@@ -65,12 +95,38 @@ export function Ask({
             {t('ask.go')}
           </button>
         </div>
+        {bridge && aiReady && (
+          <label className="ask__ai">
+            <input
+              type="checkbox"
+              role="switch"
+              checked={ai}
+              onChange={(event) => {
+                setAi(event.target.checked);
+                setSaid(null);
+              }}
+            />
+            {t('ask.ai')}
+          </label>
+        )}
       </form>
       {said && (
         <div className="ask__chat" aria-live="polite">
           <p className="ask__you">{said.words}</p>
           <div className="ask__loppa stack">
-            {said.reading.kind === 'template' && (
+            {ai && bridge && (
+              <AskAi
+                key={said.run}
+                bridge={bridge}
+                request={said.words}
+                locale={locale}
+                busy={busy}
+                onDraft={onDraft}
+                onRetry={() => setSaid({ ...said, run: said.run + 1 })}
+                onQuestions={onQuestions}
+              />
+            )}
+            {!ai && said.reading.kind === 'template' && (
               <>
                 <p>{t('ask.found', { name: nameOf(said.reading.ids[0]!) })}</p>
                 <div className="row">
@@ -102,7 +158,7 @@ export function Ask({
                 </div>
               </>
             )}
-            {said.reading.kind === 'route' && (
+            {!ai && said.reading.kind === 'route' && (
               <>
                 <p>{t('ask.route', { name: routeName(said.reading.route) })}</p>
                 <div className="row">
@@ -119,7 +175,7 @@ export function Ask({
                 </div>
               </>
             )}
-            {said.reading.kind === 'none' && (
+            {!ai && said.reading.kind === 'none' && (
               <>
                 <p>{t('ask.unsure')}</p>
                 <div className="row">

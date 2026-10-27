@@ -1202,6 +1202,16 @@ export const nbNO: Record<MessageKey, string> = {
   'ask.questions': 'Still meg spørsmål',
   'ask.route': 'Den hører hjemme i {name}.',
   'ask.open': 'Åpne {name}',
+  'ask.ai': 'La KI-en lage et utkast',
+  'ask.aiThinking': 'Lager et utkast på denne datamaskinen …',
+  'ask.aiCancel': 'Stopp',
+  'ask.aiIntro': 'Her er et utkast med {count} spørsmål. Sjekk det før du deler det.',
+  'ask.aiUse': 'Bruk dette skjemaet',
+  'ask.aiRetry': 'Prøv igjen',
+  'ask.aiFailed':
+    'Jeg klarte ikke å lage et skjema av det. Du kan svare på noen spørsmål i stedet.',
+  'ask.aiQuoteOnly':
+    'Den typen skjema har ord et menneske må skrive, så jeg lager ikke utkast. Bruk en mal eller spørsmålene.',
   'conversation.doors.title': 'Hvordan vil du begynne?',
   'conversation.doors.questions': 'Start med spørsmål',
   'conversation.doors.questionsDetail': 'Svar på noen få spørsmål, og se skjemaet ta form.',

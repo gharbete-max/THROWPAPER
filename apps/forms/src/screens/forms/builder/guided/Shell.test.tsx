@@ -202,6 +202,8 @@ describe('the doors', () => {
         nameIn={() => ''}
         onTemplate={() => {}}
         onRoute={() => {}}
+        onDraft={() => {}}
+        locale="en-GB"
         onQuestions={() => {}}
         onPaper={() => {}}
         onMyself={() => {}}

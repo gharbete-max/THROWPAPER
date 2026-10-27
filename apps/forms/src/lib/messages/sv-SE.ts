@@ -1204,6 +1204,16 @@ export const svSE: Record<MessageKey, string> = {
   'ask.questions': 'Ställ frågor till mig',
   'ask.route': 'Det hör hemma i {name}.',
   'ask.open': 'Öppna {name}',
+  'ask.ai': 'Låt AI:n skriva ett utkast',
+  'ask.aiThinking': 'Skriver ett utkast på den här datorn …',
+  'ask.aiCancel': 'Stoppa',
+  'ask.aiIntro': 'Här är ett utkast med {count} frågor. Kontrollera det innan du delar det.',
+  'ask.aiUse': 'Använd det här formuläret',
+  'ask.aiRetry': 'Försök igen',
+  'ask.aiFailed':
+    'Jag kunde inte göra ett formulär av det. Du kan svara på några frågor i stället.',
+  'ask.aiQuoteOnly':
+    'Den sortens formulär har ord som en människa måste skriva, så jag skriver inget utkast. Använd en mall eller frågorna.',
   'conversation.doors.title': 'Hur vill du börja?',
   'conversation.doors.questions': 'Börja med frågor',
   'conversation.doors.questionsDetail': 'Svara på några frågor och se formuläret växa fram.',

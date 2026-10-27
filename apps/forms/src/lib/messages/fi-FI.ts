@@ -1214,6 +1214,15 @@ export const fiFI: Record<MessageKey, string> = {
   'ask.questions': 'Kysy minulta kysymyksiä',
   'ask.route': 'Tämä kuuluu kohtaan {name}.',
   'ask.open': 'Avaa {name}',
+  'ask.ai': 'Anna tekoälyn luonnostella',
+  'ask.aiThinking': 'Luonnostellaan tällä tietokoneella …',
+  'ask.aiCancel': 'Pysäytä',
+  'ask.aiIntro': 'Tässä luonnos, jossa on {count} kysymystä. Tarkista se ennen jakamista.',
+  'ask.aiUse': 'Käytä tätä lomaketta',
+  'ask.aiRetry': 'Yritä uudelleen',
+  'ask.aiFailed': 'En saanut tästä lomaketta. Voit vastata muutamaan kysymykseen.',
+  'ask.aiQuoteOnly':
+    'Tällaisen lomakkeen sanat ihmisen on kirjoitettava, joten en luonnostele sitä. Käytä mallia tai kysymyksiä.',
   'conversation.doors.title': 'Miten haluat aloittaa?',
   'conversation.doors.questions': 'Aloita kysymyksistä',
   'conversation.doors.questionsDetail':

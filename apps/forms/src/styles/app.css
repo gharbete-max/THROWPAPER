@@ -2042,3 +2042,16 @@ a.room__centre:focus-visible {
 .ask__loppa p {
   margin: 0;
 }
+
+.ask__ai {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  margin-block-start: var(--tp-spacing-unit);
+  cursor: pointer;
+}
+
+.ask__draft {
+  margin: 0;
+  padding-inline-start: calc(var(--tp-spacing-unit) * 3);
+}

@@ -1207,6 +1207,16 @@ export const isIS: Record<MessageKey, string> = {
   'ask.questions': 'Spyrðu mig spurninga',
   'ask.route': 'Þetta á heima í {name}.',
   'ask.open': 'Opna {name}',
+  'ask.ai': 'Láta gervigreindina semja drög',
+  'ask.aiThinking': 'Býr til drög á þessari tölvu …',
+  'ask.aiCancel': 'Stöðva',
+  'ask.aiIntro': 'Hér eru drög með {count} spurningum. Athugaðu þau áður en þú deilir.',
+  'ask.aiUse': 'Nota þetta eyðublað',
+  'ask.aiRetry': 'Reyna aftur',
+  'ask.aiFailed':
+    'Ég gat ekki búið til eyðublað úr þessu. Þú getur svarað nokkrum spurningum í staðinn.',
+  'ask.aiQuoteOnly':
+    'Orðalag slíks eyðublaðs verður manneskja að skrifa, svo ég geri ekki drög. Notaðu sniðmát eða spurningarnar.',
   'conversation.doors.title': 'Hvernig viltu byrja?',
   'conversation.doors.questions': 'Byrja á spurningum',
   'conversation.doors.questionsDetail': 'Svaraðu nokkrum spurningum og sjáðu eyðublaðið mótast.',

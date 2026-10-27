@@ -1232,6 +1232,16 @@ export const frFR: Record<MessageKey, string> = {
   'ask.questions': 'Posez-moi des questions',
   'ask.route': 'Cela se trouve dans {name}.',
   'ask.open': 'Ouvrir {name}',
+  'ask.ai': "Laisser l'IA proposer un brouillon",
+  'ask.aiThinking': "Rédaction d'un brouillon sur cet ordinateur…",
+  'ask.aiCancel': 'Arrêter',
+  'ask.aiIntro': 'Voici un brouillon de {count} questions. Relisez-le avant de le partager.',
+  'ask.aiUse': 'Utiliser ce formulaire',
+  'ask.aiRetry': 'Réessayer',
+  'ask.aiFailed':
+    "Je n'ai pas pu en faire un formulaire. Vous pouvez répondre à quelques questions à la place.",
+  'ask.aiQuoteOnly':
+    "Ce type de formulaire contient des termes qu'une personne doit rédiger ; je ne le rédige donc pas. Utilisez un modèle ou les questions.",
   'conversation.doors.title': 'Comment voulez-vous commencer ?',
   'conversation.doors.questions': 'Commencer par des questions',
   'conversation.doors.questionsDetail':

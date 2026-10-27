@@ -1,3 +1,4 @@
+import type { DraftForm } from '@tp/shared/ai';
 import type { FormTemplate } from '@tp/shared/forms';
 import { Icon } from '../../../../components/Icon.js';
 import { useT } from '../../../../lib/i18n.js';
@@ -14,6 +15,8 @@ export function Doors({
   nameIn,
   onTemplate,
   onRoute,
+  onDraft,
+  locale,
   onQuestions,
   onPaper,
   onMyself,
@@ -25,6 +28,8 @@ export function Doors({
   nameIn: (template: FormTemplate) => string;
   onTemplate: (id: string) => void;
   onRoute: (path: string) => void;
+  onDraft: (draft: DraftForm) => void;
+  locale: string;
   onQuestions: () => void;
   onPaper: () => void;
   onMyself: () => void;
@@ -43,6 +48,8 @@ export function Doors({
         onTemplate={onTemplate}
         onRoute={onRoute}
         onQuestions={onQuestions}
+        locale={locale}
+        onDraft={onDraft}
       />
       <div className="doors__cards">
         <button

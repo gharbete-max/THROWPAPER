@@ -1206,6 +1206,15 @@ export const jaJP: Record<MessageKey, string> = {
   'ask.questions': '質問してもらう',
   'ask.route': 'これは{name}で扱います。',
   'ask.open': '{name}を開く',
+  'ask.ai': 'AIに下書きを任せる',
+  'ask.aiThinking': 'このパソコンで下書きを作成中…',
+  'ask.aiCancel': '停止',
+  'ask.aiIntro': '{count}個の質問の下書きです。共有する前に確認してください。',
+  'ask.aiUse': 'このフォームを使う',
+  'ask.aiRetry': 'もう一度試す',
+  'ask.aiFailed': 'これではフォームを作れませんでした。代わりにいくつかの質問に答えてください。',
+  'ask.aiQuoteOnly':
+    'この種のフォームの文言は人が書く必要があるため、下書きは作りません。テンプレートか質問をご利用ください。',
   'conversation.doors.title': 'どのように始めますか？',
   'conversation.doors.questions': '質問から始める',
   'conversation.doors.questionsDetail':

@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { pickText } from '@tp/i18n';
-import type { FormResponse, FormScope, FormTemplate } from '@tp/shared/forms';
+import {
+  emptyDefinition,
+  type FormResponse,
+  type FormScope,
+  type FormTemplate,
+} from '@tp/shared/forms';
+import type { DraftForm } from '@tp/shared/ai';
 import { ApiError, client } from '../../lib/api.js';
 import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
@@ -142,6 +148,25 @@ export function Forms() {
     }
   }
 
+  /** The AI's draft, after the person pressed "Use this form": saved as a draft and opened to edit. */
+  async function openDraft(draft: DraftForm) {
+    setError(null);
+    setOpening(true);
+    try {
+      const created = await client.createForm({
+        slug: `form-${Date.now().toString(36)}`,
+        title: { [locales.default]: draft.title || t('forms.untitled') },
+      });
+      await client.saveDraft(created.id, { ...emptyDefinition, fields: draft.fields });
+      setCreating(null);
+      navigate(`/forms/${created.id}`);
+    } catch (cause) {
+      setError(cause instanceof ApiError ? cause.message : String(cause));
+    } finally {
+      setOpening(false);
+    }
+  }
+
   async function create(event: FormEvent) {
     event.preventDefault();
     setError(null);
@@ -241,6 +266,8 @@ export function Forms() {
           nameIn={(template) => pickText(interfaceLocales, template.name, locale).value}
           onTemplate={(id) => void openTemplate(id)}
           onRoute={(path) => navigate(path)}
+          onDraft={(draft) => void openDraft(draft)}
+          locale={locales.default}
           onQuestions={() => void openBlank('questions')}
           onPaper={() => void openBlank('paper')}
           focus={door === 'paper' ? 'paper' : door === 'questions' ? 'questions' : undefined}

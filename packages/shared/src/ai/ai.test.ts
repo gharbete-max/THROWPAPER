@@ -254,6 +254,7 @@ describe('tasks', () => {
     }
     expect(Object.keys(TASK_CAPABILITY).sort()).toEqual([
       'compose-email',
+      'draft-form',
       'draft-reply',
       'proofread',
       'read-page',
