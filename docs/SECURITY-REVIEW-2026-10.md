@@ -171,3 +171,22 @@ hash and the system opening the file there is a window in which another program 
 user could swap it; that program could replace the application too. Not verified: macOS (the program
 fetched there has never been run by this project), and a packaged build's launch of the new channels
 (the Desktop workflow on both systems).
+
+## Addendum 2026-10-27: malware and spyware sweep
+
+- **Skills** (`.claude/skills`, 114 files, hash-pinned by `scripts/skills.test.ts`, passing): no network
+  code except the impeccable launcher, which can fetch its engine from `github.com/pbakaus/impeccable`
+  (checksum sidecar from the same release; `~/.impeccable/bin` is empty, so nothing was fetched) and
+  `live-browser.js`, which talks only to `localhost`. The ui-ux-pro-max Python has no network or
+  process calls. The only other script is the SessionStart hook, which runs only when
+  `CLAUDE_CODE_REMOTE=true`.
+- **Executables**: none tracked in git. Local build output (`apps/desktop/release`) and the 0.2.1
+  Windows installer from the release carry only Loppa, Electron and the pinned llama.cpp files
+  (hashes in `llama-server.json`). The 0.2.1 installer's SHA-256 equals `SHA256SUMS.txt`.
+  Installers are not code-signed (SmartScreen will warn).
+- **Windows Defender**: real-time protection on; a custom scan of the repo sources, the skills, Loppa's
+  user data and the downloaded installer found nothing.
+- **Dependencies**: `pnpm audit --prod` is clean. Electron 44.8.0 to 44.9.1 (certificate advisory);
+  `brace-expansion` and `serialize-javascript` overridden. Left, dev tooling only and not shipped:
+  `esbuild` 0.18 inside drizzle-kit (dev server) and `http-cache-semantics` inside electron-builder's
+  downloader (no patched release exists).
