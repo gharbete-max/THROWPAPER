@@ -1217,12 +1217,8 @@ export const isIS: Record<MessageKey, string> = {
     'Ég gat ekki búið til eyðublað úr þessu. Þú getur svarað nokkrum spurningum í staðinn.',
   'ask.aiQuoteOnly':
     'Orðalag slíks eyðublaðs verður manneskja að skrifa, svo ég geri ekki drög. Notaðu sniðmát eða spurningarnar.',
-  'conversation.doors.title': 'Hvernig viltu byrja?',
   'conversation.doors.questions': 'Byrja á spurningum',
-  'conversation.doors.questionsDetail': 'Svaraðu nokkrum spurningum og sjáðu eyðublaðið mótast.',
   'conversation.doors.paper': 'Byrja á pappír',
-  'conversation.doors.paperDetail':
-    'PDF-skjal, ljósmynduð síða eða skönnun með síma verður að eyðublaðinu.',
   'conversation.back': 'Til baka',
   'conversation.done': 'Lokið',
   'conversation.wayOut': 'Sýna alla valkosti',

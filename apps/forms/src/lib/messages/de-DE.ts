@@ -1251,13 +1251,8 @@ export const deDE: Record<MessageKey, string> = {
     'Daraus konnte ich kein Formular machen. Sie können stattdessen ein paar Fragen beantworten.',
   'ask.aiQuoteOnly':
     'Bei dieser Art von Formular muss ein Mensch den Wortlaut schreiben, deshalb entwerfe ich es nicht. Nehmen Sie eine Vorlage oder die Fragen.',
-  'conversation.doors.title': 'Wie möchten Sie beginnen?',
   'conversation.doors.questions': 'Mit Fragen beginnen',
-  'conversation.doors.questionsDetail':
-    'Beantworten Sie ein paar Fragen und sehen Sie zu, wie das Formular entsteht.',
   'conversation.doors.paper': 'Mit Papier beginnen',
-  'conversation.doors.paperDetail':
-    'Ein PDF, eine fotografierte Seite oder ein Scan mit dem Telefon wird zum Formular.',
   'conversation.back': 'Zurück',
   'conversation.done': 'Fertig',
   'conversation.wayOut': 'Alle Optionen anzeigen',

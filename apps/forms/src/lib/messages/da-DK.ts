@@ -1213,12 +1213,8 @@ export const daDK: Record<MessageKey, string> = {
     'Jeg kunne ikke lave et skema ud af det. Du kan svare på nogle spørgsmål i stedet.',
   'ask.aiQuoteOnly':
     'Den slags skema har ord, et menneske skal skrive, så jeg laver ikke et udkast. Brug en skabelon eller spørgsmålene.',
-  'conversation.doors.title': 'Hvordan vil du starte?',
   'conversation.doors.questions': 'Start med spørgsmål',
-  'conversation.doors.questionsDetail': 'Svar på nogle få spørgsmål, og se formularen tage form.',
   'conversation.doors.paper': 'Start fra papir',
-  'conversation.doors.paperDetail':
-    'En PDF, en fotograferet side eller en scanning med telefonen bliver til formularen.',
   'conversation.back': 'Tilbage',
   'conversation.done': 'Færdig',
   'conversation.wayOut': 'Vis alle muligheder',

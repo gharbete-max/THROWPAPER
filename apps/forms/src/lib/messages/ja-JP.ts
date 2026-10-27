@@ -1215,13 +1215,8 @@ export const jaJP: Record<MessageKey, string> = {
   'ask.aiFailed': 'これではフォームを作れませんでした。代わりにいくつかの質問に答えてください。',
   'ask.aiQuoteOnly':
     'この種のフォームの文言は人が書く必要があるため、下書きは作りません。テンプレートか質問をご利用ください。',
-  'conversation.doors.title': 'どのように始めますか？',
   'conversation.doors.questions': '質問から始める',
-  'conversation.doors.questionsDetail':
-    'いくつかの質問に答えると、フォームができあがっていきます。',
   'conversation.doors.paper': '紙から始める',
-  'conversation.doors.paperDetail':
-    'PDF、撮影したページ、またはスマートフォンでのスキャンがフォームになります。',
   'conversation.back': '戻る',
   'conversation.done': '完了',
   'conversation.wayOut': 'すべての選択肢を表示',

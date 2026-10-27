@@ -1214,12 +1214,8 @@ export const svSE: Record<MessageKey, string> = {
     'Jag kunde inte göra ett formulär av det. Du kan svara på några frågor i stället.',
   'ask.aiQuoteOnly':
     'Den sortens formulär har ord som en människa måste skriva, så jag skriver inget utkast. Använd en mall eller frågorna.',
-  'conversation.doors.title': 'Hur vill du börja?',
   'conversation.doors.questions': 'Börja med frågor',
-  'conversation.doors.questionsDetail': 'Svara på några frågor och se formuläret växa fram.',
   'conversation.doors.paper': 'Börja från papper',
-  'conversation.doors.paperDetail':
-    'En PDF, en fotograferad sida eller en skanning med mobilen blir formuläret.',
   'conversation.back': 'Tillbaka',
   'conversation.done': 'Klart',
   'conversation.wayOut': 'Visa alla alternativ',

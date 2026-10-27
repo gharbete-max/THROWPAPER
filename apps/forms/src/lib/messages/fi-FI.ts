@@ -1223,13 +1223,8 @@ export const fiFI: Record<MessageKey, string> = {
   'ask.aiFailed': 'En saanut tästä lomaketta. Voit vastata muutamaan kysymykseen.',
   'ask.aiQuoteOnly':
     'Tällaisen lomakkeen sanat ihmisen on kirjoitettava, joten en luonnostele sitä. Käytä mallia tai kysymyksiä.',
-  'conversation.doors.title': 'Miten haluat aloittaa?',
   'conversation.doors.questions': 'Aloita kysymyksistä',
-  'conversation.doors.questionsDetail':
-    'Vastaa muutamaan kysymykseen ja katso, miten lomake syntyy.',
   'conversation.doors.paper': 'Aloita paperista',
-  'conversation.doors.paperDetail':
-    'PDF, valokuvattu sivu tai puhelimella skannattu sivu muuttuu lomakkeeksi.',
   'conversation.back': 'Takaisin',
   'conversation.done': 'Valmis',
   'conversation.wayOut': 'Näytä kaikki vaihtoehdot',

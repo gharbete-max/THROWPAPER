@@ -1231,11 +1231,8 @@ export const enGB = {
   'ask.aiFailed': "I couldn't make a form from that. You can answer a few questions instead.",
   'ask.aiQuoteOnly':
     "That kind of form has wording a person must write, so I won't draft it. Use a template or the questions.",
-  'conversation.doors.title': 'How do you want to start?',
   'conversation.doors.questions': 'Start from questions',
-  'conversation.doors.questionsDetail': 'Answer a few questions and watch the form take shape.',
   'conversation.doors.paper': 'Start from paper',
-  'conversation.doors.paperDetail': 'A PDF, a photographed page or a phone scan becomes the form.',
   'conversation.back': 'Back',
   'conversation.done': 'Done',
   'conversation.wayOut': 'Show all options',

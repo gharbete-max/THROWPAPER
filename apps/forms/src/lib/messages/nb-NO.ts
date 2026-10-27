@@ -1212,12 +1212,8 @@ export const nbNO: Record<MessageKey, string> = {
     'Jeg klarte ikke å lage et skjema av det. Du kan svare på noen spørsmål i stedet.',
   'ask.aiQuoteOnly':
     'Den typen skjema har ord et menneske må skrive, så jeg lager ikke utkast. Bruk en mal eller spørsmålene.',
-  'conversation.doors.title': 'Hvordan vil du begynne?',
   'conversation.doors.questions': 'Start med spørsmål',
-  'conversation.doors.questionsDetail': 'Svar på noen få spørsmål, og se skjemaet ta form.',
   'conversation.doors.paper': 'Start fra papir',
-  'conversation.doors.paperDetail':
-    'En PDF, en fotografert side eller en skanning med telefonen blir til skjemaet.',
   'conversation.back': 'Tilbake',
   'conversation.done': 'Ferdig',
   'conversation.wayOut': 'Vis alle alternativer',

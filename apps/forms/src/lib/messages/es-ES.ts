@@ -1231,13 +1231,8 @@ export const esES: Record<MessageKey, string> = {
     'No pude hacer un formulario con eso. Puedes responder unas preguntas en su lugar.',
   'ask.aiQuoteOnly':
     'Ese tipo de formulario tiene un texto que debe escribir una persona, así que no lo redacto. Usa una plantilla o las preguntas.',
-  'conversation.doors.title': '¿Cómo quieres empezar?',
   'conversation.doors.questions': 'Empezar con preguntas',
-  'conversation.doors.questionsDetail':
-    'Responde a unas pocas preguntas y mira cómo toma forma el formulario.',
   'conversation.doors.paper': 'Empezar desde papel',
-  'conversation.doors.paperDetail':
-    'Un PDF, una página fotografiada o un escaneo con el móvil se convierte en el formulario.',
   'conversation.back': 'Atrás',
   'conversation.done': 'Listo',
   'conversation.wayOut': 'Mostrar todas las opciones',

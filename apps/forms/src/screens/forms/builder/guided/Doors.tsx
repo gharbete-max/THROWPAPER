@@ -51,39 +51,33 @@ export function Doors({
         locale={locale}
         onDraft={onDraft}
       />
-      <div className="doors__cards">
+      {error && <p className="status-down small">{error}</p>}
+      <div className="doors__links">
         <button
           type="button"
-          className="conversation__card doors__door"
+          className="button button--bare small doors__door"
           disabled={busy}
           autoFocus={focus === 'questions'}
           onClick={onQuestions}
         >
-          <Icon name="single_select" />
-          <span className="conversation__card-text">
-            <strong>{t('conversation.doors.questions')}</strong>
-            <span className="conversation__detail">{t('conversation.doors.questionsDetail')}</span>
-          </span>
+          <Icon name="single_select" className="icon--lead" />
+          {t('conversation.doors.questions')}
         </button>
         <button
           type="button"
-          className="conversation__card doors__door"
+          className="button button--bare small doors__door"
           disabled={busy}
           autoFocus={focus === 'paper'}
           onClick={onPaper}
         >
-          <Icon name="file" />
-          <span className="conversation__card-text">
-            <strong>{t('conversation.doors.paper')}</strong>
-            <span className="conversation__detail">{t('conversation.doors.paperDetail')}</span>
-          </span>
+          <Icon name="file" className="icon--lead" />
+          {t('conversation.doors.paper')}
         </button>
-      </div>
-      {error && <p className="status-down small">{error}</p>}
-      <div className="doors__myself">
-        <button type="button" className="button button--bare" onClick={onMyself}>
-          {t('wizard.advanced')}
-        </button>
+        <span className="doors__myself">
+          <button type="button" className="button button--bare small" onClick={onMyself}>
+            {t('wizard.advanced')}
+          </button>
+        </span>
       </div>
     </div>
   );

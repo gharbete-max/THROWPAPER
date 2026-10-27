@@ -1242,13 +1242,8 @@ export const frFR: Record<MessageKey, string> = {
     "Je n'ai pas pu en faire un formulaire. Vous pouvez répondre à quelques questions à la place.",
   'ask.aiQuoteOnly':
     "Ce type de formulaire contient des termes qu'une personne doit rédiger ; je ne le rédige donc pas. Utilisez un modèle ou les questions.",
-  'conversation.doors.title': 'Comment voulez-vous commencer ?',
   'conversation.doors.questions': 'Commencer par des questions',
-  'conversation.doors.questionsDetail':
-    'Répondez à quelques questions et regardez le formulaire prendre forme.',
   'conversation.doors.paper': 'Commencer à partir du papier',
-  'conversation.doors.paperDetail':
-    'Un PDF, une page photographiée ou un scan au téléphone devient le formulaire.',
   'conversation.back': 'Retour',
   'conversation.done': 'Terminé',
   'conversation.wayOut': 'Afficher toutes les options',

@@ -1240,13 +1240,8 @@ export const ruRU: Record<MessageKey, string> = {
   'ask.aiFailed': 'Не удалось сделать из этого форму. Можно ответить на несколько вопросов.',
   'ask.aiQuoteOnly':
     'Формулировки такой формы должен писать человек, поэтому я не составляю черновик. Возьмите шаблон или ответьте на вопросы.',
-  'conversation.doors.title': 'Как вы хотите начать?',
   'conversation.doors.questions': 'Начать с вопросов',
-  'conversation.doors.questionsDetail':
-    'Ответьте на несколько вопросов и смотрите, как складывается форма.',
   'conversation.doors.paper': 'Начать с бумаги',
-  'conversation.doors.paperDetail':
-    'PDF, фотография страницы или скан с телефона превращается в форму.',
   'conversation.back': 'Назад',
   'conversation.done': 'Готово',
   'conversation.wayOut': 'Показать все варианты',
