@@ -106,7 +106,7 @@ before DB tests/e2e, `rmdir` after. Run agents one at a time unless work is trul
 Merge `origin/main` in (never rebase or force-push a PR branch that Auto-fix watches).
 
 ## Current state (2026-10-26)
-**Everything planned is merged and released.** Desktop **0.2.2** is the Latest release (`desktop-v0.2.2`: Windows
+**Everything planned is merged and released.** Desktop **0.3.0** is the Latest release (`desktop-v0.3.0`, 2026-10-27: no sign-in, no demo data, People, pen mode; built and published by the Desktop workflow from `main`; before it `desktop-v0.2.2`: Windows
 installer and portable, two Mac disk images, `SHA256SUMS.txt`; checksums verified); the AI pack is its own
 non-latest release (`ai-pack-qwen2.5-vl-7b-instruct-q4_k_m`, 6.89 GB). Never mark the pack Latest: the README
 links `releases/latest/download/<installer>`.
