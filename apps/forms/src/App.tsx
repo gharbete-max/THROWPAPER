@@ -7,7 +7,16 @@ import {
   type CSSProperties,
   type ReactNode,
 } from 'react';
-import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router';
+import {
+  BrowserRouter,
+  Link,
+  NavLink,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router';
 import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
 import { BrandProvider, useBrand } from './lib/brand.js';
@@ -19,6 +28,7 @@ import { ThemeToggle } from './components/ThemeToggle.js';
 import { CommandPalette } from './components/CommandPalette.js';
 import { ToastProvider } from './lib/toast.js';
 import { Intro } from './components/Intro.js';
+import { startTour } from './components/Coach.js';
 import { useT } from './lib/i18n.js';
 import { OUTGOING_CHANGED, useEdition } from './lib/edition.js';
 import { client } from './lib/api.js';
@@ -247,6 +257,8 @@ function EarlierFeatures({
   current: boolean;
   children: ReactNode;
 }) {
+  const t = useT();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(() => {
     try {
       return localStorage.getItem(EARLIER_KEY) === '1';
@@ -260,6 +272,7 @@ function EarlierFeatures({
   return (
     <details className="sidebar__earlier" open={open}>
       <summary
+        data-tour="more"
         className="button button--quiet small nav-link"
         onClick={(event) => {
           event.preventDefault();
@@ -274,7 +287,20 @@ function EarlierFeatures({
         <Icon name="archive" className="icon--lead" />
         <span className="nav-link__label">{label}</span>
       </summary>
-      <div className="sidebar__sections">{children}</div>
+      <div className="sidebar__sections">
+        {children}
+        <button
+          type="button"
+          className="button button--quiet small nav-link"
+          onClick={() => {
+            void navigate('/room');
+            startTour();
+          }}
+        >
+          <Icon name="preview" className="icon--lead" />
+          <span className="nav-link__label">{t('tour.replay')}</span>
+        </button>
+      </div>
     </details>
   );
 }
