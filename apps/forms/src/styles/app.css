@@ -1997,3 +1997,21 @@
   outline: 3px solid var(--tp-colour-text);
   outline-offset: 3px;
 }
+
+/* Signing: requests as status cards, and the stepper's hidden steps (E6). */
+.signing__cards {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.signing__waiting {
+  margin: 0;
+  font-size: var(--tp-text-lg);
+}
+
+[hidden] {
+  display: none !important;
+}

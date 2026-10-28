@@ -52,8 +52,10 @@ async function sendFromScan(page: Page, signer: string, email: string) {
   await expect(page.getByTestId('signing-handoff')).toHaveText('PDF ready: loppa.pdf');
   const documentName = `Handoff ${Date.now()}`;
   await page.getByLabel('Document name').fill(documentName);
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByLabel('Name', { exact: true }).fill(signer);
   await page.getByLabel('Email (optional)').fill(email);
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByRole('button', { name: 'Send for signing' }).click();
 
   const row = page.getByTestId('signing-row').filter({ hasText: documentName });

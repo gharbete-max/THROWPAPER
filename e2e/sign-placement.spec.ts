@@ -135,6 +135,9 @@ test('place signature, initials and date on two pages by keyboard, seal, and fin
   await page
     .getByLabel('PDF file')
     .setInputFiles({ name: 'Lease.pdf', mimeType: 'application/pdf', buffer: await twoPages() });
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
+  await page.getByLabel('Name', { exact: true }).fill('Jon Smith');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByRole('button', { name: 'Place signature, initials and date' }).click();
 
   await makeMark(page, 'Signature', 'Jon Smith');
@@ -213,8 +216,11 @@ test('place signature, initials and date on two pages by keyboard, seal, and fin
     page.getByRole('button', { name: 'Place signature, initials and date' }),
   ).toBeVisible();
 
+  await page.getByRole('button', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'Back' }).click();
   await page.getByLabel('Document name').fill('Marked lease');
-  await page.getByLabel('Name', { exact: true }).fill('Jon Smith');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByRole('button', { name: 'Send for signing' }).click();
   const row = page.getByTestId('signing-row').filter({ hasText: 'Marked lease' }).first();
   await expect(row.getByTestId('signing-status')).toHaveText('Waiting for signatures');
@@ -282,6 +288,9 @@ test('a saved signature is forgotten only after a confirmation', async ({ page }
   await page
     .getByLabel('PDF file')
     .setInputFiles({ name: 'Lease.pdf', mimeType: 'application/pdf', buffer: await twoPages() });
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
+  await page.getByLabel('Name', { exact: true }).fill('Jon Smith');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByRole('button', { name: 'Place signature, initials and date' }).click();
   await makeMark(page, 'Signature', 'Jon Smith');
   expect(await page.evaluate((key) => localStorage.getItem(key), STORE_NAME)).not.toBeNull();

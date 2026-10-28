@@ -160,25 +160,11 @@ export function Signing() {
           />
         )
       ) : (
-        <div className="table-scroll">
-          <table className="grid">
-            <thead>
-              <tr>
-                <th>{t('signing.document')}</th>
-                <th>{t('signing.parties')}</th>
-                <th>{t('signing.status')}</th>
-                <th>
-                  <span className="visually-hidden">{t('table.actions')}</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.requests.map((request) => (
-                <Row key={request.id} request={request} onChange={replace} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ul className="signing__cards">
+          {data.requests.map((request) => (
+            <Row key={request.id} request={request} onChange={replace} />
+          ))}
+        </ul>
       )}
     </section>
   );
@@ -201,6 +187,9 @@ function Row({
   const known = ['draft', 'sent', 'completed', 'declined', 'expired', 'cancelled'];
   const copyQueued = request.parties.some((party) => party.signedCopyQueuedAt);
   const statusKey = known.includes(request.status) ? request.status : 'sent';
+  const waiting = request.parties
+    .filter((party) => party.status === 'invited' || party.status === 'viewed')
+    .map((party) => party.name);
 
   async function refresh() {
     setBusy(true);
@@ -289,14 +278,20 @@ function Row({
   }
 
   return (
-    <tr data-testid="signing-row">
-      <td>
-        <span className="row">
+    <li className="card stack signing__card" data-testid="signing-row">
+      <div className="row row--between">
+        <strong className="row">
           {request.documentName}
           {request.environment === 'test' && <span className="badge">{t('signing.testMode')}</span>}
+        </strong>
+        <span className={`badge badge--${statusKey}`} data-testid="signing-status">
+          {t(`signing.status.${statusKey}`)}
         </span>
-      </td>
-      <td>
+      </div>
+      {request.status === 'sent' && waiting.length > 0 && (
+        <p className="signing__waiting">{t('signing.waitingFor', { names: waiting.join(', ') })}</p>
+      )}
+      <div>
         <ul className="stack stack--tight signing__parties">
           {request.parties.map((party) => (
             <li key={party.id} className="row">
@@ -338,13 +333,8 @@ function Row({
             </li>
           ))}
         </ul>
-      </td>
-      <td>
-        <span className={`badge badge--${statusKey}`} data-testid="signing-status">
-          {t(`signing.status.${statusKey}`)}
-        </span>
-      </td>
-      <td>
+      </div>
+      <div>
         <span className="row">
           <button
             type="button"
@@ -388,8 +378,8 @@ function Row({
             </>
           )}
         </span>
-      </td>
-    </tr>
+      </div>
+    </li>
   );
 }
 
@@ -431,6 +421,8 @@ function Compose({
   const [scanned, setScanned] = useState<{ file: File; corners: Corners }[]>([]);
   const [documentName, setDocumentName] = useState(handoff ? documentNameOf(handoff) : '');
   const [placing, setPlacing] = useState(false);
+  /** 1 the paper, 2 who signs, 3 where and send (docs/plan/EASY.md, E6). */
+  const [step, setStep] = useState<1 | 2 | 3>(1);
 
   /** Pages from a camera, a phone or a scanner, each starting on the page's own corners if found. */
   async function addPages(pages: File[]) {
@@ -474,6 +466,9 @@ function Compose({
     missing.length === 0 &&
     (!real || confirmedReal) &&
     parties.every((party) => party.name.trim() !== '');
+
+  const hasPaper = paper !== null || (hasDocument && documentName.trim() !== '');
+  const hasPeople = parties.every((party) => party.name.trim() !== '') && missing.length === 0;
 
   function update(index: number, patch: Partial<Party>) {
     setParties((current) => current.map((p, i) => (i === index ? { ...p, ...patch } : p)));
@@ -537,143 +532,151 @@ function Compose({
     }
   }
 
+  const placeButton = (
+    <>
+      {via === 'file' && file && (file.type === 'application/pdf' || /\.pdf$/i.test(file.name)) ? (
+        placing ? (
+          <Suspense fallback={null}>
+            <PlaceMarks
+              file={file}
+              locale={locale}
+              onCancel={() => setPlacing(false)}
+              onDone={(marked) => {
+                setFile(marked);
+                setPlacing(false);
+              }}
+            />
+          </Suspense>
+        ) : (
+          <div>
+            <button
+              type="button"
+              className="button button--quiet small"
+              onClick={() => setPlacing(true)}
+            >
+              <Icon name="signature" />
+              {t('signPlace.open')}
+            </button>
+          </div>
+        )
+      ) : null}
+    </>
+  );
+
   return (
     <form className="card stack" onSubmit={submit} aria-label={t('signing.new')}>
       <Banner name="desk" />
       <h2>{t('signing.new')}</h2>
-      {paper ? (
-        <p>
-          <strong>{t('signing.document')}:</strong>{' '}
-          {t('signing.fromSubmission', { reference: paper.reference })}
-        </p>
-      ) : (
-        <>
-          <div className="row" role="radiogroup" aria-label={t('signing.document')}>
-            {(['file', 'camera'] as const).map((choice) => (
-              <button
-                key={choice}
-                type="button"
-                role="radio"
-                aria-checked={via === choice}
-                className={via === choice ? 'button' : 'button button--quiet'}
-                onClick={() => {
-                  setVia(choice);
-                  if (choice === 'camera' && scanned.length === 0) setScanning(true);
-                }}
-              >
-                <Icon name={choice === 'file' ? 'file' : 'image'} />
-                {t(`signing.source.${choice}`)}
-              </button>
-            ))}
-          </div>
-          {via === 'file' ? (
-            <label className="stack stack--tight">
-              <span>{t('signing.file')}</span>
-              <input
-                type="file"
-                accept="application/pdf,.pdf,image/jpeg,image/png"
-                multiple
-                onChange={(event) => {
-                  const chosen = Array.from(event.target.files ?? []);
-                  const images = chosen.filter(
-                    (f) => f.type === 'image/jpeg' || f.type === 'image/png',
-                  );
-                  const first = chosen[0];
-                  if (first && !documentName) {
-                    setDocumentName(first.name.replace(/\.(pdf|jpe?g|png)$/i, ''));
-                  }
-                  // Pages from a flatbed scanner's own software: the same path as a camera's.
-                  if (images.length > 0) {
-                    setFile(null);
-                    setVia('camera');
-                    void addPages(images);
-                    return;
-                  }
-                  setFile(first ?? null);
-                }}
-              />
-              {file && handoff && file === handoff ? (
-                <span className="small" data-testid="signing-handoff">
-                  {t('signing.handoff', { name: handoff.name })}
-                </span>
-              ) : null}
-              <span className="small muted">{t('signing.fileHint')}</span>
-            </label>
-          ) : scanning ? (
-            <CameraScan
-              onCancel={() => setScanning(false)}
-              onDone={(pages) => {
-                setScanning(false);
-                void addPages(pages);
-              }}
-            />
-          ) : (
-            <div className="stack">
-              {scanned.map((page, index) => (
-                <CropPhoto
-                  key={index}
-                  file={page.file}
-                  corners={page.corners}
-                  onChange={(corners) =>
-                    setScanned((current) =>
-                      current.map((p, i) => (i === index ? { ...p, corners } : p)),
-                    )
-                  }
-                />
-              ))}
-              <div>
+      <p className="small muted" aria-live="polite">
+        {t('signing.stepOf', { n: step, total: 3 })} · {t(`signing.step${step}`)}
+      </p>
+      <div className="stack" hidden={step !== 1}>
+        {paper ? (
+          <p>
+            <strong>{t('signing.document')}:</strong>{' '}
+            {t('signing.fromSubmission', { reference: paper.reference })}
+          </p>
+        ) : (
+          <>
+            <div className="row" role="radiogroup" aria-label={t('signing.document')}>
+              {(['file', 'camera'] as const).map((choice) => (
                 <button
+                  key={choice}
                   type="button"
-                  className="button button--quiet small"
-                  onClick={() => setScanning(true)}
+                  role="radio"
+                  aria-checked={via === choice}
+                  className={via === choice ? 'button' : 'button button--quiet'}
+                  onClick={() => {
+                    setVia(choice);
+                    if (choice === 'camera' && scanned.length === 0) setScanning(true);
+                  }}
                 >
-                  <Icon name="image" />
-                  {t('camera.scanDocument')}
+                  <Icon name={choice === 'file' ? 'file' : 'image'} />
+                  {t(`signing.source.${choice}`)}
                 </button>
-              </div>
+              ))}
             </div>
-          )}
-          {via === 'file' &&
-          file &&
-          (file.type === 'application/pdf' || /\.pdf$/i.test(file.name)) ? (
-            placing ? (
-              <Suspense fallback={null}>
-                <PlaceMarks
-                  file={file}
-                  locale={locale}
-                  onCancel={() => setPlacing(false)}
-                  onDone={(marked) => {
-                    setFile(marked);
-                    setPlacing(false);
+            {via === 'file' ? (
+              <label className="stack stack--tight">
+                <span>{t('signing.file')}</span>
+                <input
+                  type="file"
+                  accept="application/pdf,.pdf,image/jpeg,image/png"
+                  multiple
+                  onChange={(event) => {
+                    const chosen = Array.from(event.target.files ?? []);
+                    const images = chosen.filter(
+                      (f) => f.type === 'image/jpeg' || f.type === 'image/png',
+                    );
+                    const first = chosen[0];
+                    if (first && !documentName) {
+                      setDocumentName(first.name.replace(/\.(pdf|jpe?g|png)$/i, ''));
+                    }
+                    // Pages from a flatbed scanner's own software: the same path as a camera's.
+                    if (images.length > 0) {
+                      setFile(null);
+                      setVia('camera');
+                      void addPages(images);
+                      return;
+                    }
+                    setFile(first ?? null);
                   }}
                 />
-              </Suspense>
+                {file && handoff && file === handoff ? (
+                  <span className="small" data-testid="signing-handoff">
+                    {t('signing.handoff', { name: handoff.name })}
+                  </span>
+                ) : null}
+                <span className="small muted">{t('signing.fileHint')}</span>
+              </label>
+            ) : scanning ? (
+              <CameraScan
+                onCancel={() => setScanning(false)}
+                onDone={(pages) => {
+                  setScanning(false);
+                  void addPages(pages);
+                }}
+              />
             ) : (
-              <div>
-                <button
-                  type="button"
-                  className="button button--quiet small"
-                  onClick={() => setPlacing(true)}
-                >
-                  <Icon name="signature" />
-                  {t('signPlace.open')}
-                </button>
+              <div className="stack">
+                {scanned.map((page, index) => (
+                  <CropPhoto
+                    key={index}
+                    file={page.file}
+                    corners={page.corners}
+                    onChange={(corners) =>
+                      setScanned((current) =>
+                        current.map((p, i) => (i === index ? { ...p, corners } : p)),
+                      )
+                    }
+                  />
+                ))}
+                <div>
+                  <button
+                    type="button"
+                    className="button button--quiet small"
+                    onClick={() => setScanning(true)}
+                  >
+                    <Icon name="image" />
+                    {t('camera.scanDocument')}
+                  </button>
+                </div>
               </div>
-            )
-          ) : null}
-          <label className="stack stack--tight">
-            <span>{t('signing.documentName')}</span>
-            <input
-              className="input"
-              value={documentName}
-              maxLength={200}
-              onChange={(event) => setDocumentName(event.target.value)}
-            />
-          </label>
-        </>
-      )}
+            )}
+            <label className="stack stack--tight">
+              <span>{t('signing.documentName')}</span>
+              <input
+                className="input"
+                value={documentName}
+                maxLength={200}
+                onChange={(event) => setDocumentName(event.target.value)}
+              />
+            </label>
+          </>
+        )}
+      </div>
 
-      <fieldset className="stack stack--tight">
+      <fieldset className="stack stack--tight" hidden={step !== 2}>
         <legend>{t('signing.parties')}</legend>
         {parties.map((party, index) => (
           <div key={index} className="row signing__party">
@@ -695,20 +698,23 @@ function Compose({
                 onChange={(event) => update(index, { email: event.target.value })}
               />
             </label>
-            <label className="stack stack--tight">
-              <span className="small">{t('signing.partyLocale')}</span>
-              <select
-                className="input"
-                value={party.locale}
-                onChange={(event) => update(index, { locale: event.target.value })}
-              >
-                {languages.map((code) => (
-                  <option key={code} value={code}>
-                    {localeLabel(code)}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <details>
+              <summary className="small muted">{t('signing.more')}</summary>
+              <label className="stack stack--tight">
+                <span className="small">{t('signing.partyLocale')}</span>
+                <select
+                  className="input"
+                  value={party.locale}
+                  onChange={(event) => update(index, { locale: event.target.value })}
+                >
+                  {languages.map((code) => (
+                    <option key={code} value={code}>
+                      {localeLabel(code)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </details>
             {parties.length > 1 && (
               <button
                 type="button"
@@ -732,105 +738,132 @@ function Compose({
         </div>
       </fieldset>
 
-      <div className="row">
-        <label className="stack stack--tight">
-          <span>{t('signing.routing')}</span>
-          <select
-            className="input"
-            value={routing}
-            onChange={(event) => setRouting(event.target.value as 'sequential' | 'parallel')}
-          >
-            <option value="sequential">{t('signing.routing.sequential')}</option>
-            <option value="parallel">{t('signing.routing.parallel')}</option>
-          </select>
-        </label>
-        <label className="stack stack--tight">
-          <span>{t('signing.declarationKey')}</span>
-          {declarations.length > 0 ? (
-            <select
-              className="input"
-              value={declarationKey}
-              onChange={(event) => {
-                setDeclarationKey(event.target.value);
-                setEnvironment('test');
-                setConfirmedReal(false);
-              }}
-            >
-              {declarations.map((d) => (
-                <option key={d.key} value={d.key}>
-                  {d.shared ? `${d.key} (${t('signing.declarationTestOnly')})` : d.key}
+      <div className="stack" hidden={step !== 3}>
+        {placeButton}
+        <details className="signing__more">
+          <summary className="button button--quiet">{t('signing.more')}</summary>
+          <div className="row">
+            <label className="stack stack--tight">
+              <span>{t('signing.routing')}</span>
+              <select
+                className="input"
+                value={routing}
+                onChange={(event) => setRouting(event.target.value as 'sequential' | 'parallel')}
+              >
+                <option value="sequential">{t('signing.routing.sequential')}</option>
+                <option value="parallel">{t('signing.routing.parallel')}</option>
+              </select>
+            </label>
+            <label className="stack stack--tight">
+              <span>{t('signing.declarationKey')}</span>
+              {declarations.length > 0 ? (
+                <select
+                  className="input"
+                  value={declarationKey}
+                  onChange={(event) => {
+                    setDeclarationKey(event.target.value);
+                    setEnvironment('test');
+                    setConfirmedReal(false);
+                  }}
+                >
+                  {declarations.map((d) => (
+                    <option key={d.key} value={d.key}>
+                      {d.shared ? `${d.key} (${t('signing.declarationTestOnly')})` : d.key}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  className="input"
+                  value={declarationKey}
+                  maxLength={128}
+                  onChange={(event) => setDeclarationKey(event.target.value)}
+                />
+              )}
+            </label>
+            <label className="stack stack--tight">
+              <span>{t('signing.environment')}</span>
+              <select
+                className="input"
+                value={real ? 'production' : 'test'}
+                onChange={(event) => {
+                  setEnvironment(event.target.value as 'test' | 'production');
+                  setConfirmedReal(false);
+                }}
+              >
+                <option value="test">{t('signing.testMode')}</option>
+                <option value="production" disabled={!canBeReal}>
+                  {t('signing.realMode')}
                 </option>
-              ))}
-            </select>
-          ) : (
-            <input
-              className="input"
-              value={declarationKey}
-              maxLength={128}
-              onChange={(event) => setDeclarationKey(event.target.value)}
-            />
+              </select>
+            </label>
+          </div>
+          <p className="small muted">{t('signing.declarationHint')}</p>
+          {missing.length > 0 && (
+            <p className="error" role="alert">
+              {t('signing.declarationMissingLanguage', {
+                languages: [...new Set(missing)].map((code) => localeLabel(code)).join(', '),
+              })}
+            </p>
           )}
-        </label>
-        <label className="stack stack--tight">
-          <span>{t('signing.environment')}</span>
-          <select
-            className="input"
-            value={real ? 'production' : 'test'}
-            onChange={(event) => {
-              setEnvironment(event.target.value as 'test' | 'production');
-              setConfirmedReal(false);
-            }}
-          >
-            <option value="test">{t('signing.testMode')}</option>
-            <option value="production" disabled={!canBeReal}>
-              {t('signing.realMode')}
-            </option>
-          </select>
-        </label>
-      </div>
-      <p className="small muted">{t('signing.declarationHint')}</p>
-      {missing.length > 0 && (
-        <p className="error" role="alert">
-          {t('signing.declarationMissingLanguage', {
-            languages: [...new Set(missing)].map((code) => localeLabel(code)).join(', '),
-          })}
-        </p>
-      )}
-      {!linksAreLocal && (
-        <label className="choice__option">
-          <input
-            type="checkbox"
-            checked={inviteByEmail}
-            onChange={(event) => setInviteByEmail(event.target.checked)}
-          />
-          <span>{t('signing.inviteByEmail')}</span>
-        </label>
-      )}
-      {real ? (
-        <label className="choice__option">
-          <input
-            type="checkbox"
-            checked={confirmedReal}
-            onChange={(event) => setConfirmedReal(event.target.checked)}
-          />
-          <span>{t('signing.realConfirm')}</span>
-        </label>
-      ) : (
-        <p className="small muted">
-          <span className="badge">{t('signing.testMode')}</span>{' '}
-          {canBeReal ? t('signing.testModeHint') : t('signing.realNeedsOwnDeclaration')}
-        </p>
-      )}
+        </details>
+        {!linksAreLocal && (
+          <label className="choice__option">
+            <input
+              type="checkbox"
+              checked={inviteByEmail}
+              onChange={(event) => setInviteByEmail(event.target.checked)}
+            />
+            <span>{t('signing.inviteByEmail')}</span>
+          </label>
+        )}
+        {real ? (
+          <label className="choice__option">
+            <input
+              type="checkbox"
+              checked={confirmedReal}
+              onChange={(event) => setConfirmedReal(event.target.checked)}
+            />
+            <span>{t('signing.realConfirm')}</span>
+          </label>
+        ) : (
+          <p className="small muted">
+            <span className="badge">{t('signing.testMode')}</span>{' '}
+            {canBeReal ? t('signing.testModeHint') : t('signing.realNeedsOwnDeclaration')}
+          </p>
+        )}
 
-      {failed && (
-        <p className="error" role="alert">
-          {t('signing.failed')}
-        </p>
-      )}
+        {failed && (
+          <p className="error" role="alert">
+            {t('signing.failed')}
+          </p>
+        )}
+      </div>
       <div className="row">
-        <button type="submit" className="button" disabled={!ready || sending}>
-          {sending ? t('signing.sending') : t('signing.send')}
-        </button>
+        {step > 1 && (
+          <button
+            type="button"
+            className="button button--quiet"
+            onClick={() => setStep((step - 1) as 1 | 2)}
+          >
+            {t('signing.back')}
+          </button>
+        )}
+        {step < 3 ? (
+          <button
+            key="next"
+            type="button"
+            className="button"
+            disabled={step === 1 ? !hasPaper : !hasPeople}
+            onClick={() => setStep((step + 1) as 2 | 3)}
+          >
+            {t('signing.next')}
+          </button>
+        ) : (
+          <button key="send" type="submit" className="button" disabled={!ready || sending}>
+            {sending ? t('signing.sending') : t('signing.send')}
+          </button>
+        )}
         <button type="button" className="button button--quiet" onClick={onCancel}>
           {t('signing.cancel')}
         </button>
