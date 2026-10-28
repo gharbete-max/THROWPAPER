@@ -14,9 +14,10 @@ import { saveBlob } from '../../../lib/email-handoff.js';
 import { sendWith } from '../../../lib/send-handoff.js';
 import { formatDateTime, useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
+import { PART_STYLE } from '../../../lib/part-style.js';
 import { useConfirm } from '../../../components/Confirm.js';
 import { FieldCanvas } from './FieldCanvas.js';
-import { FieldProperties } from './FieldProperties.js';
+import { QuickEdit } from './QuickEdit.js';
 import { ImportSurvey } from './ImportSurvey.js';
 import { ImportPaper } from './paper/ImportPaper.js';
 import { PaperCanvas } from './paper/PaperCanvas.js';
@@ -32,12 +33,19 @@ type SaveState = 'saved' | 'saving' | 'unsaved';
 
 const AUTOSAVE_DELAY_MS = 800;
 
-const PREVIEW_WIDTH_KEY = 'tp.builder.previewWidth';
-
-/** Neither pane may be squeezed to the point of being useless. */
-function clampWidth(width: number): number {
-  return Math.min(720, Math.max(260, Math.round(width)));
-}
+/** What a dragged piece carries, and the nine pieces a first-timer needs. */
+const PIECE = 'application/x-loppa-piece';
+const TRAY: readonly FieldType[] = [
+  'short_text',
+  'long_text',
+  'single_select',
+  'multi_select',
+  'yes_no',
+  'date',
+  'number',
+  'signature',
+  'rich_text',
+];
 
 export function FormBuilder() {
   const t = useT();
@@ -70,21 +78,6 @@ export function FormBuilder() {
   const history = useHistory();
 
   /**
-   * Width of the preview pane, in pixels, remembered between visits.
-   *
-   * `localStorage` rather than the brand kit: this is how one person likes to work, not something
-   * about the organisation, and it should not follow them onto a colleague's screen.
-   */
-  const [previewWidth, setPreviewWidth] = useState(() => {
-    const stored = Number(localStorage.getItem(PREVIEW_WIDTH_KEY));
-    return Number.isFinite(stored) && stored > 0 ? clampWidth(stored) : 368;
-  });
-
-  useEffect(() => {
-    localStorage.setItem(PREVIEW_WIDTH_KEY, String(previewWidth));
-  }, [previewWidth]);
-
-  /**
    * Ctrl+Z and Ctrl+Shift+Z, plus Ctrl+Y for the Windows habit.
    *
    * **Not while a text box has focus.** The browser's own undo inside an input is what somebody
@@ -109,23 +102,6 @@ export function FormBuilder() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   });
-
-  function startResize(event: React.PointerEvent<HTMLDivElement>) {
-    event.preventDefault();
-    const startX = event.clientX;
-    const startWidth = previewWidth;
-
-    const move = (moved: PointerEvent) => {
-      // Dragging left grows the preview, which is the direction the divider moves.
-      setPreviewWidth(clampWidth(startWidth + (startX - moved.clientX)));
-    };
-    const stop = () => {
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', stop);
-    };
-    window.addEventListener('pointermove', move);
-    window.addEventListener('pointerup', stop);
-  }
 
   const loadVersions = useCallback(() => {
     if (!id) return;
@@ -200,7 +176,7 @@ export function FormBuilder() {
    * adding a question in the middle of a section meant scrolling to the bottom and dragging it
    * back up, every time. With nothing selected, appending is still the right guess.
    */
-  function addField(type: FieldType) {
+  function addField(type: FieldType, dropAt?: number) {
     if (!definition) return;
     const field = newField(
       type,
@@ -210,7 +186,7 @@ export function FormBuilder() {
 
     const at = definition.fields.findIndex((existing) => existing.id === selectedId);
     const fields = [...definition.fields];
-    fields.splice(at === -1 ? fields.length : at + 1, 0, field);
+    fields.splice(dropAt ?? (at === -1 ? fields.length : at + 1), 0, field);
 
     edit({ ...definition, fields });
     setSelectedId(field.id);
@@ -367,84 +343,65 @@ export function FormBuilder() {
     (entry) => !entry.complete && started.has(entry.locale),
   );
 
+  const editor = (field: Field) => (
+    <QuickEdit field={field} definition={definition} onChange={updateField} />
+  );
+
+  /** Where a piece dropped at this height lands: before the first row whose middle is below it. */
+  function dropIndex(page: HTMLElement, y: number): number {
+    const rows = [...page.querySelectorAll<HTMLElement>('.builder__list > li')];
+    const at = rows.findIndex((row) => {
+      const box = row.getBoundingClientRect();
+      return y < box.top + box.height / 2;
+    });
+    return at === -1 ? definition!.fields.length : at;
+  }
+
   return (
-    <section className="stack">
-      <header className="row row--between">
-        <div>
-          {/* In the organisation's language: this read `title['sv-SE']`, so an English or
-              Finnish organisation saw the link address as the heading of every form it built. */}
-          <h1>{pickText(locales, form.title, locale).value || form.slug}</h1>
-          <p className="small muted">
-            /f/{form.slug} ·{' '}
-            {form.publishedVersion
-              ? t('forms.version', { n: form.publishedVersion })
-              : t('forms.unpublished')}
-          </p>
-        </div>
-        <div className="row">
-          {/* Icon-only: two buttons that say "Undo" and "Redo" crowd out the one that publishes,
-              and the arrows are the most recognisable pair of glyphs in any editor. */}
-          <button
-            type="button"
-            className="button button--quiet button--icon"
-            onClick={() => stepHistory('undo')}
-            disabled={!history.canUndo}
-            title={t('builder.undo')}
-            aria-label={t('builder.undo')}
-          >
-            <Icon name="undo" />
-          </button>
-          <button
-            type="button"
-            className="button button--quiet button--icon"
-            onClick={() => stepHistory('redo')}
-            disabled={!history.canRedo}
-            title={t('builder.redo')}
-            aria-label={t('builder.redo')}
-          >
-            <Icon name="redo" />
-          </button>
-
-          {/*
-            Import sits beside undo rather than in the palette: it is something you do to the
-            whole form, once, near the start — not a field you drop on it.
-          */}
-          <ImportSurvey
-            onImport={(definition) => {
-              edit(definition);
-              setSelectedId(null);
-            }}
-          />
-          {id && (
-            <ImportPaper
-              formId={id}
-              startOpen={startPaper}
-              onImport={(definition) => {
-                edit(definition);
-                setSelectedId(null);
-                setView('paper');
-              }}
-            />
-          )}
-          {/*
-            A form with anything in it can be brought up to date with the document it was made from,
-            or a new version of it (S12c): the review compares, adds what is new and asks the rest.
-          */}
-          {id && definition.fields.length > 0 && (
-            <Link className="button button--quiet" to={`/forms/${id}/import`}>
-              {t('paper.update')}
-            </Link>
-          )}
-
-          <span className="small muted">{t(`builder.${saveState}`)}</span>
-          {/*
-            Download, Fill in, Sign and Send come first: a form is a document to keep, sign and
-            send before it is a thing to collect answers with. Sharing it to collect is the
-            quieter choice (`docs/plan/DOCUMENTS.md`, "Forms"). Sign is a plain link; Send makes the
-            draft PDF and hands it to the Send screen, which asks before anything is queued.
-          */}
-          {id && (
-            <>
+    <main className="eb" style={PART_STYLE}>
+      <header className="eb__bar">
+        <Link className="button button--quiet" to="/forms">
+          <Icon name="arrow-left" />
+          {t('nav.forms')}
+        </Link>
+        <h1 className="eb__title">{pickText(locales, form.title, locale).value || form.slug}</h1>
+        <span className="small muted">{t(`builder.${saveState}`)}</span>
+        <span className="small muted">
+          {form.publishedVersion
+            ? t('forms.version', { n: form.publishedVersion })
+            : t('forms.unpublished')}
+        </span>
+        <button
+          type="button"
+          className="button button--quiet button--icon"
+          onClick={() => stepHistory('undo')}
+          disabled={!history.canUndo}
+          title={t('builder.undo')}
+          aria-label={t('builder.undo')}
+        >
+          <Icon name="undo" />
+        </button>
+        <button
+          type="button"
+          className="button button--quiet button--icon"
+          onClick={() => stepHistory('redo')}
+          disabled={!history.canRedo}
+          title={t('builder.redo')}
+          aria-label={t('builder.redo')}
+        >
+          <Icon name="redo" />
+        </button>
+        {/*
+          One big button. Download, Fill in, Sign and Send come first: a form is a document to
+          keep, sign and send before it is a thing to collect answers with (DOCUMENTS.md).
+        */}
+        {id && (
+          <details className="eb__share">
+            <summary className="button">
+              <Icon name="share" />
+              {t('eb.share')}
+            </summary>
+            <div className="eb__menu stack">
               <button
                 type="button"
                 className="button"
@@ -468,50 +425,120 @@ export function FormBuilder() {
               >
                 {t('draft.send')}
               </button>
-            </>
-          )}
-          <button
-            className="button button--quiet"
-            onClick={publish}
-            disabled={publishing || saveState !== 'saved'}
-          >
-            <Icon name="publish" />
-            {publishing ? t('builder.publishing') : t('draft.share')}
-          </button>
-        </div>
+              <button
+                className="button button--quiet"
+                onClick={publish}
+                disabled={publishing || saveState !== 'saved'}
+              >
+                <Icon name="publish" />
+                {publishing ? t('builder.publishing') : t('draft.share')}
+              </button>
+            </div>
+          </details>
+        )}
       </header>
 
       {error && <p className="status-down small">{error}</p>}
 
-      <p className="small">
-        {incomplete.length === 0 ? (
-          <span className="status-up">{t('builder.translationsComplete')}</span>
-        ) : (
-          <span className="status-warning">
-            {incomplete
-              .map((entry) =>
-                t('builder.translationsMissing', {
-                  locale: entry.locale,
-                  n: entry.missing.length,
-                }),
-              )
-              .join(' · ')}
-          </span>
-        )}
-      </p>
-
-      {form.problems.length > 0 && (
-        <p className="small status-down">
-          {/* Translated by code — `problem.message` is English, for logs and API clients. */}
-          {form.problems.map((problem) => t(`problem.${problem.code}`, problem.params)).join('; ')}
-        </p>
+      {definition.paper && id && (
+        <div className="row" role="group" aria-label={t('paper.view')}>
+          {(['paper', 'list'] as const).map((option) => (
+            <button
+              key={option}
+              type="button"
+              className="button button--quiet small"
+              aria-pressed={view === option}
+              onClick={() => setView(option)}
+            >
+              <Icon name={option === 'paper' ? 'file' : 'forms'} />
+              {t(`paper.view.${option}`)}
+            </button>
+          ))}
+        </div>
       )}
 
+      {/* The page: white, with the form on it. Pieces dropped on it land where they fall. */}
       <div
-        className="builder"
-        style={{ gridTemplateColumns: `minmax(0, 1fr) 6px minmax(0, ${previewWidth}px)` }}
+        className="eb__page"
+        onDragOver={(event) => {
+          if (event.dataTransfer.types.includes(PIECE)) event.preventDefault();
+        }}
+        onDrop={(event) => {
+          const type = event.dataTransfer.getData(PIECE) as FieldType;
+          if (!type) return;
+          event.preventDefault();
+          addField(type, dropIndex(event.currentTarget, event.clientY));
+        }}
       >
+        {definition.paper && id && view === 'paper' ? (
+          <PaperCanvas
+            formId={id}
+            saved={saveState === 'saved'}
+            definition={definition}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            onChange={edit}
+            renderEditor={editor}
+          />
+        ) : (
+          <FieldCanvas
+            fields={definition.fields}
+            selectedId={selectedId}
+            onSelect={(fieldId) => setSelectedId(fieldId === selectedId ? null : fieldId)}
+            onReorder={(fields) => edit({ ...definition, fields })}
+            onRemove={removeField}
+            onMove={moveField}
+            onDuplicate={duplicateField}
+            renderEditor={editor}
+          />
+        )}
+      </div>
+
+      {/* Big pictured pieces: drag one onto the page, or press it to add it below the open one. */}
+      <div className="eb__tray" role="group" aria-label={t('eb.tray')}>
+        {TRAY.map((type) => (
+          <button
+            key={type}
+            type="button"
+            className="eb__piece"
+            draggable
+            onDragStart={(event) => event.dataTransfer.setData(PIECE, type)}
+            onClick={() => addField(type)}
+          >
+            <Icon name={type} />
+            <span>{t(`fieldType.${type}`)}</span>
+          </button>
+        ))}
+      </div>
+
+      <details className="eb__more" open={startPaper}>
+        <summary className="button button--quiet">{t('eb.more')}</summary>
         <div className="stack">
+          <div className="row">
+            <ImportSurvey
+              onImport={(definition) => {
+                edit(definition);
+                setSelectedId(null);
+              }}
+            />
+            {id && (
+              <ImportPaper
+                formId={id}
+                startOpen={startPaper}
+                onImport={(definition) => {
+                  edit(definition);
+                  setSelectedId(null);
+                  setView('paper');
+                }}
+              />
+            )}
+            {id && definition.fields.length > 0 && (
+              <Link className="button button--quiet" to={`/forms/${id}/import`}>
+                {t('paper.update')}
+              </Link>
+            )}
+          </div>
+
           <div className="card stack builder__tools">
             <strong className="small">{t('builder.palette')}</strong>
             {PALETTE_GROUPS.map((group) => (
@@ -532,138 +559,85 @@ export function FormBuilder() {
                 </div>
               </div>
             ))}
-            <span className="small muted">{t('builder.addHint')}</span>
           </div>
 
-          {/*
-            A form made from paper has two views of the same field list: the paper, where each
-            question is a box on the page it came from, and the list, where order and removal
-            live. Neither is a copy of the other.
-          */}
-          {definition.paper && id && (
-            <div className="row" role="group" aria-label={t('paper.view')}>
-              {(['paper', 'list'] as const).map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  className="button button--quiet small"
-                  aria-pressed={view === option}
-                  onClick={() => setView(option)}
-                >
-                  <Icon name={option === 'paper' ? 'file' : 'forms'} />
-                  {t(`paper.view.${option}`)}
-                </button>
-              ))}
-            </div>
+          <p className="small">
+            {incomplete.length === 0 ? (
+              <span className="status-up">{t('builder.translationsComplete')}</span>
+            ) : (
+              <span className="status-warning">
+                {incomplete
+                  .map((entry) =>
+                    t('builder.translationsMissing', {
+                      locale: entry.locale,
+                      n: entry.missing.length,
+                    }),
+                  )
+                  .join(' · ')}
+              </span>
+            )}
+          </p>
+
+          {form.problems.length > 0 && (
+            <p className="small status-down">
+              {/* Translated by code — `problem.message` is English, for logs and API clients. */}
+              {form.problems
+                .map((problem) => t(`problem.${problem.code}`, problem.params))
+                .join('; ')}
+            </p>
           )}
 
-          <div className="card builder__canvas">
-            {definition.paper && id && view === 'paper' ? (
-              <PaperCanvas
-                formId={id}
-                saved={saveState === 'saved'}
-                definition={definition}
-                selectedId={selectedId}
-                onSelect={setSelectedId}
-                onChange={edit}
-                renderEditor={(field) => (
-                  <FieldProperties field={field} definition={definition} onChange={updateField} />
-                )}
-              />
-            ) : (
-              <FieldCanvas
-                fields={definition.fields}
-                selectedId={selectedId}
-                onSelect={(fieldId) => setSelectedId(fieldId === selectedId ? null : fieldId)}
-                onReorder={(fields) => edit({ ...definition, fields })}
-                onRemove={removeField}
-                onMove={moveField}
-                onDuplicate={duplicateField}
-                renderEditor={(field) => (
-                  <FieldProperties field={field} definition={definition} onChange={updateField} />
-                )}
-              />
-            )}
+          <div className="card stack builder__panel">
+            <strong className="small row">
+              <Icon name="preview" />
+              {t('builder.viewPreview')}
+            </strong>
+            <FormPreview
+              definition={definition}
+              locale={locale}
+              locales={locales}
+              selectedId={selectedId}
+            />
           </div>
+
+          {/* The table itself lives at `/forms/:id/submissions`; here is only the way there. */}
+          {id && form.publishedVersion !== null && (
+            <section className="card row row--between">
+              <strong className="small">
+                <Icon name="inbox" className="icon--lead" />
+                {t('forms.responses', { count: form.submissionCount })}
+              </strong>
+              <Link className="button button--quiet" to={`/forms/${id}/submissions`}>
+                {t('forms.viewResponses')}
+                <Icon name="arrow-right" className="icon--lead" />
+              </Link>
+            </section>
+          )}
+
+          <FormSettingsPanel definition={definition} onChange={edit} />
+
+          <section className="card stack">
+            <strong className="small">{t('builder.history')}</strong>
+            {versions.length === 0 && <p className="muted small">{t('forms.unpublished')}</p>}
+            {versions.map((version) => (
+              <div className="row row--between" key={version.id}>
+                <span className="small">
+                  {t('forms.version', { n: version.version })}
+                  {version.publishedAt
+                    ? ` · ${formatDateTime(interfaceLocale, version.publishedAt)}`
+                    : ''}
+                </span>
+                <button
+                  className="button button--quiet small"
+                  onClick={() => restore(version.version)}
+                >
+                  {t('builder.restore')}
+                </button>
+              </div>
+            ))}
+          </section>
         </div>
-
-        {/*
-          The preview is not a tab any more. It is the right-hand side of the screen, always on,
-          because the question a builder answers all day is "what does this look like?" — and an
-          answer you have to click for is one you stop asking for.
-        */}
-        {/*
-          The divider is a real control, not decoration: a form with long labels wants a wide
-          preview, and a form being reordered wants a wide list. Both are the same person ten
-          minutes apart, so the split is theirs to set rather than ours to guess.
-
-          It is a slider for the keyboard as well as a drag handle for the mouse — a resize nobody
-          can do without a pointer is a resize half the people cannot do.
-        */}
-        <div
-          className="builder__divider"
-          role="separator"
-          aria-orientation="vertical"
-          aria-label={t('builder.resize')}
-          aria-valuenow={previewWidth}
-          aria-valuemin={260}
-          aria-valuemax={720}
-          tabIndex={0}
-          onPointerDown={startResize}
-          onKeyDown={(event) => {
-            if (event.key === 'ArrowLeft') setPreviewWidth((width) => clampWidth(width + 32));
-            if (event.key === 'ArrowRight') setPreviewWidth((width) => clampWidth(width - 32));
-          }}
-        />
-
-        <div className="card stack builder__panel">
-          <strong className="small row">
-            <Icon name="preview" />
-            {t('builder.viewPreview')}
-          </strong>
-          <FormPreview
-            definition={definition}
-            locale={locale}
-            locales={locales}
-            selectedId={selectedId}
-          />
-        </div>
-      </div>
-
-      {/* The table itself moved to `/forms/:id/submissions`. What belongs at the foot of the
-          editor is the way there, not forty rows of other people's answers. */}
-      {id && form.publishedVersion !== null && (
-        <section className="card row row--between">
-          <strong className="small">
-            <Icon name="inbox" className="icon--lead" />
-            {t('forms.responses', { count: form.submissionCount })}
-          </strong>
-          <Link className="button button--quiet" to={`/forms/${id}/submissions`}>
-            {t('forms.viewResponses')}
-            <Icon name="arrow-right" className="icon--lead" />
-          </Link>
-        </section>
-      )}
-
-      <FormSettingsPanel definition={definition} onChange={edit} />
-
-      <section className="card stack">
-        <strong className="small">{t('builder.history')}</strong>
-        {versions.length === 0 && <p className="muted small">{t('forms.unpublished')}</p>}
-        {versions.map((version) => (
-          <div className="row row--between" key={version.id}>
-            <span className="small">
-              {t('forms.version', { n: version.version })}
-              {version.publishedAt
-                ? ` · ${formatDateTime(interfaceLocale, version.publishedAt)}`
-                : ''}
-            </span>
-            <button className="button button--quiet small" onClick={() => restore(version.version)}>
-              {t('builder.restore')}
-            </button>
-          </div>
-        ))}
-      </section>
-    </section>
+      </details>
+    </main>
   );
 }

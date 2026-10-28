@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import postgres from 'postgres';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { expect, test, type Page } from '@playwright/test';
-import { db, openMoreTools, scanStep, signInAs } from './support.js';
+import { db, openMoreTools, openShare, scanStep, signInAs } from './support.js';
 import { E2E_SIGN_SERVICE_TOKEN, signDatabaseUrl } from './ports.js';
 import { fakeBridge } from './fake-model.js';
 import { svStandard } from '../fixtures/invoices/invoices.js';
@@ -137,6 +137,7 @@ test('scan, arrange, sign, fill, send and summarise, by clicking alone', async (
     .filter({ has: page.getByRole('heading', { name: /Membership application/ }) })
     .getByRole('link', { name: 'Edit form' })
     .click();
+  await openShare(page);
   await page.getByRole('link', { name: 'Fill in', exact: true }).click();
   await expect(page.getByText(/Fill the form in here/)).toBeVisible();
   await page.getByRole('textbox').first().fill('Maja Strand');

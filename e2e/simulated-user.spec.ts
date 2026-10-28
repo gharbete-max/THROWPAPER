@@ -4,6 +4,8 @@ import {
   db,
   decodeQrFromPdf,
   deleteSubmission,
+  openBuilderMore,
+  openShare,
   plantLoginToken,
   uniqueEmail,
   zipEntryCount,
@@ -167,6 +169,7 @@ test('one person: signs in, builds an event and a form, and admits a stranger at
   await page.getByRole('button', { name: 'Kort text' }).click();
   await page.getByLabel('Etikett').first().fill('Namn');
 
+  await openBuilderMore(page);
   await page.getByRole('button', { name: 'E-post', exact: true }).click();
   await page.getByLabel('Etikett').first().fill('E-postadress');
   await page.getByLabel('Obligatoriskt').check();
@@ -196,6 +199,7 @@ test('one person: signs in, builds an event and a form, and admits a stranger at
     .toBe(true);
 
   // ── 6. Publish ────────────────────────────────────────────────────────────────────────────
+  await openShare(page);
   await page.getByRole('button', { name: 'Dela för att samla in svar' }).first().click();
   // A form whose twelve locales are not all translated asks before publishing. Answering it is
   // part of the journey: the operator publishes in Swedish and fills the rest in later.

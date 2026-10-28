@@ -1,6 +1,13 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
-import { db, deleteSubmission, seededForm, signInAs } from './support.js';
+import {
+  db,
+  deleteSubmission,
+  openBuilderMore,
+  openShare,
+  seededForm,
+  signInAs,
+} from './support.js';
 import { tinyPdf } from './pdf.js';
 import { findAnswer, see, type SeenBox } from './pdf-read.js';
 
@@ -83,6 +90,7 @@ for (const [shape, rotate] of [
     const formId = page.url().split('/').pop()!;
     forms.push(formId);
 
+    await openBuilderMore(page);
     await page.getByRole('button', { name: 'From paper' }).click();
     await page.getByLabel('PDF, Word document or photographs').setInputFiles({
       name: 'membership.pdf',
@@ -111,6 +119,7 @@ for (const [shape, rotate] of [
     ).toEqual(placed);
 
     // ── Publish ───────────────────────────────────────────────────────────────────────────
+    await openShare(page);
     await page.getByRole('button', { name: 'Share to collect' }).first().click();
     // The organisation publishes in two languages and the boxes' labels are in one, so the builder
     // asks first (rule 7); the answer is yes.

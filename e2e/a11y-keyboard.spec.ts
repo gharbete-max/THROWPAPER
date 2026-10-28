@@ -47,12 +47,12 @@ test('the arrow keys move between the ways to send @smoke', async ({ page }) => 
   await expect(one).toBeChecked();
 });
 
-test("the builder's divider has a value, and To send on a server is empty, not an error", async ({
+test('the builder opens on its tray, and To send on a server is empty, not an error', async ({
   page,
 }) => {
   const [draft] = await sql`select id from forms where published_version_id is null limit 1`;
   await page.goto(`/forms/${String(draft!['id'])}`);
-  await expect(page.getByRole('separator')).toHaveAttribute('aria-valuenow', /^\d+$/);
+  await expect(page.locator('.eb__tray')).toBeVisible();
 
   const failures: string[] = [];
   page.on('response', (r) => {

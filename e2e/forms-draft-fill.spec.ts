@@ -2,7 +2,7 @@ import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
-import { db, signInAs } from './support.js';
+import { db, openShare, signInAs } from './support.js';
 
 /**
  * Forms, for a person who collects nothing — phase 3 of `docs/plan/DOCUMENTS.md`.
@@ -152,6 +152,7 @@ test('a form built Akinator-style is downloaded blank, filled in and kept, with 
   await page.getByRole('button', { name: /Open it in the editor/ }).click();
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
   // The editor has loaded and has nothing left to save.
+  await openShare(page);
   await expect(page.getByRole('button', { name: 'Download PDF' })).toBeEnabled();
 
   await expectDemotedPublish(page);
@@ -194,6 +195,7 @@ test('a form built by hand opens in the editor, and is downloaded blank, filled 
 
   await page.getByRole('button', { name: 'Short text' }).first().click();
   // Download waits for the autosave, so enabled again means the field is in the draft.
+  await openShare(page);
   await expect(page.getByRole('button', { name: 'Download PDF' })).toBeEnabled();
 
   const blank = await pdfText(await downloaded(page, 'Download PDF'));
