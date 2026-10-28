@@ -2232,7 +2232,7 @@ export const fiFI: Record<MessageKey, string> = {
   'copy.error.formFailed': 'Lomaketta ei voitu aloittaa. Yritä uudelleen.',
   'copy.close': 'Sulje',
   'copy.noWords': 'Sivulta ei löytynyt sanoja.',
-  'docs.drop.hint': 'Pudota tiedosto mihin tahansa huoneessa avataksesi sen.',
+  'docs.drop.hint': 'Pudota tiedosto mihin tahansa tälle sivulle avataksesi sen.',
   'docs.open': 'Avaa tiedosto…',
   'docs.opened.pdf': 'Avattu PDF:nä sivuluetteloon.',
   'docs.opened.word': 'Avattu Word-tiedostona ja muutettu PDF:ksi.',

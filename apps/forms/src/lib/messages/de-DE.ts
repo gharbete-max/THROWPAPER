@@ -2299,7 +2299,7 @@ export const deDE: Record<MessageKey, string> = {
   'copy.error.formFailed': 'Das Formular konnte nicht gestartet werden. Versuchen Sie es erneut.',
   'copy.close': 'Schließen',
   'copy.noWords': 'Auf dieser Seite wurden keine Wörter gefunden.',
-  'docs.drop.hint': 'Legen Sie eine Datei irgendwo im Raum ab, um sie zu öffnen.',
+  'docs.drop.hint': 'Legen Sie eine Datei irgendwo auf dieser Seite ab, um sie zu öffnen.',
   'docs.open': 'Datei öffnen…',
   'docs.opened.pdf': 'Als PDF geöffnet, in der Seitenliste.',
   'docs.opened.word': 'Als Word-Datei geöffnet und in eine PDF umgewandelt.',

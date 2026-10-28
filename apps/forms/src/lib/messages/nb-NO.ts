@@ -2215,7 +2215,7 @@ export const nbNO: Record<MessageKey, string> = {
   'copy.error.formFailed': 'Skjemaet kunne ikke startes. Prøv igjen.',
   'copy.close': 'Lukk',
   'copy.noWords': 'Fant ingen ord på siden.',
-  'docs.drop.hint': 'Slipp en fil hvor som helst i rommet for å åpne den.',
+  'docs.drop.hint': 'Slipp en fil hvor som helst på siden for å åpne den.',
   'docs.open': 'Åpne en fil…',
   'docs.opened.pdf': 'Åpnet som en PDF, i sideoversikten.',
   'docs.opened.word': 'Åpnet som en Word-fil og gjort om til en PDF.',

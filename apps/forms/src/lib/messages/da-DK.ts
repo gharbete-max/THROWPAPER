@@ -2216,7 +2216,7 @@ export const daDK: Record<MessageKey, string> = {
   'copy.error.formFailed': 'Formularen kunne ikke startes. Prøv igen.',
   'copy.close': 'Luk',
   'copy.noWords': 'Der blev ikke fundet nogen ord på siden.',
-  'docs.drop.hint': 'Slip en fil hvor som helst i rummet for at åbne den.',
+  'docs.drop.hint': 'Slip en fil hvor som helst på siden for at åbne den.',
   'docs.open': 'Åbn en fil…',
   'docs.opened.pdf': 'Åbnet som en PDF, i sidelisten.',
   'docs.opened.word': 'Åbnet som en Word-fil og lavet til en PDF.',

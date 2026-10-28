@@ -2271,7 +2271,7 @@ export const frFR: Record<MessageKey, string> = {
   'copy.error.formFailed': 'Le formulaire n’a pas pu être démarré. Réessayez.',
   'copy.close': 'Fermer',
   'copy.noWords': 'Aucun mot n’a été trouvé sur cette page.',
-  'docs.drop.hint': 'Déposez un fichier n’importe où dans la pièce pour l’ouvrir.',
+  'docs.drop.hint': 'Déposez un fichier n’importe où sur cette page pour l’ouvrir.',
   'docs.open': 'Ouvrir un fichier…',
   'docs.opened.pdf': 'Ouvert comme PDF, dans la liste des pages.',
   'docs.opened.word': 'Ouvert comme fichier Word et converti en PDF.',

@@ -2249,7 +2249,7 @@ export const esES: Record<MessageKey, string> = {
   'copy.error.formFailed': 'No se pudo iniciar el formulario. Inténtelo de nuevo.',
   'copy.close': 'Cerrar',
   'copy.noWords': 'No se encontró ninguna palabra en esta página.',
-  'docs.drop.hint': 'Suelta un archivo en cualquier parte de la sala para abrirlo.',
+  'docs.drop.hint': 'Suelta un archivo en cualquier parte de esta página para abrirlo.',
   'docs.open': 'Abrir un archivo…',
   'docs.opened.pdf': 'Abierto como PDF, en la lista de páginas.',
   'docs.opened.word': 'Abierto como archivo de Word y convertido en PDF.',

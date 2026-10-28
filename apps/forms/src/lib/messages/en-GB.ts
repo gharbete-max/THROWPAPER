@@ -2224,7 +2224,7 @@ export const enGB = {
   'copy.error.formFailed': 'The form could not be started. Try again.',
   'copy.close': 'Close',
   'copy.noWords': 'No words were found on this page.',
-  'docs.drop.hint': 'Drop a file anywhere in the room to open it.',
+  'docs.drop.hint': 'Drop a file anywhere on this page to open it.',
   'docs.open': 'Open a file…',
   'docs.opened.pdf': 'Opened as a PDF, in the page list.',
   'docs.opened.word': 'Opened as a Word file, made into a PDF.',

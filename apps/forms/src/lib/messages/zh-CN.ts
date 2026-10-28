@@ -2088,7 +2088,7 @@ export const zhCN: Record<MessageKey, string> = {
   'copy.error.formFailed': '无法开始创建表单。请重试。',
   'copy.close': '关闭',
   'copy.noWords': '此页面上没有找到字词。',
-  'docs.drop.hint': '把文件拖放到房间的任意位置即可打开。',
+  'docs.drop.hint': '把文件拖放到本页任意位置即可打开。',
   'docs.open': '打开文件…',
   'docs.opened.pdf': '已作为PDF打开，加入页面列表。',
   'docs.opened.word': '已作为Word文件打开，并转换为PDF。',
