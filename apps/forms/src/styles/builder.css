@@ -1761,3 +1761,107 @@
   padding-block: var(--tp-spacing-unit);
   background: var(--tp-colour-background);
 }
+
+/* The form creator as a blank page (E3): a bar, the page, a tray of pieces, and everything else under More. */
+.eb {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  inline-size: min(100%, 52rem);
+  margin-inline: auto;
+  padding: calc(var(--tp-spacing-unit) * 2);
+  padding-block-end: calc(var(--tp-spacing-unit) * 4);
+}
+
+.eb__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.eb__title {
+  flex: 1 1 8rem;
+  min-inline-size: 0;
+  margin: 0;
+  font-size: var(--tp-text-xl);
+}
+
+.eb__share {
+  position: relative;
+}
+
+.eb__share > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.eb__share > summary::-webkit-details-marker {
+  display: none;
+}
+
+.eb__menu {
+  position: absolute;
+  inset-inline-end: 0;
+  z-index: 20;
+  min-inline-size: 13rem;
+  margin-block-start: var(--tp-spacing-unit);
+  padding: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-background);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.15);
+}
+
+.eb__page {
+  min-block-size: 50vh;
+  padding: calc(var(--tp-spacing-unit) * 3);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: #fff;
+  color: #1a1a1a;
+}
+
+.eb__tray {
+  position: sticky;
+  inset-block-end: var(--tp-spacing-unit);
+  display: flex;
+  gap: var(--tp-spacing-unit);
+  overflow-x: auto;
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-background);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.12);
+}
+
+.eb__piece {
+  display: grid;
+  flex: none;
+  justify-items: center;
+  gap: calc(var(--tp-spacing-unit) / 2);
+  inline-size: 5.5rem;
+  padding: var(--tp-spacing-unit);
+  border: 2px solid var(--tp-part-forms);
+  border-radius: var(--tp-radius-lg);
+  background: color-mix(in srgb, var(--tp-part-forms) 22%, transparent);
+  color: var(--tp-colour-text);
+  font: inherit;
+  font-size: var(--tp-text-ui);
+  text-align: center;
+  cursor: grab;
+}
+
+.eb__piece:hover {
+  background: var(--tp-part-forms);
+  color: var(--tp-part-forms-ink);
+}
+
+.eb__piece .icon {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+}
+
+.eb__more > summary {
+  display: inline-flex;
+  cursor: pointer;
+}

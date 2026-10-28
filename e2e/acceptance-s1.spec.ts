@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test, type Locator, type Page } from '@playwright/test';
-import { db, deleteSubmission, signInAs } from './support.js';
+import { db, deleteSubmission, openShare, signInAs } from './support.js';
 
 /**
  * Acceptance S1 — `docs/plan/PREDICTIVE-BUILDER.md`, built in S13a (`docs/archive/plan/POLISH.md`):
@@ -260,6 +260,7 @@ test('acceptance S1: a published form, by clicking alone', async ({ page, browse
   // ── Published, with its confirmation ──────────────────────────────────────────────────────
   await page.getByRole('button', { name: /Open it in the editor/ }).click();
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
+  await openShare(page);
   await page.getByRole('button', { name: 'Share to collect' }).first().click();
   const anyway = page.getByRole('dialog').getByRole('button', { name: 'Publish', exact: true });
   const published = page.getByText(/Version 1/).first();
@@ -374,6 +375,8 @@ test('acceptance S1 by keyboard alone', async ({ page, browser }) => {
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
 
   // ── Published: Tab to Publish, Enter, and Enter on the confirmation if it asks ────────────
+  await tabTo(page, page.locator('.eb__share summary'));
+  await page.keyboard.press('Enter');
   await tabTo(page, page.getByRole('button', { name: 'Share to collect' }).first());
   await page.keyboard.press('Enter');
   const anyway = page.getByRole('dialog').getByRole('button', { name: 'Publish', exact: true });

@@ -310,3 +310,13 @@ export async function connectFormsToSign(sql: ReturnType<typeof db>): Promise<vo
     await sign.end();
   }
 }
+
+/** The form creator's Share menu and its More drawer: closed until opened, in any language. */
+export async function openShare(page: Page) {
+  const menu = page.locator('.eb__share');
+  if ((await menu.getAttribute('open')) === null) await menu.locator('summary').click();
+}
+export async function openBuilderMore(page: Page) {
+  const more = page.locator('.eb__more');
+  if ((await more.getAttribute('open')) === null) await more.locator('summary').click();
+}

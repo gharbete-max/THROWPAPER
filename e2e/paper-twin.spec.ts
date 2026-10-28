@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
-import { db, deleteSubmission, signInAs } from './support.js';
+import { db, deleteSubmission, openShare, signInAs } from './support.js';
 import { linesPdf } from './pdf.js';
 import { findAnswer, see } from './pdf-read.js';
 
@@ -91,6 +91,7 @@ test('a PDF read into questions comes back filled in, as that paper (S12b)', asy
   await question(page, 'Your form is ready.');
   await page.getByRole('button', { name: /Open it in the editor/ }).click();
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}$`));
+  await openShare(page);
   await page.getByRole('button', { name: 'Share to collect' }).first().click();
   const anyway = page.getByRole('dialog').getByRole('button', { name: 'Publish', exact: true });
   const published = page.getByText(/Version 1/).first();

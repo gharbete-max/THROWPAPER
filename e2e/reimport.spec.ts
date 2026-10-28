@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { db, signInAs } from './support.js';
+import { db, openBuilderMore, signInAs } from './support.js';
 import { linesPdf } from './pdf.js';
 
 /**
@@ -50,6 +50,7 @@ async function paste(page: Page, text: string) {
 /** From the editor, the way back into the review: "Update from a document". */
 async function updateFromEditor(page: Page, formId: string) {
   await page.goto(`/forms/${formId}`);
+  await openBuilderMore(page);
   await page.getByRole('link', { name: 'Update from a document' }).click();
   await expect(page).toHaveURL(new RegExp(`/forms/${formId}/import$`));
   await expect(

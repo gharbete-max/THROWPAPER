@@ -374,6 +374,17 @@ function Shell() {
     );
   }
 
+  /* The form creator is a blank page too: a bar, the page, a tray of pieces (E3). */
+  if (/^\/forms\/[0-9a-f-]{36}$/.test(location.pathname)) {
+    return (
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          <Route path="/forms/:id" element={<FormBuilder />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
   /**
    * How wide the content column gets, which depends on what kind of screen it is.
    *

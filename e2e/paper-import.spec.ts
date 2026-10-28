@@ -9,7 +9,7 @@ import {
   paragraph,
   zipBytes,
 } from '../apps/forms/src/screens/forms/builder/paper/docx.fixture.js';
-import { db, plantLoginToken } from './support.js';
+import { db, openBuilderMore, plantLoginToken } from './support.js';
 import { tinyPdf } from './pdf.js';
 
 /**
@@ -49,6 +49,7 @@ async function openPaperDoor(page: Page) {
   await page.getByRole('button', { name: 'Skapa' }).click();
   await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}$/);
   created.push(page.url().split('/').pop()!);
+  await openBuilderMore(page);
   await page.getByRole('button', { name: 'Från papper' }).click();
 }
 
