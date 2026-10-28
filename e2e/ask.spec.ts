@@ -31,6 +31,21 @@ test('"PoA" leads to the power of attorney template in two presses @smoke', asyn
   await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}$/);
 });
 
+test('one tap on a picture card makes the form, and "Something else" is the blank page', async ({
+  page,
+}) => {
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  await page.goto('/forms/new');
+  await expect(page.locator('.ask__card')).toHaveCount(8);
+  await page.getByRole('button', { name: 'Feedback' }).click();
+  await expect(page).toHaveURL(/\/forms\/[0-9a-f-]{36}$/);
+  await expect(page.locator('.builder__list > li').first()).toBeVisible();
+
+  await page.goto('/forms/new');
+  await page.getByRole('button', { name: 'Something else' }).click();
+  await expect(page).toHaveURL(/\/forms\?new=manual/);
+});
+
 test('"contract" leads to Sign, and nonsense falls back to the questions', async ({ page }) => {
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   await ask(page, 'contract');

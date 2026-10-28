@@ -2015,3 +2015,40 @@
 [hidden] {
   display: none !important;
 }
+
+/* New form: the commonest needs as one-tap cards (E5). */
+.ask__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--tp-spacing-unit);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ask__card {
+  display: grid;
+  justify-items: center;
+  gap: var(--tp-spacing-unit);
+  inline-size: 100%;
+  min-block-size: 6.5rem;
+  padding: calc(var(--tp-spacing-unit) * 2);
+  border: 2px solid var(--tp-part-forms);
+  border-radius: var(--tp-radius-lg);
+  background: color-mix(in srgb, var(--tp-part-forms) 22%, transparent);
+  color: var(--tp-colour-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+}
+
+.ask__card:hover:not(:disabled) {
+  background: var(--tp-part-forms);
+  color: var(--tp-part-forms-ink);
+}
+
+.ask__card .icon {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+}

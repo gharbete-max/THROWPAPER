@@ -8,6 +8,8 @@ import {
 } from '@tp/shared/forms';
 import type { DraftForm } from '@tp/shared/ai';
 import { aiBridge } from '../../../../lib/ai-bridge.js';
+import { Icon, type IconName } from '../../../../components/Icon.js';
+import { PART_STYLE } from '../../../../lib/part-style.js';
 import { useT } from '../../../../lib/i18n.js';
 import { AskAi } from './AskAi.js';
 
@@ -16,6 +18,18 @@ import { AskAi } from './AskAi.js';
  * catalogue (`docs/plan/EASY.md`). A few words are read by rule (`readAsk`) as a template or as
  * another part of the app, and Loppa answers with one thing to press. Nothing is made until a press.
  */
+/** One tap to a form for the commonest needs; each is a template that already exists. */
+const CARDS: readonly { key: string; icon: IconName; template?: string }[] = [
+  { key: 'signup', icon: 'events', template: 'event-registration' },
+  { key: 'feedback', icon: 'inbox', template: 'customer-feedback' },
+  { key: 'order', icon: 'file', template: 'quote-request' },
+  { key: 'booking', icon: 'clock', template: 'booking-request' },
+  { key: 'contact', icon: 'email', template: 'contact-enquiry' },
+  { key: 'survey', icon: 'rating', template: 'satisfaction-survey' },
+  { key: 'application', icon: 'user', template: 'job-application' },
+  { key: 'other', icon: 'plus' },
+];
+
 export function Ask({
   templates,
   nameIn,
@@ -23,6 +37,7 @@ export function Ask({
   onTemplate,
   onRoute,
   onQuestions,
+  onBlank,
   locale,
   onDraft,
   focusInput = true,
@@ -34,6 +49,8 @@ export function Ask({
   onTemplate: (id: string) => void;
   onRoute: (path: string) => void;
   onQuestions: () => void;
+  /** "Something else": the blank page. */
+  onBlank: () => void;
   /** The form's default language, for a draft by the AI. */
   locale: string;
   onDraft: (draft: DraftForm) => void;
@@ -79,7 +96,7 @@ export function Ask({
   }
 
   return (
-    <div className="ask">
+    <div className="ask" style={PART_STYLE}>
       <form className="ask__form" onSubmit={submit}>
         <label className="ask__label" htmlFor="ask-input">
           {t('ask.label')}
@@ -113,6 +130,25 @@ export function Ask({
           </label>
         )}
       </form>
+      {!said && (
+        <ul className="ask__cards">
+          {CARDS.filter(
+            (card) => !card.template || templates.some((x) => x.id === card.template),
+          ).map((card) => (
+            <li key={card.key}>
+              <button
+                type="button"
+                className="ask__card"
+                disabled={busy}
+                onClick={() => (card.template ? onTemplate(card.template) : onBlank())}
+              >
+                <Icon name={card.icon} />
+                <span>{t(`ask.card.${card.key}`)}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
       {said && (
         <div className="ask__chat" aria-live="polite">
           <p className="ask__you">{said.words}</p>
