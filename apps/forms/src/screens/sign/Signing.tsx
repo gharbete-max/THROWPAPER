@@ -278,7 +278,10 @@ function Row({
   }
 
   return (
-    <li className="card stack signing__card" data-testid="signing-row">
+    <li
+      className={`card stack signing__card${request.status === 'completed' ? ' signing__card--done' : ''}`}
+      data-testid="signing-row"
+    >
       <div className="row row--between">
         <strong className="row">
           {request.documentName}

@@ -2052,3 +2052,41 @@
   inline-size: 1.75rem;
   block-size: 1.75rem;
 }
+
+/* A small, short moment when something is sent or everyone has signed (E8); still under reduced motion. */
+.celebrate {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.celebrate__tick {
+  inline-size: 2rem;
+  block-size: 2rem;
+  padding: 0.35rem;
+  border-radius: 50%;
+  background: var(--tp-part-send, var(--tp-colour-success));
+  color: var(--tp-part-send-ink, var(--tp-colour-background));
+  animation: celebrate-pop 400ms var(--tp-ease) both;
+}
+
+@keyframes celebrate-pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.signing__card--done {
+  border-inline-start: 6px solid var(--tp-colour-success);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebrate__tick {
+    animation: none;
+  }
+}
