@@ -87,7 +87,9 @@ test('pages photographed on a phone arrive on the computer and are sent for sign
   await expect(panel).toBeHidden();
 
   await page.getByLabel('Document name').fill('Scanned by phone');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByLabel('Name', { exact: true }).fill('Mia Telefon');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByRole('button', { name: 'Send for signing' }).click();
   const row = page.getByTestId('signing-row').filter({ hasText: 'Scanned by phone' }).first();
   await expect(row.getByTestId('signing-status')).toHaveText('Waiting for signatures');

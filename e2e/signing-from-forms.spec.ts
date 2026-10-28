@@ -50,9 +50,11 @@ test('an operator sends a PDF for signing and downloads it sealed', async ({ pag
     buffer: tinyPdf('Lease from Forms'),
   });
   await expect(page.getByLabel('Document name')).toHaveValue('Lease e2e');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByLabel('Name', { exact: true }).fill('Åsa Öberg');
   await page.getByLabel('Email (optional)').fill('asa@example.com');
   // P1c-4b: the invitation goes by email too — after a second, worded confirmation (rule 7).
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByRole('checkbox', { name: /Email each signer their link/ }).check();
   await page.getByRole('button', { name: 'Send for signing' }).click();
   const dialog = page.getByRole('dialog');
@@ -131,7 +133,10 @@ test("an admin writes the organisation's own declaration and sends a real signin
     mimeType: 'application/pdf',
     buffer: tinyPdf('A real one'),
   });
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByLabel('Name', { exact: true }).fill('Per Ärlig');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
+  await page.locator('.signing__more > summary').click();
   await page.getByRole('combobox', { name: 'Declaration', exact: true }).selectOption('e2e-terms');
   await page.getByRole('combobox', { name: 'Mode' }).selectOption('production');
   const send = page.getByRole('button', { name: 'Send for signing' });

@@ -110,8 +110,10 @@ test('scan, arrange, sign, fill, send and summarise, by clicking alone', async (
   await expect(page.getByTestId('signing-handoff')).toHaveText('PDF ready: loppa.pdf');
   const documentName = `Demo ${TAG}`;
   await page.getByLabel('Document name').fill(documentName);
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByLabel('Name', { exact: true }).fill('Maja Strand');
   await page.getByLabel('Email (optional)').fill('maja.strand@example.com');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByRole('button', { name: 'Send for signing' }).click();
   const row = page.getByTestId('signing-row').filter({ hasText: documentName });
   await expect(row.getByTestId('signing-status')).toHaveText('Waiting for signatures');

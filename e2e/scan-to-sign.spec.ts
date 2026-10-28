@@ -62,7 +62,9 @@ test('a paper document scanned with the camera is sent, signed and sealed', asyn
   await scanner.getByRole('button', { name: 'Done (2)' }).click();
 
   await page.getByLabel('Document name').fill('Scanned lease');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByLabel('Name', { exact: true }).fill('Jon Smith');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByRole('button', { name: 'Send for signing' }).click();
 
   const row = page.getByTestId('signing-row').filter({ hasText: 'Scanned lease' }).first();
@@ -76,8 +78,13 @@ test('a paper document scanned with the camera is sent, signed and sealed', asyn
   await expect(signer.getByTestId('outcome')).toHaveText('Everyone has signed.');
   await signer.close();
 
-  await row.getByRole('button', { name: 'Refresh' }).click();
-  await expect(row.getByTestId('signing-status')).toHaveText('Signed by everyone');
+  // Sealing finishes a moment after the signer's page says so; pressing Refresh again is what a person does.
+  await expect(async () => {
+    await row.getByRole('button', { name: 'Refresh' }).click();
+    await expect(row.getByTestId('signing-status')).toHaveText('Signed by everyone', {
+      timeout: 2_000,
+    });
+  }).toPass({ timeout: 20_000 });
   const [download] = await Promise.all([
     page.waitForEvent('download'),
     row.getByRole('button', { name: 'Download signed PDF' }).click(),
@@ -133,7 +140,9 @@ test("pages from a flatbed scanner's own software are sent as a scan", async ({ 
   // They become scanned pages, straightened like a camera's.
   await expect(page.getByRole('radio', { name: 'Camera' })).toHaveAttribute('aria-checked', 'true');
   await expect(page.getByLabel('Document name')).toHaveValue('Lease p1');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByLabel('Name', { exact: true }).fill('Flatbed Fredrik');
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByRole('button', { name: 'Send for signing' }).click();
   const row = page.getByTestId('signing-row').filter({ hasText: 'Lease p1' }).first();
   await expect(row.getByTestId('signing-status')).toHaveText('Waiting for signatures');
