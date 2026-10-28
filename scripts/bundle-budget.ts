@@ -111,8 +111,11 @@ const BUDGET_KB = {
    * 1270 -> 1275 (2026-10-27): New form as its own page with the Ask box (keyword reader, the AI
    * draft task's reader and its strings in twelve languages) measured 1270.0 on CI's gzip, 0.2 above
    * a Windows build; the old template-and-doors strip it replaces stays for "Build it myself".
+   * 1275 -> 1290 (2026-10-28): the EASY slices E1-E6 (home, tour, form-creator tray and bubble, the
+   * signing stepper, picture cards) and their strings in twelve languages measured 1274.7. The
+   * doubling-detector still holds: the entry, the first thing a person loads, is unchanged at 6.6.
    */
-  total: 1275,
+  total: 1290,
 } as const;
 
 function gzippedKb(path: string): number {

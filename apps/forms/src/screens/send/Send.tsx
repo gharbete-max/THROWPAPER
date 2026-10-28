@@ -153,7 +153,10 @@ function SendOne() {
   if (step === 'done') {
     return (
       <div className="stack" data-testid="send-done">
-        <h2>{t('send.done')}</h2>
+        <h2 className="celebrate">
+          <Icon name="check" className="celebrate__tick" />
+          {t('send.done')}
+        </h2>
         <Delivery recipients={queued} />
         <div className="row">
           <button

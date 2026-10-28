@@ -48,6 +48,7 @@ export function Doors({
         onTemplate={onTemplate}
         onRoute={onRoute}
         onQuestions={onQuestions}
+        onBlank={onMyself}
         locale={locale}
         onDraft={onDraft}
         focusInput={focus === undefined}
