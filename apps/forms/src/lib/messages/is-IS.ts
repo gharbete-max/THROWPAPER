@@ -2230,7 +2230,7 @@ export const isIS: Record<MessageKey, string> = {
   'copy.error.formFailed': 'Ekki tókst að hefja eyðublaðið. Reyndu aftur.',
   'copy.close': 'Loka',
   'copy.noWords': 'Engin orð fundust á síðunni.',
-  'docs.drop.hint': 'Slepptu skrá hvar sem er í herberginu til að opna hana.',
+  'docs.drop.hint': 'Slepptu skrá hvar sem er á þessari síðu til að opna hana.',
   'docs.open': 'Opna skrá…',
   'docs.opened.pdf': 'Opnað sem PDF, í blaðsíðulistanum.',
   'docs.opened.word': 'Opnað sem Word-skrá og breytt í PDF.',

@@ -2213,7 +2213,7 @@ export const jaJP: Record<MessageKey, string> = {
   'copy.error.formFailed': 'フォームを開始できませんでした。もう一度お試しください。',
   'copy.close': '閉じる',
   'copy.noWords': 'このページには単語が見つかりませんでした。',
-  'docs.drop.hint': 'ファイルを部屋のどこかにドロップすると開きます。',
+  'docs.drop.hint': 'ファイルをこのページのどこかにドロップすると開きます。',
   'docs.open': 'ファイルを開く…',
   'docs.opened.pdf': 'PDFとして開きました（ページ一覧に追加）。',
   'docs.opened.word': 'Wordファイルとして開き、PDFにしました。',

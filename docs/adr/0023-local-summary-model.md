@@ -190,3 +190,10 @@ disk, status, the size and "this stays on this computer". The desktop panel's AI
   one page 20–25 s, ten pages 142 s, one-page translation 39 s. The spike's numbers hold in the app's pipeline.
   Still unmeasured: a real 8 GB laptop, a Mac, a packaged build, native-speaker quality.
 - **Found:** the reduce step's token cap cut the ten-page summary mid-sentence; it now scales with the parts.
+- **Amendment 2026-10-28 (EASY E4): a draft-form text task.** The Ask box on New form (`/forms/new`) may, on the person's
+  switch and only where `window.loppaModel`/`loppaAi` reports an installed text model, ask the model for a list of
+  field labels. It is one more `TextTask` (`draft-form`, `packages/shared/src/ai/draft-form.ts`), run by the same
+  pipeline with the same one-resident rule. Its answer is JSON that `readDraft` validates against the `Field` schema; it
+  is shown as an editable draft and saved only on "Use this form". Requests for consent, legal, clinical or tax wording
+  are refused before the model is asked (`needsAHuman`, `mustQuote`), rule 8. It lives outside
+  `packages/shared/src/{builder,interpret,import}`, which stay AI-free; the guided builder never calls it.

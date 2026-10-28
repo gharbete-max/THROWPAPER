@@ -2224,7 +2224,7 @@ export const svSE: Record<MessageKey, string> = {
   'copy.error.formFailed': 'Formuläret kunde inte startas. Försök igen.',
   'copy.close': 'Stäng',
   'copy.noWords': 'Inga ord hittades på sidan.',
-  'docs.drop.hint': 'Släpp en fil var som helst i rummet för att öppna den.',
+  'docs.drop.hint': 'Släpp en fil var som helst på sidan för att öppna den.',
   'docs.open': 'Öppna en fil…',
   'docs.opened.pdf': 'Öppnad som en PDF, i sidlistan.',
   'docs.opened.word': 'Öppnad som en Wordfil och gjord till en PDF.',

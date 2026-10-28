@@ -2262,7 +2262,7 @@ export const ruRU: Record<MessageKey, string> = {
   'copy.error.formFailed': 'Не удалось начать форму. Попробуйте ещё раз.',
   'copy.close': 'Закрыть',
   'copy.noWords': 'На этой странице слов не найдено.',
-  'docs.drop.hint': 'Перетащите файл в любое место комнаты, чтобы открыть его.',
+  'docs.drop.hint': 'Перетащите файл в любое место страницы, чтобы открыть его.',
   'docs.open': 'Открыть файл…',
   'docs.opened.pdf': 'Открыт как PDF, в списке страниц.',
   'docs.opened.word': 'Открыт как файл Word и преобразован в PDF.',
