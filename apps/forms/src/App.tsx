@@ -17,6 +17,7 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router';
+import { roomCssVariables } from '@tp/tokens';
 import { SessionProvider, useSession } from './lib/session.js';
 import { DemoBanner, DemoProvider } from './lib/demo.js';
 import { BrandProvider, useBrand } from './lib/brand.js';
@@ -112,7 +113,7 @@ const NewForm = lazy(() =>
 );
 
 /** The room is where a signed-in person arrives (ADR 0022); the rail's screens follow it. */
-const Home = lazy(() => import('./screens/room/Home.js').then((m) => ({ default: m.Home })));
+const Room = lazy(() => import('./screens/room/Room.js').then((m) => ({ default: m.Room })));
 const UserWorkspace = lazy(() =>
   import('./screens/earlier/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
 );
@@ -333,6 +334,9 @@ function useWaitingCount(enabled: boolean, path: string): number {
   return count;
 }
 
+/** The room's own grey while its screen loads, so the light page never flashes in between. */
+const ROOM_STYLE = roomCssVariables() as CSSProperties;
+
 /** Everything behind the bearer token. */
 function Shell() {
   const t = useT();
@@ -364,6 +368,18 @@ function Shell() {
   }
 
   if (!user) return <Navigate to="/login" replace />;
+
+  /*
+   * The room is its own world: full screen, dark grey, no rail and no session row (ADR 0022). It
+   * carries its own corner controls, so none of the shell's chrome is drawn around it.
+   */
+  if (/^\/room(\/documents)?$/.test(location.pathname)) {
+    return (
+      <Suspense fallback={<main className="room" style={ROOM_STYLE} />}>
+        <Room />
+      </Suspense>
+    );
+  }
 
   /* New form is one question on an empty page: no rail, no top bar (docs/plan/EASY.md). */
   if (location.pathname === '/forms/new') {
@@ -576,8 +592,6 @@ function Shell() {
           <Suspense fallback={<Loading />}>
             <Routes>
               <Route path="/" element={<Navigate to="/room" replace />} />
-              <Route path="/room" element={<Home />} />
-              <Route path="/room/documents" element={<Navigate to="/room" replace />} />
               <Route path="/events" element={<Events />} />
               <Route path="/events/new" element={<EventForm />} />
               <Route path="/events/:id" element={<EventForm />} />

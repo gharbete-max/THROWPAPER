@@ -14,7 +14,7 @@ export function startTour(): void {
 }
 
 /** The steps, in order: each points at the element marked `data-tour="<target>"`. */
-const STEPS = ['forms', 'scan', 'sign', 'more'] as const;
+const STEPS = ['forms', 'scan', 'sign'] as const;
 
 function seen(): boolean {
   try {
@@ -97,18 +97,14 @@ export function Coach() {
     if (!target) return setSpot(null);
     const place = () => {
       const r = target.getBoundingClientRect();
-      const wide = window.innerWidth > 760 && STEPS[step!] === 'more';
       const width = bubble.current?.offsetWidth ?? 280;
-      const left = wide
-        ? r.right + 14
-        : Math.min(Math.max(r.left, 8), window.innerWidth - width - 8);
+      const left = Math.min(Math.max(r.left, 8), window.innerWidth - width - 8);
       const height = bubble.current?.offsetHeight ?? 140;
-      const top = wide
-        ? r.top
-        : r.bottom + 14 + height > window.innerHeight
+      const top =
+        r.bottom + 14 + height > window.innerHeight
           ? Math.max(8, r.top - height - 14)
           : r.bottom + 14;
-      setSpot({ top, left, side: wide ? 'right' : 'below' });
+      setSpot({ top, left, side: 'below' });
     };
     place();
     target.classList.add('coach-on');

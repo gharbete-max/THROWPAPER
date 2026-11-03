@@ -88,9 +88,10 @@ test('scan, arrange, sign, fill, send and summarise, by clicking alone', async (
   test.setTimeout(180_000);
   await signInWithSign(page);
 
-  // Home: Scan is one of the four tiles.
+  // The room: Documents opens into its parts, and Scan is one of them.
   await page.goto('/room');
-  await page.locator('.home__tiles').getByRole('link', { name: /Scan/ }).click();
+  await page.getByRole('link', { name: 'Documents' }).click();
+  await page.getByRole('link', { name: 'Scan' }).click();
   await expect(page.getByRole('heading', { name: 'Arrange pages' })).toBeVisible();
 
   // Scan: two pages with the camera, then arranged.
@@ -165,7 +166,7 @@ test('scan, arrange, sign, fill, send and summarise, by clicking alone', async (
     });
   });
   await page.addInitScript(fakeBridge);
-  await page.goto('/room');
+  await page.goto('/room/documents');
   await page.getByRole('link', { name: /Summary and translation/ }).click();
   await page.getByRole('link', { name: 'Set up AI' }).click();
   await page.getByRole('button', { name: /Open a file( or an AI pack.*)? from disk/ }).click();

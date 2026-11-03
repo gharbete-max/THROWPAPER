@@ -7,6 +7,8 @@ questions should reach a template in fewer clicks. Builds on `SIMPLIFY.md` (stru
 `DESIGN-LANGUAGE.md` (look); where this disagrees with them on *what a first-time person sees*, this
 wins and they get amended in the same PR as each slice.
 
+**Amended 2026-11-03 (owner): the catcher room is back, and it is three parts.** The owner asked for the cootie-catcher room (paper folding, the summary in the middle) instead of the tiles: `Room.tsx` and `room.css` are restored from before E1, with People on the fourth pocket where Send was, and `Home.tsx` is gone. The tour is told on the opened catcher. Below, E1's "tiles" description is history.
+
 **Amended 2026-11-03 (owner): three parts, not four.** Send is off home, the rail, the tour and the
 command palette; Home is Forms, Scan, Sign, with Recent as the overview. Nothing is deleted: `/send`,
 Outgoing and the hand-offs from Scan and Forms still work, and the "send" part colour stays in
