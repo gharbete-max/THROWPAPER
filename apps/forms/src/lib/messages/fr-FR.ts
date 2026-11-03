@@ -1246,6 +1246,15 @@ export const frFR: Record<MessageKey, string> = {
     "Je n'ai pas pu en faire un formulaire. Vous pouvez répondre à quelques questions à la place.",
   'ask.aiQuoteOnly':
     "Ce type de formulaire contient des termes qu'une personne doit rédiger ; je ne le rédige donc pas. Utilisez un modèle ou les questions.",
+  'chat.label': 'Demander à Loppa',
+  'chat.placeholder': 'Dites quoi ajouter, p. ex. numéro de téléphone et taille de T-shirt',
+  'chat.send': 'Demander',
+  'chat.proposal': 'Je propose {count} questions. Cochez celles que vous voulez.',
+  'chat.add': 'Ajouter {count}',
+  'chat.no': 'Non merci',
+  'chat.setup': 'Configurer l’IA pour utiliser ce chat',
+  'chat.failed':
+    'Je n’ai pas pu en faire des questions. Essayez d’autres mots, ou ajoutez-en une à la main.',
   'conversation.doors.questions': 'Commencer par des questions',
   'conversation.doors.paper': 'Commencer à partir du papier',
   'conversation.back': 'Retour',

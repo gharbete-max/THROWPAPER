@@ -1216,6 +1216,15 @@ export const nbNO: Record<MessageKey, string> = {
     'Jeg klarte ikke å lage et skjema av det. Du kan svare på noen spørsmål i stedet.',
   'ask.aiQuoteOnly':
     'Den typen skjema har ord et menneske må skrive, så jeg lager ikke utkast. Bruk en mal eller spørsmålene.',
+  'chat.label': 'Spør Loppa',
+  'chat.placeholder': 'Si hva som skal legges til, f.eks. telefonnummer og t-skjortestørrelse',
+  'chat.send': 'Spør',
+  'chat.proposal': 'Jeg foreslår {count} spørsmål. Kryss av for dem du vil ha.',
+  'chat.add': 'Legg til {count}',
+  'chat.no': 'Nei takk',
+  'chat.setup': 'Sett opp AI for å bruke chatten',
+  'chat.failed':
+    'Jeg klarte ikke å lage spørsmål av det. Prøv andre ord, eller legg til ett for hånd.',
   'conversation.doors.questions': 'Start med spørsmål',
   'conversation.doors.paper': 'Start fra papir',
   'conversation.back': 'Tilbake',

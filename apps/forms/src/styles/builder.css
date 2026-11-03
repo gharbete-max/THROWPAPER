@@ -1770,6 +1770,10 @@
   margin-inline: auto;
   padding: calc(var(--tp-spacing-unit) * 2);
   padding-block-end: calc(var(--tp-spacing-unit) * 4);
+  /* White in every theme: the colours here are the light ones (FormBuilder.tsx sets them). */
+  background: #fff;
+  color: #1a1a1a;
+  color-scheme: light;
 }
 
 .eb__bar {
@@ -1821,9 +1825,15 @@
   color: #1a1a1a;
 }
 
-.eb__tray {
+/* The tray and the chat stay at the foot of the window while the form scrolls. */
+.eb__dock {
   position: sticky;
   inset-block-end: var(--tp-spacing-unit);
+  display: grid;
+  gap: var(--tp-spacing-unit);
+}
+
+.eb__tray {
   display: flex;
   gap: var(--tp-spacing-unit);
   overflow-x: auto;
@@ -1864,4 +1874,51 @@
 .eb__more > summary {
   display: inline-flex;
   cursor: pointer;
+}
+
+/* The chat at the foot of the editor: one line to say what to add, and a short list to accept. */
+.chat {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-lg);
+  background: var(--tp-colour-background);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.12);
+}
+
+.chat__row {
+  display: flex;
+  gap: var(--tp-spacing-unit);
+}
+
+.chat__input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  min-block-size: 2.75rem;
+  padding-inline: calc(var(--tp-spacing-unit) * 1.5);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius-pill);
+  background: var(--tp-colour-background);
+  color: var(--tp-colour-text);
+  font: inherit;
+}
+
+.chat__draft {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) / 2);
+  margin: 0;
+  padding: var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+}
+
+.chat__pick {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.chat__setup {
+  margin: 0;
 }

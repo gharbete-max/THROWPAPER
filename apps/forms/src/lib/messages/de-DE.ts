@@ -1255,6 +1255,15 @@ export const deDE: Record<MessageKey, string> = {
     'Daraus konnte ich kein Formular machen. Sie können stattdessen ein paar Fragen beantworten.',
   'ask.aiQuoteOnly':
     'Bei dieser Art von Formular muss ein Mensch den Wortlaut schreiben, deshalb entwerfe ich es nicht. Nehmen Sie eine Vorlage oder die Fragen.',
+  'chat.label': 'Loppa fragen',
+  'chat.placeholder': 'Sagen Sie, was hinzukommen soll, z. B. Telefonnummer und T-Shirt-Größe',
+  'chat.send': 'Fragen',
+  'chat.proposal': 'Ich schlage {count} Fragen vor. Haken Sie die gewünschten an.',
+  'chat.add': '{count} hinzufügen',
+  'chat.no': 'Nein danke',
+  'chat.setup': 'KI einrichten, um den Chat zu nutzen',
+  'chat.failed':
+    'Daraus konnte ich keine Fragen machen. Versuchen Sie andere Worte oder fügen Sie eine von Hand hinzu.',
   'conversation.doors.questions': 'Mit Fragen beginnen',
   'conversation.doors.paper': 'Mit Papier beginnen',
   'conversation.back': 'Zurück',

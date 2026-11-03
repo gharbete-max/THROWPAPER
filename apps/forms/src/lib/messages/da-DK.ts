@@ -1217,6 +1217,15 @@ export const daDK: Record<MessageKey, string> = {
     'Jeg kunne ikke lave et skema ud af det. Du kan svare på nogle spørgsmål i stedet.',
   'ask.aiQuoteOnly':
     'Den slags skema har ord, et menneske skal skrive, så jeg laver ikke et udkast. Brug en skabelon eller spørgsmålene.',
+  'chat.label': 'Spørg Loppa',
+  'chat.placeholder': 'Sig, hvad der skal tilføjes, fx telefonnummer og t-shirtstørrelse',
+  'chat.send': 'Spørg',
+  'chat.proposal': 'Jeg foreslår {count} spørgsmål. Sæt kryds ved dem, du vil have.',
+  'chat.add': 'Tilføj {count}',
+  'chat.no': 'Nej tak',
+  'chat.setup': 'Opsæt AI for at bruge chatten',
+  'chat.failed':
+    'Jeg kunne ikke lave spørgsmål ud fra det. Prøv andre ord, eller tilføj et i hånden.',
   'conversation.doors.questions': 'Start med spørgsmål',
   'conversation.doors.paper': 'Start fra papir',
   'conversation.back': 'Tilbage',
