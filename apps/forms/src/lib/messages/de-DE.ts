@@ -963,6 +963,11 @@ export const deDE: Record<MessageKey, string> = {
   'signing.party.signed': 'Unterschrieben',
   'signing.party.declined': 'Abgelehnt',
   'signing.openLink': 'Unterschriftsseite öffnen',
+  'signing.scanToSign': '{name}: Mit dem Handy scannen und unterschreiben',
+  'signing.signHere': 'Oder auf diesem Computer unterschreiben',
+  'signing.noWifi':
+    'Kein WLAN gefunden, daher erreicht ein Handy diesen Computer nicht. Unterschreiben Sie stattdessen auf diesem Computer.',
+  'signing.allSigned': 'Alle haben unterschrieben. Danke!',
   'signing.refresh': 'Aktualisieren',
   'signing.downloadSigned': 'Unterschriebenes PDF herunterladen',
   'signing.declarationHint':

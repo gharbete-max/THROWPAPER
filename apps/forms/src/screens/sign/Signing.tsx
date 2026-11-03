@@ -17,6 +17,7 @@ import { CropPhoto, WHOLE_PICTURE } from '../forms/builder/paper/CropPhoto.js';
 import { isUsable, straightenFile, type Corners } from '../forms/builder/paper/warp.js';
 import { detectPage } from '../forms/builder/paper/detect.js';
 import { SigningDeclarations } from './SigningDeclarations.js';
+import { SignQr } from './SignQr.js';
 import { documentNameOf, pdfFromState } from '../../lib/sign-handoff.js';
 import { useToast } from '../../lib/toast.js';
 import { Banner } from '../../components/Banner.js';
@@ -191,6 +192,16 @@ function Row({
     .filter((party) => party.status === 'invited' || party.status === 'viewed')
     .map((party) => party.name);
 
+  // At this computer a phone signs from a QR code, so the card watches for it and turns to Signed.
+  const watching = edition === 'desktop' && request.status === 'sent';
+  useEffect(() => {
+    if (!watching) return;
+    const timer = setInterval(() => {
+      client.refreshSigningRequest(request.id).then(onChange, () => undefined);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [watching, request.id, onChange]);
+
   async function refresh() {
     setBusy(true);
     try {
@@ -291,6 +302,12 @@ function Row({
           {t(`signing.status.${statusKey}`)}
         </span>
       </div>
+      {request.status === 'completed' && (
+        <h2 className="celebrate">
+          <Icon name="check" className="celebrate__tick" />
+          {t('signing.allSigned')}
+        </h2>
+      )}
       {request.status === 'sent' && waiting.length > 0 && (
         <p className="signing__waiting">{t('signing.waitingFor', { names: waiting.join(', ') })}</p>
       )}
@@ -305,6 +322,9 @@ function Row({
               {(party.status === 'invited' || party.status === 'viewed') &&
                 request.status === 'sent' && (
                   <>
+                    {edition === 'desktop' && (
+                      <SignQr requestId={request.id} partyId={party.id} name={party.name} />
+                    )}
                     <a
                       className="button button--quiet small"
                       href={party.signUrl}
@@ -312,9 +332,9 @@ function Row({
                       rel="noreferrer noopener"
                     >
                       <Icon name="external" />
-                      {t('signing.openLink')}
+                      {edition === 'desktop' ? t('signing.signHere') : t('signing.openLink')}
                     </a>
-                    <CopyLink path={party.signUrl} />
+                    {edition !== 'desktop' && <CopyLink path={party.signUrl} />}
                     {/* A link that opens only here would reach the signer broken. */}
                     {party.email && !opensOnlyHere(party.signUrl, edition) && (
                       <button

@@ -934,6 +934,11 @@ export const daDK: Record<MessageKey, string> = {
   'signing.party.signed': 'Underskrevet',
   'signing.party.declined': 'Afvist',
   'signing.openLink': 'Åbn underskriftssiden',
+  'signing.scanToSign': '{name}: scan med din telefon for at underskrive',
+  'signing.signHere': 'Eller underskriv på denne computer',
+  'signing.noWifi':
+    'Intet Wi-Fi fundet, så en telefon kan ikke nå denne computer. Underskriv på denne computer i stedet.',
+  'signing.allSigned': 'Alle har underskrevet. Tak!',
   'signing.refresh': 'Opdater',
   'signing.downloadSigned': 'Hent underskrevet PDF',
   'signing.declarationHint':

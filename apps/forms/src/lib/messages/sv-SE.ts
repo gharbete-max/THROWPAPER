@@ -935,6 +935,11 @@ export const svSE: Record<MessageKey, string> = {
   'signing.party.signed': 'Signerat',
   'signing.party.declined': 'Avböjt',
   'signing.openLink': 'Öppna signeringssidan',
+  'signing.scanToSign': '{name}: skanna med mobilen för att signera',
+  'signing.signHere': 'Eller signera på den här datorn',
+  'signing.noWifi':
+    'Inget Wi-Fi hittades, så en mobil når inte den här datorn. Signera på den här datorn i stället.',
+  'signing.allSigned': 'Alla har signerat. Tack!',
   'signing.refresh': 'Uppdatera',
   'signing.downloadSigned': 'Ladda ner signerad PDF',
   'signing.declarationHint':

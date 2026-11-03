@@ -950,6 +950,11 @@ export const esES: Record<MessageKey, string> = {
   'signing.party.signed': 'Firmado',
   'signing.party.declined': 'Rechazado',
   'signing.openLink': 'Abrir la página de firma',
+  'signing.scanToSign': '{name}: escanea con el móvil para firmar',
+  'signing.signHere': 'O firma en este ordenador',
+  'signing.noWifi':
+    'No se encontró ninguna red Wi-Fi, así que un móvil no llega a este ordenador. Firma en este ordenador.',
+  'signing.allSigned': 'Todos han firmado. ¡Gracias!',
   'signing.refresh': 'Actualizar',
   'signing.downloadSigned': 'Descargar PDF firmado',
   'signing.declarationHint':

@@ -1,3 +1,4 @@
+import type { FastifyInstance } from 'fastify';
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import {
   CreateEnvelopeResponse,
@@ -23,6 +24,11 @@ export interface SignConnection {
   apiUrl: string;
   /** The service token Sign issued to this organisation. */
   serviceToken: string;
+  /**
+   * Sign running inside this same program (the desktop): its server, so a phone that scans a
+   * signer's QR code can be let in to the signer's page and nothing else (`desktop/phone-relay.ts`).
+   */
+  local?: { app: FastifyInstance };
 }
 
 export class SignUnavailable extends Error {}

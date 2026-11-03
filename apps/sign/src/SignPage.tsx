@@ -26,7 +26,8 @@ export function SignPage({ token, fallback }: { token: string; fallback: Transla
   const [failed, setFailed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [method, setMethod] = useState<Method>('typed');
-  const [typedName, setTypedName] = useState('');
+  // Until they type, the name the sender wrote: most people only press Sign.
+  const [typedName, setTypedName] = useState<string | null>(null);
   const [paths, setPaths] = useState<string[]>([]);
   const [confirmingDecline, setConfirmingDecline] = useState(false);
 
@@ -62,8 +63,8 @@ export function SignPage({ token, fallback }: { token: string; fallback: Transla
 
   const body: SignBody | null =
     method === 'typed'
-      ? typedName.trim()
-        ? { typedName: typedName.trim() }
+      ? (typedName ?? view.party.name).trim()
+        ? { typedName: (typedName ?? view.party.name).trim() }
         : null
       : paths.length
         ? { drawn: { v: 1, kind: 'drawn', width: PAD.width, height: PAD.height, paths } }
@@ -77,6 +78,26 @@ export function SignPage({ token, fallback }: { token: string; fallback: Transla
         : view.party.status === 'declined'
           ? t('sign.party.declined')
           : null;
+
+  // Signed: nothing more to do, so nothing more to read.
+  if (view.party.status === 'signed') {
+    return (
+      <main className="shell stack thanks" data-testid="thanks">
+        <h1 className="thanks__title">
+          <span className="thanks__tick" aria-hidden="true">
+            ✓
+          </span>
+          {t('sign.thanks')}
+        </h1>
+        <p className="muted">{view.documentName}</p>
+        {outcome && (
+          <p role="status" data-testid="outcome">
+            {outcome}
+          </p>
+        )}
+      </main>
+    );
+  }
 
   return (
     <main className="shell stack">
@@ -131,7 +152,7 @@ export function SignPage({ token, fallback }: { token: string; fallback: Transla
               <span>{t('sign.typedLabel')}</span>
               <input
                 className="input"
-                value={typedName}
+                value={typedName ?? view.party.name}
                 maxLength={200}
                 autoComplete="name"
                 onChange={(event) => setTypedName(event.target.value)}

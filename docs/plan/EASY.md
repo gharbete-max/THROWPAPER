@@ -16,6 +16,13 @@ Outgoing and the hand-offs from Scan and Forms still work, and the "send" part c
 (then "Thank you, done"), and the form creator as an always-white page with a small chat bar at the
 bottom (E4).
 
+**Built 2026-11-03: signing by QR (the desktop).** Each waiting signer's card shows a QR code; a
+phone on the same Wi-Fi scans it, opens the signer's page (name already filled in, one Sign button)
+and ends on "Thank you. You are done."; the computer's card turns to Signed by itself. The phone
+reaches only the signer's page, through a relay that is open while a code has been shown in the last
+half hour (plain HTTP, like phone scan; no internet). Decline stays as a small quiet button on the
+signer's page, since a signer must be able to refuse.
+
 ## The one idea
 
 **One thing on the screen at a time, and it is always obvious what to press.** Today every screen

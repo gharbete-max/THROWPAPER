@@ -18,6 +18,9 @@ import type { PrivateUploadStore } from '../uploads/private-store.js';
 import { resolveFormAccess } from '../forms/access.js';
 import { SignRefused, SignUnavailable, type SignClient } from '../signing/client.js';
 import { createHash } from 'node:crypto';
+import QRCode from 'qrcode';
+import { defaultTokens } from '@tp/tokens';
+import { QR_DARK } from '../documents/admission.js';
 import { PageTooLarge, pagesToPdf } from '../signing/scan.js';
 import { queueInvitations, queueSignedCopies } from '../signing/invitations.js';
 
@@ -56,6 +59,8 @@ export function registerSigningRoutes(
     sign: SignClient | null;
     /** Where Sign can reach this API from: the documents it fetches and the hooks it posts. */
     publicApiUrl: string;
+    /** Where a phone can reach this computer's Sign (desktop only), for a signer's QR code. */
+    signPhoneOrigin: (() => Promise<string | null>) | null;
   },
 ): void {
   const authenticated = requireAuth(deps.guard);
@@ -392,6 +397,48 @@ export function registerSigningRoutes(
         after: { partyId: party.id },
       });
       return reply.send(view(reminded));
+    },
+  });
+
+  /**
+   * The QR code a signer scans with their phone to sign on it (desktop). The code holds the
+   * signer's own link on this computer's network address; the relay behind it lets a phone reach
+   * the signer's page and nothing else (`desktop/phone-relay.ts`).
+   */
+  app.post('/v1/signing/requests/:id/parties/:partyId/qr', {
+    preHandler: authenticated,
+    config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+    schema: {
+      tags: ['signing'],
+      params: IdParam.extend({ partyId: z.string().min(1).max(16) }),
+      response: { 200: formSchemas.SigningPartyQr, ...errors },
+    },
+    handler: async (request, reply) => {
+      const auth = request.auth!;
+      const params = IdParam.extend({ partyId: z.string().min(1).max(16) }).parse(request.params);
+      const record = await visible(auth, params.id);
+      const party = record?.parties.find((p) => p.id === params.partyId);
+      if (!record || !party?.signUrl)
+        return reply.code(404).send({ error: { code: 'not-found', message: 'Not found' } });
+      if (record.status !== 'sent' || !deps.signPhoneOrigin) {
+        return reply
+          .code(409)
+          .send({ error: { code: 'no-qr', message: 'This cannot be signed from a phone' } });
+      }
+      const origin = await deps.signPhoneOrigin();
+      if (!origin) {
+        return reply.code(503).send({
+          error: { code: 'no-network', message: 'No network a phone could reach this computer on' },
+        });
+      }
+      const phoneUrl = `${origin.replace(/\/$/, '')}${new URL(party.signUrl).pathname}`;
+      const qrSvg = await QRCode.toString(phoneUrl, {
+        type: 'svg',
+        errorCorrectionLevel: 'M',
+        margin: 2,
+        color: { dark: QR_DARK, light: defaultTokens.colour.background },
+      });
+      return reply.send({ phoneUrl, qrSvg });
     },
   });
 

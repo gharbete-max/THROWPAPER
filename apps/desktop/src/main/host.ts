@@ -40,7 +40,11 @@ export function startForms(
     ...options,
     signing: async (organisationId, origin) =>
       sign
-        ? { apiUrl: sign.url, serviceToken: await sign.tokenFor(organisationId, [origin]) }
+        ? {
+            apiUrl: sign.url,
+            serviceToken: await sign.tokenFor(organisationId, [origin]),
+            local: { app: sign.app },
+          }
         : null,
   });
 }

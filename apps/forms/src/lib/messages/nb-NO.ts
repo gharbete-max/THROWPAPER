@@ -935,6 +935,11 @@ export const nbNO: Record<MessageKey, string> = {
   'signing.party.signed': 'Signert',
   'signing.party.declined': 'Avslått',
   'signing.openLink': 'Åpne signeringssiden',
+  'signing.scanToSign': '{name}: skann med mobilen for å signere',
+  'signing.signHere': 'Eller signer på denne datamaskinen',
+  'signing.noWifi':
+    'Fant ikke noe Wi-Fi, så en mobil når ikke denne datamaskinen. Signer på denne datamaskinen i stedet.',
+  'signing.allSigned': 'Alle har signert. Takk!',
   'signing.refresh': 'Oppdater',
   'signing.downloadSigned': 'Last ned signert PDF',
   'signing.declarationHint':

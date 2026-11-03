@@ -151,4 +151,87 @@ describe('Forms and Sign on one computer', { timeout: 120_000 }, () => {
       await sign.close();
     }
   });
+
+  it('lets a phone sign from a QR code through the relay, and reaches nothing else of Sign', async () => {
+    const root = await resources();
+    const dataDir = join(scratch, 'workspace-qr');
+    const sign = await startSign(dataDir, { root }, 0);
+    const options = {
+      dataDir,
+      webDir: join(root, 'web'),
+      migrationsFolder: join(root, 'drizzle'),
+      port: await freePort(),
+      renderer: fakeRenderer,
+      // The phone's address on a machine with no Wi-Fi: this computer's own loopback.
+      phoneAddress: () => '127.0.0.1',
+    };
+    let forms = await startForms(sign, options);
+    try {
+      await forms.bootstrap({
+        organisationName: 'Byalaget',
+        name: 'Åke',
+        email: 'ake@example.com',
+      });
+      await forms.close();
+      forms = await startForms(sign, options);
+      const link = await forms.signInLink();
+      const exchanged = await fetch(`${forms.url}/v1/auth/token`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ token: new URL(link!).searchParams.get('token') }),
+      });
+      const { accessToken } = (await exchanged.json()) as { accessToken: string };
+      const auth = { authorization: `Bearer ${accessToken}`, 'content-type': 'application/json' };
+      const created = await fetch(`${forms.url}/v1/signing/requests`, {
+        method: 'POST',
+        headers: auth,
+        body: JSON.stringify({
+          source: 'upload',
+          documentName: 'Arrende',
+          pdfBase64: tinyPdf().toString('base64'),
+          parties: [{ name: 'Åke', locale: 'sv-SE' }],
+          declarationKey: 'demo',
+        }),
+      });
+      expect(created.status, await created.clone().text()).toBe(201);
+      const request = (await created.json()) as { id: string; parties: { id: string }[] };
+
+      const qr = await fetch(
+        `${forms.url}/v1/signing/requests/${request.id}/parties/${request.parties[0]!.id}/qr`,
+        { method: 'POST', headers: { authorization: auth.authorization } },
+      );
+      expect(qr.status, await qr.clone().text()).toBe(200);
+      const { phoneUrl, qrSvg } = (await qr.json()) as { phoneUrl: string; qrSvg: string };
+      expect(qrSvg).toContain('<svg');
+      const phone = new URL(phoneUrl);
+      // Not the loopback server's own port: the relay is a second door, open on its own.
+      expect(phone.origin).not.toBe(sign.url);
+      const token = phone.pathname.split('/s/')[1]!;
+
+      // The phone gets the signer's page and its own link's API…
+      expect((await fetch(phoneUrl)).status).toBe(200);
+      expect((await fetch(`${phone.origin}/api/v1/sign/${token}`)).status).toBe(200);
+      // …and nothing else of Sign, and nothing of Forms.
+      expect((await fetch(`${phone.origin}/api/v1/envelopes`)).status).toBe(404);
+      expect((await fetch(`${phone.origin}/v1/signing/requests`, { headers: auth })).status).toBe(
+        404,
+      );
+
+      const signed = await fetch(`${phone.origin}/api/v1/sign/${token}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ typedName: 'Åke' }),
+      });
+      expect(signed.status, await signed.clone().text()).toBe(200);
+
+      // The computer sees it: the card turns to signed with no help from the phone.
+      const after = await fetch(`${forms.url}/v1/signing/requests/${request.id}`, {
+        headers: auth,
+      });
+      expect(((await after.json()) as { status: string }).status).toBe('completed');
+    } finally {
+      await forms.close();
+      await sign.close();
+    }
+  });
 });

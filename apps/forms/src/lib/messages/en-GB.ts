@@ -953,6 +953,11 @@ export const enGB = {
   'signing.party.signed': 'Signed',
   'signing.party.declined': 'Declined',
   'signing.openLink': 'Open signing page',
+  'signing.scanToSign': '{name}: scan this with your phone to sign',
+  'signing.signHere': 'Or sign on this computer',
+  'signing.noWifi':
+    'No Wi-Fi network found, so a phone cannot reach this computer. Sign on this computer instead.',
+  'signing.allSigned': 'All signed. Thank you!',
   'signing.refresh': 'Refresh',
   'signing.downloadSigned': 'Download signed PDF',
   'signing.declarationHint':

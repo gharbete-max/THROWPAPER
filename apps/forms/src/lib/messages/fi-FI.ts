@@ -941,6 +941,11 @@ export const fiFI: Record<MessageKey, string> = {
   'signing.party.signed': 'Allekirjoitettu',
   'signing.party.declined': 'Hylätty',
   'signing.openLink': 'Avaa allekirjoitussivu',
+  'signing.scanToSign': '{name}: skannaa puhelimella ja allekirjoita',
+  'signing.signHere': 'Tai allekirjoita tällä tietokoneella',
+  'signing.noWifi':
+    'Wi-Fi-verkkoa ei löytynyt, joten puhelin ei tavoita tätä tietokonetta. Allekirjoita tällä tietokoneella.',
+  'signing.allSigned': 'Kaikki ovat allekirjoittaneet. Kiitos!',
   'signing.refresh': 'Päivitä',
   'signing.downloadSigned': 'Lataa allekirjoitettu PDF',
   'signing.declarationHint':

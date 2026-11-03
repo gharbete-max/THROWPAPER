@@ -1987,3 +1987,18 @@
     animation: none;
   }
 }
+
+/* A signer's QR code (desktop): big enough to read off the screen from an arm's length. */
+.signing__qr {
+  display: grid;
+  justify-items: center;
+  gap: calc(var(--tp-spacing-unit) / 2);
+  margin: 0;
+  text-align: center;
+}
+
+.signing__qr img {
+  inline-size: 12rem;
+  block-size: 12rem;
+  border-radius: var(--tp-radius);
+}

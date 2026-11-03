@@ -178,3 +178,27 @@ a:focus-visible {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+.thanks {
+  text-align: center;
+  justify-items: center;
+  padding-block: calc(var(--tp-spacing-unit) * 6);
+}
+
+.thanks__title {
+  display: grid;
+  justify-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.thanks__tick {
+  display: grid;
+  place-items: center;
+  inline-size: 4rem;
+  block-size: 4rem;
+  border-radius: 50%;
+  background: var(--tp-colour-success);
+  color: var(--tp-colour-background);
+  font-size: 2rem;
+  line-height: 1;
+}

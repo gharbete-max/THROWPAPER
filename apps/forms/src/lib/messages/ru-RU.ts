@@ -957,6 +957,11 @@ export const ruRU: Record<MessageKey, string> = {
   'signing.party.signed': 'Подписано',
   'signing.party.declined': 'Отклонено',
   'signing.openLink': 'Открыть страницу подписания',
+  'signing.scanToSign': '{name}: отсканируйте телефоном, чтобы подписать',
+  'signing.signHere': 'Или подпишите на этом компьютере',
+  'signing.noWifi':
+    'Сеть Wi-Fi не найдена, поэтому телефон не сможет подключиться к этому компьютеру. Подпишите на этом компьютере.',
+  'signing.allSigned': 'Все подписали. Спасибо!',
   'signing.refresh': 'Обновить',
   'signing.downloadSigned': 'Скачать подписанный PDF',
   'signing.declarationHint':

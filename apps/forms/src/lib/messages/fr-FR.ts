@@ -960,6 +960,11 @@ export const frFR: Record<MessageKey, string> = {
   'signing.party.signed': 'Signé',
   'signing.party.declined': 'Refusé',
   'signing.openLink': 'Ouvrir la page de signature',
+  'signing.scanToSign': '{name} : scannez avec votre téléphone pour signer',
+  'signing.signHere': 'Ou signez sur cet ordinateur',
+  'signing.noWifi':
+    'Aucun réseau Wi-Fi trouvé : un téléphone ne peut pas joindre cet ordinateur. Signez plutôt sur cet ordinateur.',
+  'signing.allSigned': 'Tout le monde a signé. Merci !',
   'signing.refresh': 'Actualiser',
   'signing.downloadSigned': 'Télécharger le PDF signé',
   'signing.declarationHint':
