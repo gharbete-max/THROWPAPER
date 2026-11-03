@@ -1221,6 +1221,15 @@ export const isIS: Record<MessageKey, string> = {
     'Ég gat ekki búið til eyðublað úr þessu. Þú getur svarað nokkrum spurningum í staðinn.',
   'ask.aiQuoteOnly':
     'Orðalag slíks eyðublaðs verður manneskja að skrifa, svo ég geri ekki drög. Notaðu sniðmát eða spurningarnar.',
+  'chat.label': 'Spyrðu Loppa',
+  'chat.placeholder': 'Segðu hvað á að bæta við, t.d. símanúmer og stærð á bol',
+  'chat.send': 'Spyrja',
+  'chat.proposal': 'Ég legg til {count} spurningar. Hakaðu við þær sem þú vilt.',
+  'chat.add': 'Bæta við {count}',
+  'chat.no': 'Nei takk',
+  'chat.setup': 'Settu upp gervigreindina til að nota spjallið',
+  'chat.failed':
+    'Ég gat ekki búið til spurningar úr þessu. Prófaðu önnur orð eða bættu einni við í höndunum.',
   'conversation.doors.questions': 'Byrja á spurningum',
   'conversation.doors.paper': 'Byrja á pappír',
   'conversation.back': 'Til baka',

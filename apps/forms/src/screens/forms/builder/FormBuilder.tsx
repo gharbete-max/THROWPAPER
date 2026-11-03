@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { pickText } from '@tp/i18n';
 import { translatableTexts } from '@tp/shared/forms';
@@ -16,6 +16,9 @@ import { formatDateTime, useT } from '../../../lib/i18n.js';
 import { useSession } from '../../../lib/session.js';
 import { PART_STYLE } from '../../../lib/part-style.js';
 import { useConfirm } from '../../../components/Confirm.js';
+import { toCssVariables } from '@tp/tokens';
+import { useBrand } from '../../../lib/brand.js';
+import { ChatBar } from './ChatBar.js';
 import { FieldCanvas } from './FieldCanvas.js';
 import { QuickEdit } from './QuickEdit.js';
 import { ImportSurvey } from './ImportSurvey.js';
@@ -76,6 +79,8 @@ export function FormBuilder() {
   /** Paper is the default view of a form that has some: it is why the author brought it. */
   const [view, setView] = useState<'list' | 'paper'>('paper');
   const history = useHistory();
+  /** The editor is white in every theme, so what is being edited is always seen as it will print. */
+  const { tokens } = useBrand();
 
   /**
    * Ctrl+Z and Ctrl+Shift+Z, plus Ctrl+Y for the Windows habit.
@@ -190,6 +195,19 @@ export function FormBuilder() {
 
     edit({ ...definition, fields });
     setSelectedId(field.id);
+  }
+
+  /** Questions the chat proposed and the person accepted: at the end, as new fields, one Undo. */
+  function addDrafted(drafted: Field[]) {
+    if (!definition || drafted.length === 0) return;
+    const keys = definition.fields.map((existing) => existing.key);
+    const added = drafted.map((field) => {
+      const key = uniqueKey(field.key, keys);
+      keys.push(key);
+      return { ...field, id: crypto.randomUUID(), key } as Field;
+    });
+    edit({ ...definition, fields: [...definition.fields, ...added] });
+    setSelectedId(added[0]!.id);
   }
 
   /**
@@ -358,7 +376,7 @@ export function FormBuilder() {
   }
 
   return (
-    <main className="eb" style={PART_STYLE}>
+    <main className="eb" style={{ ...toCssVariables(tokens), ...PART_STYLE } as CSSProperties}>
       <header className="eb__bar">
         <Link className="button button--quiet" to="/forms">
           <Icon name="arrow-left" />
@@ -494,21 +512,24 @@ export function FormBuilder() {
         )}
       </div>
 
-      {/* Big pictured pieces: drag one onto the page, or press it to add it below the open one. */}
-      <div className="eb__tray" role="group" aria-label={t('eb.tray')}>
-        {TRAY.map((type) => (
-          <button
-            key={type}
-            type="button"
-            className="eb__piece"
-            draggable
-            onDragStart={(event) => event.dataTransfer.setData(PIECE, type)}
-            onClick={() => addField(type)}
-          >
-            <Icon name={type} />
-            <span>{t(`fieldType.${type}`)}</span>
-          </button>
-        ))}
+      {/* The dock: big pictured pieces, and under them a small chat for saying what to add. */}
+      <div className="eb__dock">
+        <div className="eb__tray" role="group" aria-label={t('eb.tray')}>
+          {TRAY.map((type) => (
+            <button
+              key={type}
+              type="button"
+              className="eb__piece"
+              draggable
+              onDragStart={(event) => event.dataTransfer.setData(PIECE, type)}
+              onClick={() => addField(type)}
+            >
+              <Icon name={type} />
+              <span>{t(`fieldType.${type}`)}</span>
+            </button>
+          ))}
+        </div>
+        <ChatBar locale={locale} onAdd={addDrafted} />
       </div>
 
       <details className="eb__more" open={startPaper}>

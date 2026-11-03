@@ -22,6 +22,12 @@ and ends on "Thank you. You are done."; the computer's card turns to Signed by i
 reaches only the signer's page, through a relay that is open while a code has been shown in the last
 half hour (plain HTTP, like phone scan; no internet). Decline stays as a small quiet button on the
 signer's page, since a signer must be able to refuse.
+**Built 2026-11-03: the form editor is always white, with a chat at the foot (E4 in the editor).**
+`.eb` carries the light palette in every theme. Where the desktop has a text model, a small chat under
+the tray takes "phone number and T-shirt size", shows what the model proposes with a tick on each,
+and "Add n" puts them at the end of the form as one Undo. A request about wording a person writes
+(consent, contracts, ...) is never sent; with no model installed the bar is a link to set up the
+AI; on the web edition there is no bar.
 
 ## The one idea
 
