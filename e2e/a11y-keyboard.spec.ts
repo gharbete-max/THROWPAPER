@@ -30,9 +30,9 @@ test('the first Tab is a skip link, and a new screen takes focus at its top @smo
   // Pressing a rail link moves focus into the new screen instead of leaving it on the rail.
   await page
     .getByRole('navigation', { name: 'Sections' })
-    .getByRole('link', { name: 'Send' })
+    .getByRole('link', { name: 'Sign' })
     .click();
-  await expect(page).toHaveURL(/\/send$/);
+  await expect(page).toHaveURL(/\/signing$/);
   await expect(page.locator('main#main')).toBeFocused();
 });
 

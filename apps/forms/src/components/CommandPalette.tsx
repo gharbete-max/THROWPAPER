@@ -76,7 +76,6 @@ export function CommandPalette() {
       { id: 'forms', label: t('nav.forms'), icon: 'forms', to: '/forms' },
       { id: 'scan', label: t('room.scan'), icon: 'upload', to: '/scan' },
       { id: 'sign', label: t('room.sign'), icon: 'signature', to: '/signing' },
-      { id: 'send', label: t('room.send'), icon: 'email', to: '/send' },
       { id: 'events', label: t('nav.events'), icon: 'events', to: '/events' },
       { id: 'inbox', label: t('nav.inbox'), icon: 'inbox', to: '/responses' },
       { id: 'invoices', label: t('nav.invoices'), icon: 'file', to: '/invoices' },

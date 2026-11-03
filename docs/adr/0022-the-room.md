@@ -87,3 +87,7 @@ change at any time (`DOCUMENTS.md` §9).
 - What happens to events, registrations, check-in, invoices, the ledger and Mailer: `DOCUMENTS.md`
   §5.
 - The summary and translation: ADR 0023.
+
+## Amendment 2026-11-03: the room is back
+
+EASY E1 replaced the room with a tiles Home; the owner asked for the catcher room again. It is restored (the zoom, the rosette, the pause button), with Forms, Scan, Sign and People on the four pockets and the summary centre in the middle. Send is no longer a part (it stays reachable at `/send`).

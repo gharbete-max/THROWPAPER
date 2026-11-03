@@ -18,7 +18,7 @@ test('the rail lists the four parts; the earlier features fold, remember and sta
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   await page.goto('/forms');
   const rail = page.getByRole('navigation', { name: 'Sections' });
-  for (const name of ['Forms', 'Scan', 'Sign', 'Send']) {
+  for (const name of ['Forms', 'Scan', 'Sign']) {
     await expect(rail.getByRole('link', { name, exact: true })).toBeVisible();
   }
   await expect(rail.getByRole('link', { name: 'Back to the room', exact: false })).toBeVisible();
