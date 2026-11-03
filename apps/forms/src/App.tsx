@@ -483,7 +483,6 @@ function Shell() {
               <NavSection to="/forms" icon="forms" part="forms" label={t('nav.forms')} />
               <NavSection to="/scan" icon="upload" part="scan" label={t('room.scan')} />
               <NavSection to="/signing" icon="signature" part="sign" label={t('room.sign')} />
-              <NavSection to="/send" icon="email" part="send" label={t('room.send')} />
             </div>
 
             {/* Nothing here is removed; these wait for the catchers they belong to. */}

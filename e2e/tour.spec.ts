@@ -22,7 +22,7 @@ test('a fresh profile gets the tour once; Escape ends it; More replays it @smoke
   await page.goto('/room');
   const bubble = page.getByRole('dialog', { name: 'A quick tour' });
   await expect(bubble).toBeVisible({ timeout: 20_000 });
-  await expect(bubble).toContainText('1 / 5');
+  await expect(bubble).toContainText('1 / 4');
   await expect(bubble.getByRole('button', { name: 'Next' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(bubble).toContainText('Got a paper?');
@@ -38,9 +38,9 @@ test('a fresh profile gets the tour once; Escape ends it; More replays it @smoke
   // Replay from More, through to the end.
   await page.getByText('More', { exact: true }).first().click();
   await page.getByRole('button', { name: 'Show me around' }).click();
-  await expect(bubble).toContainText('1 / 5');
-  for (let i = 0; i < 4; i++) await bubble.getByRole('button', { name: 'Next' }).click();
-  await expect(bubble).toContainText('5 / 5');
+  await expect(bubble).toContainText('1 / 4');
+  for (let i = 0; i < 3; i++) await bubble.getByRole('button', { name: 'Next' }).click();
+  await expect(bubble).toContainText('4 / 4');
   await bubble.getByRole('button', { name: 'Got it' }).click();
   await expect(bubble).toHaveCount(0);
 });

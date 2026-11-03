@@ -7,6 +7,13 @@ questions should reach a template in fewer clicks. Builds on `SIMPLIFY.md` (stru
 `DESIGN-LANGUAGE.md` (look); where this disagrees with them on *what a first-time person sees*, this
 wins and they get amended in the same PR as each slice.
 
+**Amended 2026-11-03 (owner): three parts, not four.** Send is off home, the rail, the tour and the
+command palette; Home is Forms, Scan, Sign, with Recent as the overview. Nothing is deleted: `/send`,
+Outgoing and the hand-offs from Scan and Forms still work, and the "send" part colour stays in
+`packages/tokens` unused. Next, from the same note: signing by a QR code scanned on the same Wi-Fi
+(then "Thank you, done"), and the form creator as an always-white page with a small chat bar at the
+bottom (E4).
+
 ## The one idea
 
 **One thing on the screen at a time, and it is always obvious what to press.** Today every screen

@@ -14,7 +14,7 @@ export function startTour(): void {
 }
 
 /** The steps, in order: each points at the element marked `data-tour="<target>"`. */
-const STEPS = ['forms', 'scan', 'sign', 'send', 'more'] as const;
+const STEPS = ['forms', 'scan', 'sign', 'more'] as const;
 
 function seen(): boolean {
   try {

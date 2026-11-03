@@ -26,12 +26,7 @@ test('signing in lands on home, with four tiles @smoke', async ({ page }) => {
     page.getByRole('heading', { level: 1, name: 'What do you want to do?' }),
   ).toBeVisible();
   const tiles = page.locator('.home__tiles a');
-  await expect(tiles).toHaveText([
-    /Make or fill in forms/,
-    /Scan a paper/,
-    /Get something signed/,
-    /Send a file/,
-  ]);
+  await expect(tiles).toHaveText([/Make or fill in forms/, /Scan a paper/, /Get something signed/]);
   await expect(page.getByText('Not built yet')).toHaveCount(1);
   // The start-up intro plays once over a first arrival; the picture is of home after it.
   await expect(page.locator('.intro__stage')).toHaveCount(0, { timeout: 20_000 });
@@ -88,9 +83,6 @@ test('the tiles are reached by keyboard and lead to the screens that do the work
   await tile(/Get something signed/).click();
   await expect(page).toHaveURL(/\/signing$/);
 
-  await page.goto('/room');
-  await expect(tile(/Send a file/)).toHaveAttribute('href', '/send');
-
   // Arriving on home was the arrival: the intro does not play over a part one click later.
   await expect(page.locator('.intro__stage')).toHaveCount(0);
 });
@@ -99,7 +91,7 @@ test('the rail is four coloured parts, and everything else is under More', async
   await signInAs(page, sql, 'admin@example.com', 'en-GB');
   await page.goto('/room');
   const rail = page.getByRole('navigation', { name: 'Sections' });
-  await expect(rail.locator('.nav-link__chip')).toHaveCount(4);
+  await expect(rail.locator('.nav-link__chip')).toHaveCount(3);
   await expect(rail.getByRole('link', { name: 'People', exact: true })).toBeHidden();
 });
 
@@ -117,12 +109,7 @@ test('at 360 × 640 in German, home fits without sideways scrolling', async ({ p
     () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
   );
   expect(fits).toBe(true);
-  for (const name of [
-    /Formulare erstellen/,
-    /Papier scannen/,
-    /Etwas unterschreiben/,
-    /Datei senden/,
-  ]) {
+  for (const name of [/Formulare erstellen/, /Papier scannen/, /Etwas unterschreiben/]) {
     const tile = page.locator('.home__tiles').getByRole('link', { name });
     await tile.scrollIntoViewIfNeeded();
     const box = await tile.boundingBox();

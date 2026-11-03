@@ -44,7 +44,6 @@ export function Home() {
         <Tile part="forms" to="/forms" icon="forms" />
         <Tile part="scan" to="/scan" icon="upload" />
         <Tile part="sign" to="/signing" icon="signature" />
-        <Tile part="send" to="/send" icon="email" />
       </ul>
       {centre ? (
         <Link className="home__centre" to="/summary">
@@ -66,15 +65,7 @@ export function Home() {
   );
 }
 
-function Tile({
-  part,
-  to,
-  icon,
-}: {
-  part: 'forms' | 'scan' | 'sign' | 'send';
-  to: string;
-  icon: IconName;
-}) {
+function Tile({ part, to, icon }: { part: 'forms' | 'scan' | 'sign'; to: string; icon: IconName }) {
   const t = useT();
   const colours = {
     '--tile': `var(--tp-part-${part})`,
