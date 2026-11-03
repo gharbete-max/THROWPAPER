@@ -938,6 +938,11 @@ export const jaJP: Record<MessageKey, string> = {
   'signing.party.signed': '署名済み',
   'signing.party.declined': '辞退',
   'signing.openLink': '署名ページを開く',
+  'signing.scanToSign': '{name}さん: スマートフォンでスキャンして署名してください',
+  'signing.signHere': 'またはこのパソコンで署名',
+  'signing.noWifi':
+    'Wi-Fiが見つからないため、スマートフォンからこのパソコンに接続できません。このパソコンで署名してください。',
+  'signing.allSigned': '全員が署名しました。ありがとうございます！',
   'signing.refresh': '更新',
   'signing.downloadSigned': '署名済み PDF をダウンロード',
   'signing.declarationHint': '各署名者が同意する文言です。組織が「宣誓文」で作成します。',

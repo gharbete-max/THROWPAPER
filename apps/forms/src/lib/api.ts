@@ -561,6 +561,11 @@ export const client = {
       `/v1/signing/requests/${id}/parties/${encodeURIComponent(partyId)}/remind`,
       { method: 'POST' },
     ),
+  signerQr: (id: string, partyId: string) =>
+    request<formSchemas.SigningPartyQr>(
+      `/v1/signing/requests/${id}/parties/${encodeURIComponent(partyId)}/qr`,
+      { method: 'POST' },
+    ),
   cancelSigningRequest: (id: string) =>
     request<formSchemas.SigningRequestView>(`/v1/signing/requests/${id}/cancel`, {
       method: 'POST',

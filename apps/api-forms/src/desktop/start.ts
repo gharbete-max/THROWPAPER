@@ -12,7 +12,7 @@ import { createMailDrafter, type MailDrafter } from '../mail/draft.js';
 import { createOutgoingStore, createQueueMailProvider } from '../mail/queue.js';
 import { readSettings, type DesktopSettings } from './settings.js';
 import { createPhoneScanStore } from '../phone-scan/store.js';
-import { createPhoneRelay } from './phone-relay.js';
+import { createPhoneRelay, SIGN_RULES } from './phone-relay.js';
 import { guardLoopbackHost } from './loopback-host.js';
 import type { SignConnection } from '../signing/client.js';
 import {
@@ -220,6 +220,18 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
     active: () => phoneScans.active(),
     ...(options.phoneAddress ? { address: options.phoneAddress } : {}),
   });
+  // A signer scanning a QR code with a phone reaches Sign through a second relay of the same kind,
+  // open while a code has been shown in the last half hour and passing only the signer's page.
+  let codeShownAt = 0;
+  const signRelay = signing?.local
+    ? createPhoneRelay({
+        app: () => signing.local!.app,
+        host: () => new URL(signing.apiUrl).host,
+        active: () => (Date.now() - codeShownAt < 30 * 60_000 ? 1 : 0),
+        rules: SIGN_RULES,
+        ...(options.phoneAddress ? { address: options.phoneAddress } : {}),
+      })
+    : null;
   try {
     app = await buildServer({
       repos: local.repos,
@@ -244,6 +256,14 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
       signing,
       phoneScans,
       phoneOrigin: () => relay.open(),
+      ...(signRelay
+        ? {
+            signPhoneOrigin: () => {
+              codeShownAt = Date.now();
+              return signRelay.open();
+            },
+          }
+        : {}),
       mailDraft:
         options.mailDraft === undefined ? draftProgramFor(settings, paths) : options.mailDraft,
       // The To send screen: always there on the desktop, so mail queued while "open in my email
@@ -275,6 +295,7 @@ export async function startDesktopServer(options: StartDesktopOptions): Promise<
     signingConnected: signing !== null,
     async close() {
       await relay.close();
+      await signRelay?.close();
       await app.close();
       await local.close();
     },

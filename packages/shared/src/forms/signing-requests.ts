@@ -61,6 +61,13 @@ export const CreateSigningRequest = z.discriminatedUnion('source', [
 ]);
 export type CreateSigningRequest = z.input<typeof CreateSigningRequest>;
 
+/** A signer's QR code (desktop): the link a phone opens to sign, and the same link as a QR. */
+export const SigningPartyQr = z.object({
+  phoneUrl: z.string(),
+  qrSvg: z.string(),
+});
+export type SigningPartyQr = z.infer<typeof SigningPartyQr>;
+
 export const SigningRequestView = z.object({
   id: z.guid(),
   envelopeId: z.string(),

@@ -938,6 +938,11 @@ export const isIS: Record<MessageKey, string> = {
   'signing.party.signed': 'Undirritað',
   'signing.party.declined': 'Hafnað',
   'signing.openLink': 'Opna undirritunarsíðu',
+  'signing.scanToSign': '{name}: skannaðu með símanum til að undirrita',
+  'signing.signHere': 'Eða undirritaðu í þessari tölvu',
+  'signing.noWifi':
+    'Ekkert Wi-Fi fannst, svo sími nær ekki til þessarar tölvu. Undirritaðu frekar í þessari tölvu.',
+  'signing.allSigned': 'Allir hafa undirritað. Takk!',
   'signing.refresh': 'Uppfæra',
   'signing.downloadSigned': 'Sækja undirritað PDF',
   'signing.declarationHint':

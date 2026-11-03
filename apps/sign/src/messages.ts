@@ -44,6 +44,7 @@ export const messages: Catalogue = {
     'en-GB': 'What you approve by signing',
     'sv-SE': 'Det här godkänner du genom att signera',
   },
+  'sign.thanks': { 'en-GB': 'Thank you. You are done.', 'sv-SE': 'Tack. Du är klar.' },
   'sign.signature': { 'en-GB': 'Signature', 'sv-SE': 'Underskrift' },
   'sign.method.typed': { 'en-GB': 'Type your name', 'sv-SE': 'Skriv ditt namn' },
   'sign.method.drawn': { 'en-GB': 'Draw', 'sv-SE': 'Rita' },

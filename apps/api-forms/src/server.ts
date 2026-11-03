@@ -104,6 +104,8 @@ export interface ServerOptions {
    *  reaches this app. Default: a store of its own, and `appUrl`. */
   phoneScans?: PhoneScanStore;
   phoneOrigin?: () => Promise<string | null>;
+  /** Where a phone can reach this computer's Sign, for a signer's QR code. Desktop only. */
+  signPhoneOrigin?: () => Promise<string | null>;
   /**
    * The desktop edition's mail program, for "Email document" as a draft with the PDF attached
    * (`mail/draft.ts`). A server has none; leave it out.
@@ -607,6 +609,7 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     uploadStore,
     renderer,
     sign: signClient,
+    signPhoneOrigin: options.signPhoneOrigin ?? null,
     // The app's origin with the `/api` prefix: served by this process, or proxied to it by Vite.
     publicApiUrl: `${appUrl.replace(/\/$/, '')}/api`,
   });

@@ -3,7 +3,8 @@ import { networkInterfaces } from 'node:os';
 import type { FastifyInstance } from 'fastify';
 
 /**
- * The one door from the local network into the desktop app: a phone scanning pages for it.
+ * The doors from the local network into the desktop app: a phone scanning pages for it, and a phone
+ * signing from a QR code (`SIGN_RULES`, on Sign's own server).
  *
  * The desktop server listens on 127.0.0.1 only (ADR 0016). A phone cannot reach that, so while a
  * scan is open this relay listens on the LAN and passes through **only**:
@@ -19,11 +20,12 @@ import type { FastifyInstance } from 'fastify';
  * exposure as the phone's own upload to any local device, and is said in the screen's hint.
  */
 const TOKEN = '[A-Za-z0-9_-]{43}';
-const ALLOWED: { method: string; path: RegExp }[] = [
-  { method: 'GET', path: new RegExp(`^/phone-scan/${TOKEN}$`) },
-  { method: 'GET', path: new RegExp(`^/api/v1/phone-scan/${TOKEN}$`) },
-  { method: 'POST', path: new RegExp(`^/api/v1/phone-scan/${TOKEN}/pages$`) },
-  // The built app: hashed bundles, the icons and the manifest. Public files, no data.
+export interface RelayRule {
+  method: string;
+  path: RegExp;
+}
+/** The built app: hashed bundles, the icons and the manifest. Public files, no data. */
+const STATIC_FILES: RelayRule[] = [
   { method: 'GET', path: /^\/assets\/[\w.-]+$/ },
   {
     method: 'GET',
@@ -31,13 +33,35 @@ const ALLOWED: { method: string; path: RegExp }[] = [
   },
   { method: 'GET', path: /^\/mark-[\w-]+\.(png|webp)$/ },
 ];
+const ALLOWED: RelayRule[] = [
+  { method: 'GET', path: new RegExp(`^/phone-scan/${TOKEN}$`) },
+  { method: 'GET', path: new RegExp(`^/api/v1/phone-scan/${TOKEN}$`) },
+  { method: 'POST', path: new RegExp(`^/api/v1/phone-scan/${TOKEN}/pages$`) },
+  ...STATIC_FILES,
+];
+
+/**
+ * What a phone may reach on this computer's Sign when it scans a signer's QR code: the signer's own
+ * page, the document, and the two things the page does (sign, decline). A signing link is the
+ * signer's authority and is read only from the path, so nothing else of Sign (envelopes, tokens,
+ * the service API) is reachable.
+ */
+const SIGN_TOKEN = '[A-Za-z0-9_.~-]{16,600}';
+export const SIGN_RULES: RelayRule[] = [
+  { method: 'GET', path: new RegExp(`^/s/${SIGN_TOKEN}$`) },
+  { method: 'GET', path: new RegExp(`^/api/v1/sign/${SIGN_TOKEN}$`) },
+  { method: 'GET', path: new RegExp(`^/api/v1/sign/${SIGN_TOKEN}/document$`) },
+  { method: 'POST', path: new RegExp(`^/api/v1/sign/${SIGN_TOKEN}$`) },
+  { method: 'POST', path: new RegExp(`^/api/v1/sign/${SIGN_TOKEN}/decline$`) },
+  ...STATIC_FILES,
+];
 const MAX_BODY = 9 * 1024 * 1024;
 /** How often the relay checks whether any scan is still open. */
 const IDLE_CHECK_MS = 30_000;
 
-export function isRelayed(method: string, url: string): boolean {
+export function isRelayed(method: string, url: string, rules: RelayRule[] = ALLOWED): boolean {
   const path = url.split('?')[0] ?? '';
-  return ALLOWED.some((rule) => rule.method === method && rule.path.test(path));
+  return rules.some((rule) => rule.method === method && rule.path.test(path));
 }
 
 /** A private IPv4 address of this machine, the kind a phone on the same Wi-Fi can reach. */
@@ -71,6 +95,8 @@ export function createPhoneRelay(options: {
   active: () => number;
   address?: () => string | null;
   port?: number;
+  /** What passes; the scan's by default. */
+  rules?: RelayRule[];
 }): PhoneRelay {
   let server: Server | null = null;
   let origin: string | null = null;
@@ -80,7 +106,7 @@ export function createPhoneRelay(options: {
   async function handle(request: IncomingMessage, response: ServerResponse) {
     const method = request.method ?? 'GET';
     const url = request.url ?? '/';
-    if (!isRelayed(method, url)) {
+    if (!isRelayed(method, url, options.rules)) {
       response.writeHead(404, { 'content-type': 'text/plain' }).end();
       request.resume();
       return;
