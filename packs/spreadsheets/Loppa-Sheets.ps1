@@ -340,11 +340,18 @@ function Invoke-Clean {
       'rows in' = $t.Rows.Count; 'cells changed' = $cells; 'empty rows dropped' = $emptyRows; 'rows out' = $kept.Count })
 }
 
-switch ($Command) {
-  'compare' { Invoke-Compare }
-  'match' { Invoke-Match }
-  'dupes' { Invoke-Dupes }
-  'merge' { Invoke-Merge }
-  'split' { Invoke-Split }
-  'clean' { Invoke-Clean }
+# A plain one-line message on stderr and a failing exit code: PowerShell's own error display wraps
+# a long message over several decorated lines, which is hard to read and to search.
+try {
+  switch ($Command) {
+    'compare' { Invoke-Compare }
+    'match' { Invoke-Match }
+    'dupes' { Invoke-Dupes }
+    'merge' { Invoke-Merge }
+    'split' { Invoke-Split }
+    'clean' { Invoke-Clean }
+  }
+} catch {
+  [Console]::Error.WriteLine($_.Exception.Message)
+  exit 1
 }
