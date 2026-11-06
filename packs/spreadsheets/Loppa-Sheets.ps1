@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-  Loppa spreadsheet pack: compare, match, de-duplicate, merge, split and tidy CSV files.
+  Loppa spreadsheet pack: compare, match, look up, summarise, mask and tidy CSV files.
 
 .DESCRIPTION
-  One script, six commands, for the jobs people do by hand in Excel. Runs in Windows PowerShell 5.1
+  One script, twelve commands, for the jobs people do by hand in Excel. Runs in Windows PowerShell 5.1
   and PowerShell 7 (Windows, macOS, Linux). Needs no Excel, no module and no network.
 
   Safe by design:
@@ -43,11 +43,35 @@
 .EXAMPLE
   .\Loppa-Sheets.ps1 clean -File contacts.csv
   Trims spaces, turns non-breaking spaces into spaces, collapses runs of spaces, drops empty rows.
+
+.EXAMPLE
+  .\Loppa-Sheets.ps1 fuzzy -A members.csv -B export.csv -Column Name -Threshold 0.85
+  For each name in A, the most alike name in B and how alike (word order, case, accents ignored).
+
+.EXAMPLE
+  .\Loppa-Sheets.ps1 numbers -A budget.csv -B actual.csv -Key Account -Column Amount -Tolerance 0.01
+  Cells whose numbers differ by more than the tolerance (-Percent makes it a percentage of A).
+
+.EXAMPLE
+  .\Loppa-Sheets.ps1 lookup -File orders.csv -Key CustomerId -From customers.csv -Take Name,City
+  Adds columns from another file, found by key: a VLOOKUP/XLOOKUP across files.
+
+.EXAMPLE
+  .\Loppa-Sheets.ps1 gaps -File invoices.csv -Column InvoiceNo
+  Missing numbers in a series (INV-0001, INV-0002, ...) and numbers that appear twice.
+
+.EXAMPLE
+  .\Loppa-Sheets.ps1 pivot -File sales.csv -By Country -Cols Product -Sum Amount
+  Counts (or sums, with -Sum) by one column, or by two as a table; totals included.
+
+.EXAMPLE
+  .\Loppa-Sheets.ps1 mask -File people.csv -Column Name,Email -Salt "a secret phrase"
+  A copy for sharing: chosen columns replaced by tokens that stay the same for the same value.
 #>
 [CmdletBinding()]
 param(
   [Parameter(Position = 0, Mandatory = $true)]
-  [ValidateSet('compare', 'match', 'dupes', 'merge', 'split', 'clean')]
+  [ValidateSet('compare', 'match', 'dupes', 'merge', 'split', 'clean', 'fuzzy', 'numbers', 'lookup', 'gaps', 'pivot', 'mask')]
   [string]$Command,
   [string]$A,
   [string]$B,
@@ -56,7 +80,29 @@ param(
   [string]$By,
   [string]$Out,
   [switch]$IgnoreCase,
-  [switch]$Trim
+  [switch]$Trim,
+  # fuzzy, numbers, gaps, mask: the column(s) to work on. fuzzy: -ColumnB if B names it differently.
+  [string[]]$Column,
+  [string]$ColumnB,
+  [double]$Threshold = 0.85,
+  # numbers: how far apart two numbers may be before they count as different (-Percent: % of A).
+  [double]$Tolerance = 0,
+  [switch]$Percent,
+  # Which mark is the decimal one when a number is ambiguous ("1,234"): ',' or '.'.
+  [ValidateSet('', ',', '.')][string]$Decimal = '',
+  # lookup: the other file, its key column if named differently, the columns to bring, the filler.
+  [string]$From,
+  [string[]]$KeyFrom,
+  [string[]]$Take,
+  [string]$Missing = '',
+  # pivot: -By rows, -Cols columns, -Sum a number column to add up (otherwise rows are counted).
+  [string]$Cols,
+  [string]$Sum,
+  # gaps: the step between numbers in the series.
+  [int]$Step = 1,
+  # mask: hash (a token per value), partial (first letter and stars), blank. -Salt keeps tokens the same between runs.
+  [ValidateSet('hash', 'partial', 'blank')][string]$Mode = 'hash',
+  [string]$Salt
 )
 
 $ErrorActionPreference = 'Stop'
@@ -64,6 +110,9 @@ $ErrorActionPreference = 'Stop'
 # unless a file really is called that.
 $File = @($File | Where-Object { $_ } | ForEach-Object { if (Test-Path -LiteralPath $_) { $_ } else { $_ -split ',' } })
 $Key = @($Key | Where-Object { $_ } | ForEach-Object { $_ -split ',' })
+$KeyFrom = @($KeyFrom | Where-Object { $_ } | ForEach-Object { $_ -split ',' })
+$Column = @($Column | Where-Object { $_ } | ForEach-Object { $_ -split ',' })
+$Take = @($Take | Where-Object { $_ } | ForEach-Object { $_ -split ',' })
 $MaxSplitFiles = 500
 
 function Stop-Loppa([string]$Message) { throw "Loppa: $Message" }
@@ -87,7 +136,7 @@ function Get-Text([string]$Path) {
 
 function Get-Delimiter([string]$Text) {
   $first = ($Text -split "`r?`n", 2)[0]
-  $best = ','; $most = -1
+  $best = ','; $most = 0   # a one-column file has none: ',' then
   foreach ($d in @(';', ',', "`t", '|')) {
     $inQuotes = $false; $n = 0
     foreach ($c in $first.ToCharArray()) {
@@ -340,6 +389,286 @@ function Invoke-Clean {
       'rows in' = $t.Rows.Count; 'cells changed' = $cells; 'empty rows dropped' = $emptyRows; 'rows out' = $kept.Count })
 }
 
+# ---- more helpers -----------------------------------------------------------------------------
+
+# A number as people write it: "1 234,56", "1,234.56", "12.5 kr", "(120)", "-3". $null when it is not one.
+# "1,234" alone is read as one thousand two hundred thirty-four unless -Decimal says ',' is the decimal mark.
+function ConvertTo-Number([string]$Text) {
+  $t = ($Text -replace '[\s  ]', '')
+  if ($t -match '^\((.+)\)$') { $t = '-' + $Matches[1] }
+  $t = $t -replace '^[^\d\-+.,]+', '' -replace '[^\d]+$', ''
+  if ($t -notmatch '^[+-]?\d[\d.,]*$') { return $null }
+  $sign = ''; if ($t[0] -eq '-' -or $t[0] -eq '+') { if ($t[0] -eq '-') { $sign = '-' }; $t = $t.Substring(1) }
+  $dot = $t.LastIndexOf('.'); $comma = $t.LastIndexOf(',')
+  $mark = $null
+  if ($dot -ge 0 -and $comma -ge 0) { $mark = if ($dot -gt $comma) { '.' } else { ',' } }
+  elseif ($dot -ge 0 -or $comma -ge 0) {
+    $one = if ($dot -ge 0) { '.' } else { ',' }
+    $parts = $t -split [regex]::Escape($one)
+    if ($Decimal -ne '') { $mark = if ($one -eq $Decimal -and $parts.Count -eq 2) { $one } else { $null } }
+    elseif ($parts.Count -eq 2 -and -not ($parts[1].Length -eq 3 -and $parts[0].Length -le 3 -and $parts[0] -ne '0')) { $mark = $one }
+  }
+  if ($mark) {
+    $i = $t.LastIndexOf($mark)
+    $t = ($t.Substring(0, $i) -replace '[.,]', '') + '.' + ($t.Substring($i + 1) -replace '[.,]', '')
+  } else { $t = $t -replace '[.,]', '' }
+  $d = [decimal]0
+  if ([decimal]::TryParse($sign + $t, [System.Globalization.NumberStyles]::Float, [System.Globalization.CultureInfo]::InvariantCulture, [ref]$d)) { return $d }
+  return $null
+}
+
+# A number written for the file it goes into: a ';' file gets a decimal comma, as Excel in that country wants.
+function Format-Number([decimal]$Value, [string]$Delimiter) {
+  $text = $Value.ToString('0.############', [System.Globalization.CultureInfo]::InvariantCulture)
+  if ($Delimiter -eq ';') { $text = $text.Replace('.', ',') }
+  return $text
+}
+
+# Words, lower case, no accents, no punctuation, in alphabetical order: "Berg, Anna-Maria" = "anna maria berg".
+function Get-Tokens([string]$Text) {
+  $s = $Text.Normalize([System.Text.NormalizationForm]::FormD)
+  $sb = New-Object System.Text.StringBuilder
+  foreach ($c in $s.ToCharArray()) {
+    if ([System.Globalization.CharUnicodeInfo]::GetUnicodeCategory($c) -eq 'NonSpacingMark') { continue }
+    if ([char]::IsLetterOrDigit($c)) { [void]$sb.Append([char]::ToLowerInvariant($c)) } else { [void]$sb.Append(' ') }
+  }
+  return ((($sb.ToString() -split ' ') | Where-Object { $_ } | Sort-Object { $_ }) -join ' ')
+}
+
+function Get-Similarity([string]$X, [string]$Y) {
+  if ($X -eq $Y) { return 1.0 }
+  $lx = $X.Length; $ly = $Y.Length
+  if ($lx -eq 0 -or $ly -eq 0) { return 0.0 }
+  $prev = New-Object 'int[]' ($ly + 1); $cur = New-Object 'int[]' ($ly + 1)
+  for ($j = 0; $j -le $ly; $j++) { $prev[$j] = $j }
+  for ($i = 1; $i -le $lx; $i++) {
+    $cur[0] = $i; $cx = $X[$i - 1]
+    for ($j = 1; $j -le $ly; $j++) {
+      $cost = if ($cx -eq $Y[$j - 1]) { 0 } else { 1 }
+      $m = $prev[$j - 1] + $cost
+      $a = $prev[$j] + 1; if ($a -lt $m) { $m = $a }
+      $b = $cur[$j - 1] + 1; if ($b -lt $m) { $m = $b }
+      $cur[$j] = $m
+    }
+    $t = $prev; $prev = $cur; $cur = $t
+  }
+  return 1.0 - ($prev[$ly] / [Math]::Max($lx, $ly))
+}
+
+# ---- more commands ----------------------------------------------------------------------------
+
+function Invoke-Fuzzy {
+  if (-not $A -or -not $B) { Stop-Loppa 'fuzzy needs -A and -B (two files)' }
+  if ($Column.Count -ne 1) { Stop-Loppa 'fuzzy needs -Column: the one column to compare, e.g. -Column Name' }
+  $ta = Read-Table $A; $tb = Read-Table $B
+  $ca = Find-Column $ta $Column[0]; $cb = Find-Column $tb $(if ($ColumnB) { $ColumnB } else { $Column[0] })
+  # ponytail: every A against every B in PowerShell (400 x 500 names took 14 s in PowerShell 7); fine to a couple of thousand rows each, slow beyond. Upgrade path: compile the distance with Add-Type, where the machine allows it.
+  $bTokens = @($tb.Rows | ForEach-Object { Get-Tokens ([string]$_.$cb) })
+  $exact = @{}; for ($j = 0; $j -lt $bTokens.Count; $j++) { if ($bTokens[$j] -ne '' -and -not $exact.ContainsKey($bTokens[$j])) { $exact[$bTokens[$j]] = $j } }
+  $rows = New-Object System.Collections.ArrayList; $same = 0; $likely = 0; $none = 0
+  for ($i = 0; $i -lt $ta.Rows.Count; $i++) {
+    $va = [string]$ta.Rows[$i].$ca; $tok = Get-Tokens $va
+    $best = -1; $score = 0.0
+    if ($tok -eq '') { $best = -1 }
+    elseif ($exact.ContainsKey($tok)) { $best = $exact[$tok]; $score = 1.0 }
+    else {
+      for ($j = 0; $j -lt $bTokens.Count; $j++) {
+        $t2 = $bTokens[$j]; if ($t2 -eq '') { continue }
+        if ([Math]::Abs($tok.Length - $t2.Length) / [Math]::Max($tok.Length, $t2.Length) -gt (1 - $Threshold + 0.15)) { continue }
+        $sc = Get-Similarity $tok $t2
+        if ($sc -gt $score) { $score = $sc; $best = $j }
+      }
+    }
+    $status = if ($best -lt 0) { 'no candidate' } elseif ($score -ge 0.9999) { 'same' } elseif ($score -ge $Threshold) { 'likely' } else { 'weak' }
+    switch ($status) { 'same' { $same++ } 'likely' { $likely++ } default { $none++ } }
+    [void]$rows.Add([pscustomobject][ordered]@{
+        'Row in A' = $i + 2; 'Value in A' = $va
+        'Most alike in B' = $(if ($best -ge 0) { [string]$tb.Rows[$best].$cb } else { '' })
+        'Row in B' = $(if ($best -ge 0) { $best + 2 } else { '' })
+        'Score' = $(if ($best -ge 0) { [Math]::Round($score, 3).ToString([System.Globalization.CultureInfo]::InvariantCulture) } else { '' })
+        'Status' = $status })
+  }
+  $dir = New-OutDir $A
+  Write-Table $dir 'fuzzy-matches.csv' $rows $ta.Delimiter
+  Show-Result "Compared '$ca' (case, accents, punctuation and word order ignored). Check 'likely' and 'weak' by eye:" ([ordered]@{
+      'values in A' = $ta.Rows.Count; 'same' = $same; "likely (>= $Threshold)" = $likely; 'weak or none' = $none })
+}
+
+function Invoke-Numbers {
+  if (-not $A -or -not $B) { Stop-Loppa 'numbers needs -A and -B (two files)' }
+  if (-not $Key) { Stop-Loppa 'numbers needs -Key: the column that identifies a row' }
+  if ($Column.Count -lt 1) { Stop-Loppa 'numbers needs -Column: the number column(s) to compare, e.g. -Column Amount' }
+  $ta = Read-Table $A; $tb = Read-Table $B
+  $ka = @($Key | ForEach-Object { Find-Column $ta $_ }); $kb = @($Key | ForEach-Object { Find-Column $tb $_ })
+  $na = @($Column | ForEach-Object { Find-Column $ta $_ }); $nb = @($Column | ForEach-Object { Find-Column $tb $_ })
+  $index = @{}; foreach ($r in $tb.Rows) { $k = Get-KeyOf $r $kb; if (-not $index.ContainsKey($k)) { $index[$k] = $r } }
+  $rows = New-Object System.Collections.ArrayList; $checked = 0; $missing = 0; $differ = 0; $bad = 0; $seenKeys = @{}
+  foreach ($r in $ta.Rows) {
+    $k = Get-KeyOf $r $ka
+    if ($seenKeys.ContainsKey($k)) { continue }; $seenKeys[$k] = $true
+    if (-not $index.ContainsKey($k)) { $missing++; continue }
+    $o = $index[$k]
+    for ($c = 0; $c -lt $na.Count; $c++) {
+      $checked++
+      $xa = ConvertTo-Number ([string]$r.($na[$c])); $xb = ConvertTo-Number ([string]$o.($nb[$c]))
+      $status = $null; $diff = ''
+      if ($null -eq $xa) { $status = 'A is not a number' } elseif ($null -eq $xb) { $status = 'B is not a number' }
+      else {
+        $d = $xb - $xa
+        $limit = if ($Percent) { [Math]::Abs($xa) * [decimal]$Tolerance / 100 } else { [decimal]$Tolerance }
+        if ([Math]::Abs($d) -gt $limit) { $status = 'differs'; $diff = Format-Number $d $ta.Delimiter }
+      }
+      if ($status) {
+        if ($status -eq 'differs') { $differ++ } else { $bad++ }
+        $row = [ordered]@{}; for ($i = 0; $i -lt $ka.Count; $i++) { $row[$ka[$i]] = $r.($ka[$i]) }
+        $row['Column'] = $na[$c]; $row['A'] = $r.($na[$c]); $row['B'] = $o.($nb[$c]); $row['B minus A'] = $diff; $row['Status'] = $status
+        [void]$rows.Add([pscustomobject]$row)
+      }
+    }
+  }
+  $dir = New-OutDir $A
+  Write-Table $dir 'number-differences.csv' $rows $ta.Delimiter
+  Show-Result "Compared numbers (tolerance $Tolerance$(if ($Percent) { ' %' } else { '' })):" ([ordered]@{
+      'cells compared' = $checked; 'differ' = $differ; 'not a number' = $bad; 'keys only in A (skipped)' = $missing })
+}
+
+function Invoke-Lookup {
+  if (-not $File -or $File.Count -ne 1) { Stop-Loppa 'lookup needs -File (the file to add columns to)' }
+  if (-not $From) { Stop-Loppa 'lookup needs -From: the file to take columns from' }
+  if (-not $Key) { Stop-Loppa 'lookup needs -Key: the column in -File that finds the row in -From' }
+  if ($Take.Count -lt 1) { Stop-Loppa 'lookup needs -Take: the column(s) to bring over, e.g. -Take Name,City' }
+  $tm = Read-Table $File[0]; $tf = Read-Table $From
+  $km = @($Key | ForEach-Object { Find-Column $tm $_ })
+  $kf = @($(if ($KeyFrom.Count -gt 0) { $KeyFrom } else { $Key }) | ForEach-Object { Find-Column $tf $_ })
+  if ($km.Count -ne $kf.Count) { Stop-Loppa '-Key and -KeyFrom must name the same number of columns' }
+  $tk = @($Take | ForEach-Object { Find-Column $tf $_ })
+  $index = @{}; $repeats = 0
+  foreach ($r in $tf.Rows) { $k = Get-KeyOf $r $kf; if ($index.ContainsKey($k)) { $repeats++ } else { $index[$k] = $r } }
+  $existing = @{}; foreach ($h in $tm.Headers) { $existing[(Get-Norm $h)] = $true }
+  $names = @($tk | ForEach-Object { if ($existing.ContainsKey((Get-Norm $_))) { "$_ (from $(Split-Path -Leaf $From))" } else { $_ } })
+  $rows = New-Object System.Collections.ArrayList; $found = 0; $notFound = 0
+  foreach ($r in $tm.Rows) {
+    $row = [ordered]@{}; foreach ($h in $tm.Headers) { $row[$h] = $r.$h }
+    $k = Get-KeyOf $r $km
+    if ($index.ContainsKey($k)) { $found++; $o = $index[$k]; for ($c = 0; $c -lt $tk.Count; $c++) { $row[$names[$c]] = $o.($tk[$c]) } }
+    else { $notFound++; for ($c = 0; $c -lt $tk.Count; $c++) { $row[$names[$c]] = $Missing } }
+    [void]$rows.Add([pscustomobject]$row)
+  }
+  $dir = New-OutDir $File[0]
+  Write-Table $dir 'lookup-result.csv' $rows $tm.Delimiter
+  Show-Result 'Looked up (the first row of a repeated key is the one used):' ([ordered]@{
+      'rows' = $tm.Rows.Count; 'found' = $found; 'not found' = $notFound; 'repeated keys in -From' = $repeats })
+}
+
+function Invoke-Gaps {
+  if (-not $File -or $File.Count -ne 1) { Stop-Loppa 'gaps needs -File (one file)' }
+  if ($Column.Count -ne 1) { Stop-Loppa 'gaps needs -Column: the column holding the numbers, e.g. -Column InvoiceNo' }
+  if ($Step -lt 1) { Stop-Loppa '-Step must be 1 or more' }
+  $t = Read-Table $File[0]; $col = Find-Column $t $Column[0]
+  $series = @{}; $skipped = 0
+  foreach ($r in $t.Rows) {
+    $v = ([string]$r.$col).Trim()
+    if ($v -eq '') { continue }
+    if ($v -notmatch '^(.*?)(\d+)(\D*)$') { $skipped++; continue }
+    $name = $Matches[1] + '#' + $Matches[3]
+    if (-not $series.ContainsKey($name)) { $series[$name] = @{ Prefix = $Matches[1]; Suffix = $Matches[3]; Seen = @{}; Pad = 0 } }
+    $n = [int64]$Matches[2]
+    if ($Matches[2].Length -gt 1 -and $Matches[2][0] -eq '0') { $series[$name].Pad = [Math]::Max($series[$name].Pad, $Matches[2].Length) }
+    if ($series[$name].Seen.ContainsKey($n)) { $series[$name].Seen[$n]++ } else { $series[$name].Seen[$n] = 1 }
+  }
+  $gaps = New-Object System.Collections.ArrayList; $repeats = New-Object System.Collections.ArrayList; $missingTotal = [int64]0
+  foreach ($name in ($series.Keys | Sort-Object)) {
+    $s = $series[$name]; $nums = @($s.Seen.Keys | ForEach-Object { [int64]$_ } | Sort-Object)
+    $fmt = { param($n) $s.Prefix + $(if ($s.Pad -gt 0) { $n.ToString('D' + $s.Pad) } else { [string]$n }) + $s.Suffix }
+    foreach ($n in $nums) { if ($s.Seen[$n] -gt 1) { [void]$repeats.Add([pscustomobject][ordered]@{ 'Number' = (& $fmt $n); 'Times' = $s.Seen[$n] }) } }
+    for ($i = 0; $i -lt $nums.Count - 1; $i++) {
+      $from1 = $nums[$i] + $Step; $to1 = $nums[$i + 1] - $Step
+      if ($to1 -ge $from1) {
+        $count = [int64][Math]::Floor(($to1 - $from1) / $Step) + 1; $missingTotal += $count
+        [void]$gaps.Add([pscustomobject][ordered]@{ 'Series' = "$($s.Prefix)...$($s.Suffix)"; 'Missing from' = (& $fmt $from1); 'Missing to' = (& $fmt $to1); 'How many' = $count })
+      }
+    }
+  }
+  $dir = New-OutDir $File[0]
+  Write-Table $dir 'gaps.csv' $gaps $t.Delimiter
+  Write-Table $dir 'repeated-numbers.csv' $repeats $t.Delimiter
+  Show-Result "Looked for gaps in '$col' (one series per prefix and suffix):" ([ordered]@{
+      'series' = $series.Count; 'missing numbers' = $missingTotal; 'gaps' = $gaps.Count; 'numbers used twice or more' = $repeats.Count; 'cells with no number' = $skipped })
+}
+
+function Invoke-Pivot {
+  if (-not $File -or $File.Count -ne 1) { Stop-Loppa 'pivot needs -File (one file)' }
+  if (-not $By) { Stop-Loppa 'pivot needs -By: the column whose values become the rows' }
+  $t = Read-Table $File[0]; $rc = Find-Column $t $By
+  $cc = if ($Cols) { Find-Column $t $Cols } else { $null }
+  $sc = if ($Sum) { Find-Column $t $Sum } else { $null }
+  $cell = @{}; $rowKeys = @{}; $colKeys = @{}; $bad = 0
+  foreach ($r in $t.Rows) {
+    $rk = [string]$r.$rc; if ($Trim) { $rk = $rk.Trim() }; if ($rk -eq '') { $rk = '(empty)' }
+    $ck = if ($cc) { $x = [string]$r.$cc; if ($Trim) { $x = $x.Trim() }; if ($x -eq '') { '(empty)' } else { $x } } else { 'Total' }
+    $add = [decimal]1
+    if ($sc) { $add = ConvertTo-Number ([string]$r.$sc); if ($null -eq $add) { $bad++; continue } }
+    $rowKeys[$rk] = $true; $colKeys[$ck] = $true
+    $key = $rk + [string][char]0x1F + $ck
+    $cell[$key] = [decimal]$(if ($cell.ContainsKey($key)) { $cell[$key] } else { 0 }) + $add
+  }
+  $rks = @($rowKeys.Keys | Sort-Object); $cks = @($colKeys.Keys | Sort-Object)
+  $rows = New-Object System.Collections.ArrayList; $colTotals = @{}; $grand = [decimal]0
+  foreach ($rk in $rks) {
+    $row = [ordered]@{}; $row[$rc] = $rk; $rowTotal = [decimal]0
+    foreach ($ck in $cks) {
+      $key = $rk + [string][char]0x1F + $ck; $v = if ($cell.ContainsKey($key)) { $cell[$key] } else { [decimal]0 }
+      $row[$ck] = if ($cell.ContainsKey($key)) { Format-Number $v $t.Delimiter } else { '' }
+      $rowTotal += $v; $colTotals[$ck] = [decimal]$(if ($colTotals.ContainsKey($ck)) { $colTotals[$ck] } else { 0 }) + $v
+    }
+    if ($cc) { $row['Total'] = Format-Number $rowTotal $t.Delimiter }
+    $grand += $rowTotal; [void]$rows.Add([pscustomobject]$row)
+  }
+  $tr = [ordered]@{}; $tr[$rc] = 'Total'
+  foreach ($ck in $cks) { $tr[$ck] = Format-Number ([decimal]$colTotals[$ck]) $t.Delimiter }
+  if ($cc) { $tr['Total'] = Format-Number $grand $t.Delimiter }
+  [void]$rows.Add([pscustomobject]$tr)
+  $dir = New-OutDir $File[0]
+  Write-Table $dir 'pivot.csv' $rows $t.Delimiter
+  Show-Result "Pivot of '$rc'$(if ($cc) { " by '$cc'" })$(if ($sc) { ", adding up '$sc'" } else { ', counting rows' }):" ([ordered]@{
+      'row values' = $rks.Count; 'column values' = $cks.Count; 'grand total' = (Format-Number $grand $t.Delimiter); 'rows skipped (not a number)' = $bad })
+}
+
+function Invoke-Mask {
+  if (-not $File -or $File.Count -ne 1) { Stop-Loppa 'mask needs -File (one file)' }
+  if ($Column.Count -lt 1) { Stop-Loppa 'mask needs -Column: the column(s) to hide, e.g. -Column Name,Email' }
+  $t = Read-Table $File[0]; $targets = @($Column | ForEach-Object { Find-Column $t $_ })
+  $salt = if ($Salt) { $Salt } else { [guid]::NewGuid().ToString() }
+  $sha = [System.Security.Cryptography.SHA256]::Create(); $cache = @{}; $cells = 0
+  $rows = New-Object System.Collections.ArrayList
+  foreach ($r in $t.Rows) {
+    $row = [ordered]@{}; foreach ($h in $t.Headers) { $row[$h] = $r.$h }
+    foreach ($h in $targets) {
+      $v = [string]$r.$h
+      if ($v.Trim() -eq '') { continue }
+      $cells++
+      switch ($Mode) {
+        'blank' { $row[$h] = '' }
+        'partial' { $row[$h] = $v.Substring(0, 1) + ('*' * [Math]::Max(1, $v.Length - 1)) }
+        default {
+          $k = $h + [string][char]0x1F + $v.Trim().ToLowerInvariant()
+          if (-not $cache.ContainsKey($k)) {
+            $bytes = $sha.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($salt + [string][char]0x1F + $k))
+            $cache[$k] = 'm' + (($bytes[0..4] | ForEach-Object { $_.ToString('x2') }) -join '')
+          }
+          $row[$h] = $cache[$k]
+        }
+      }
+    }
+    [void]$rows.Add([pscustomobject]$row)
+  }
+  $dir = New-OutDir $File[0]
+  Write-Table $dir 'masked.csv' $rows $t.Delimiter
+  $note = if ($Mode -eq 'hash') { if ($Salt) { 'tokens repeat across runs that use the same -Salt' } else { 'random salt: tokens cannot be matched to another run' } } else { $Mode }
+  Show-Result "Masked $($targets -join ', ') ($note):" ([ordered]@{ 'rows' = $t.Rows.Count; 'cells masked' = $cells; 'distinct tokens' = $cache.Count })
+  Write-Host '  Other columns are untouched, and rare values can still identify a person. Check the file before you share it.'
+}
+
 # A plain one-line message on stderr and a failing exit code: PowerShell's own error display wraps
 # a long message over several decorated lines, which is hard to read and to search.
 try {
@@ -350,6 +679,12 @@ try {
     'merge' { Invoke-Merge }
     'split' { Invoke-Split }
     'clean' { Invoke-Clean }
+    'fuzzy' { Invoke-Fuzzy }
+    'numbers' { Invoke-Numbers }
+    'lookup' { Invoke-Lookup }
+    'gaps' { Invoke-Gaps }
+    'pivot' { Invoke-Pivot }
+    'mask' { Invoke-Mask }
   }
 } catch {
   [Console]::Error.WriteLine($_.Exception.Message)
