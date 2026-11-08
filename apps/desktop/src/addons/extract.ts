@@ -220,7 +220,9 @@ export async function extractTarGz(
 ): Promise<void> {
   const packed = (await stat(archive)).size;
   const budget = new Budget(limits, packed);
-  const gunzip = createGunzip();
+  // A noop listener keeps an early zlib error from being uncaught before the Puller subscribes
+  // (it is awaiting `mkdir` first); the async iterator still rejects with the stored error.
+  const gunzip = createGunzip().on('error', () => {});
   createReadStream(archive)
     .on('error', (e) => gunzip.destroy(e))
     .pipe(gunzip);
