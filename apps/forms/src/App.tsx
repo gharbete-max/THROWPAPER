@@ -114,6 +114,9 @@ const NewForm = lazy(() =>
 
 /** The room is where a signed-in person arrives (ADR 0022); the rail's screens follow it. */
 const Room = lazy(() => import('./screens/room/Room.js').then((m) => ({ default: m.Room })));
+const Library = lazy(() =>
+  import('./screens/sheets/Library.js').then((m) => ({ default: m.Library })),
+);
 const UserWorkspace = lazy(() =>
   import('./screens/earlier/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
 );
@@ -377,6 +380,16 @@ function Shell() {
     return (
       <Suspense fallback={<main className="room" style={ROOM_STYLE} />}>
         <Room />
+      </Suspense>
+    );
+  }
+
+  /* Spreadsheets is its own catcher: its Library is a bare page with a way back to the room, not a
+     part of Documents' rail (ADR 0027). */
+  if (location.pathname === '/sheets') {
+    return (
+      <Suspense fallback={<Loading />}>
+        <Library />
       </Suspense>
     );
   }

@@ -1490,6 +1490,29 @@ export const fiFI: Record<MessageKey, string> = {
   'room.opened': '{name} on auki',
   'room.documents': 'Asiakirjat',
   'room.spreadsheets': 'Laskentataulukot',
+  'sheets.library': 'Kirjasto',
+  'sheets.intro':
+    'Skriptejä töihin, jotka Excel tekee hankaliksi. Kopioi yksi tai tallenna se ja aja se itse omilla tiedostoillasi. Loppa ei koskaan aja sitä.',
+  'sheets.kind': 'PowerShell-skripti',
+  'sheets.scriptNote':
+    'Yksi tiedosto, jossa kaikki kaksitoista komentoa. Se toimii CSV-tiedostoilla, ei tarvitse Exceliä eikä internetiä, ja se vain lukee tiedostosi ja kirjoittaa uudet uuteen kansioon.',
+  'sheets.copyScript': 'Kopioi skripti',
+  'sheets.saveScript': 'Tallenna .ps1-tiedostona',
+  'sheets.copyCommand': 'Kopioi esimerkki',
+  'sheets.copied': 'Kopioitu',
+  'sheets.copyFailed': 'Kopiointi ei onnistunut. Valitse teksti ja kopioi se käsin.',
+  'sheets.search': 'Hae komennoista',
+  'sheets.noMatch': 'Mikään komento ei täsmää.',
+  'sheets.commands': 'Komennot',
+  'sheets.howTitle': 'Näin ajat sen',
+  'sheets.howRun':
+    'Tallenna tiedosto, avaa PowerShell samassa kansiossa ja kirjoita esimerkki omilla tiedostonimilläsi. Macilla asenna ensin PowerShell.',
+  'sheets.howBlocked':
+    'Jos Windows estää tiedoston: napsauta sitä hiiren kakkospainikkeella, valitse Ominaisuudet ja ruksaa Poista esto.',
+  'sheets.howCsv':
+    'Se lukee CSV-tiedostoja. .xlsx-tiedostolle käytä ensin Excelin Tallenna nimellä, CSV.',
+  'sheets.inEnglish': 'Englanniksi',
+  'sheets.desktopOnly': 'Tämä on työpöytäsovelluksessa.',
   'room.presentation': 'Esitykset ja suunnittelu',
   'room.notBuilt': 'Ei vielä rakennettu',
   'room.scan': 'Skannaa',

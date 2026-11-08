@@ -137,6 +137,24 @@
   animation-play-state: paused;
 }
 
+.catcher--link {
+  transition: background-color var(--tp-motion) var(--tp-ease);
+}
+
+.catcher--link:hover {
+  background: color-mix(in srgb, var(--tp-room-shade) 70%, transparent);
+}
+
+.catcher--link:hover .catcher__name {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.catcher--link:focus-visible {
+  outline: 2px solid var(--tp-room-platinum);
+  outline-offset: 4px;
+}
+
 .catcher--documents {
   transition: background-color var(--tp-motion) var(--tp-ease);
 }

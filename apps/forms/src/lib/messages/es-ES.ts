@@ -1500,6 +1500,28 @@ export const esES: Record<MessageKey, string> = {
   'room.opened': '{name} está abierto',
   'room.documents': 'Documentos',
   'room.spreadsheets': 'Hojas de cálculo',
+  'sheets.library': 'Biblioteca',
+  'sheets.intro':
+    'Scripts para tareas que Excel hace incómodas. Copia uno o guárdalo y ejecútalo tú mismo con tus propios archivos. Loppa nunca lo ejecuta.',
+  'sheets.kind': 'Script de PowerShell',
+  'sheets.scriptNote':
+    'Un archivo con los doce comandos. Funciona con archivos CSV, no necesita Excel ni internet y solo lee tus archivos y escribe otros nuevos en una carpeta nueva.',
+  'sheets.copyScript': 'Copiar el script',
+  'sheets.saveScript': 'Guardar como .ps1',
+  'sheets.copyCommand': 'Copiar el ejemplo',
+  'sheets.copied': 'Copiado',
+  'sheets.copyFailed': 'No se pudo copiar. Selecciona el texto y cópialo a mano.',
+  'sheets.search': 'Buscar en los comandos',
+  'sheets.noMatch': 'Ningún comando coincide.',
+  'sheets.commands': 'Los comandos',
+  'sheets.howTitle': 'Cómo ejecutarlo',
+  'sheets.howRun':
+    'Guarda el archivo, abre PowerShell en la misma carpeta y escribe el ejemplo con tus propios nombres de archivo. En un Mac, instala PowerShell primero.',
+  'sheets.howBlocked':
+    'Si Windows bloquea el archivo: clic derecho, Propiedades y marca Desbloquear.',
+  'sheets.howCsv': 'Lee archivos CSV. Para un archivo .xlsx, usa antes Guardar como CSV en Excel.',
+  'sheets.inEnglish': 'En inglés',
+  'sheets.desktopOnly': 'Esto está en la aplicación de escritorio.',
   'room.presentation': 'Presentación y planificación',
   'room.notBuilt': 'Aún no construido',
   'room.scan': 'Escanear',

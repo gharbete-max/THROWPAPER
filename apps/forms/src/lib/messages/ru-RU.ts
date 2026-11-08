@@ -1517,6 +1517,28 @@ export const ruRU: Record<MessageKey, string> = {
   'room.opened': 'Открыто: {name}',
   'room.documents': 'Документы',
   'room.spreadsheets': 'Таблицы',
+  'sheets.library': 'Библиотека',
+  'sheets.intro':
+    'Скрипты для задач, которые в Excel делаются неудобно. Скопируйте один или сохраните его и запустите сами на своих файлах. Loppa никогда его не запускает.',
+  'sheets.kind': 'Скрипт PowerShell',
+  'sheets.scriptNote':
+    'Один файл со всеми двенадцатью командами. Он работает с файлами CSV, не требует ни Excel, ни интернета, только читает ваши файлы и записывает новые в новую папку.',
+  'sheets.copyScript': 'Скопировать скрипт',
+  'sheets.saveScript': 'Сохранить как .ps1',
+  'sheets.copyCommand': 'Скопировать пример',
+  'sheets.copied': 'Скопировано',
+  'sheets.copyFailed': 'Не удалось скопировать. Выделите текст и скопируйте вручную.',
+  'sheets.search': 'Поиск по командам',
+  'sheets.noMatch': 'Ни одна команда не подходит.',
+  'sheets.commands': 'Команды',
+  'sheets.howTitle': 'Как запустить',
+  'sheets.howRun':
+    'Сохраните файл, откройте PowerShell в той же папке и введите пример со своими именами файлов. На Mac сначала установите PowerShell.',
+  'sheets.howBlocked':
+    'Если Windows блокирует файл: щёлкните его правой кнопкой, выберите «Свойства» и отметьте «Разблокировать».',
+  'sheets.howCsv': 'Он читает файлы CSV. Для файла .xlsx сначала сохраните его в Excel как CSV.',
+  'sheets.inEnglish': 'На английском',
+  'sheets.desktopOnly': 'Это есть в настольном приложении.',
   'room.presentation': 'Презентации и планирование',
   'room.notBuilt': 'Ещё не готово',
   'room.scan': 'Сканировать',

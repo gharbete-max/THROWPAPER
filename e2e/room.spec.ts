@@ -46,7 +46,10 @@ test('signing in lands in the room, with three named catchers @smoke', async ({ 
   await expect(page.getByRole('link', { name: 'Documents' })).toBeVisible();
   await expect(page.getByText('Spreadsheets', { exact: true })).toBeVisible();
   await expect(page.getByText('Presentation & planning', { exact: true })).toBeVisible();
-  await expect(page.getByText('Not built yet')).toHaveCount(2);
+  // Presentation & planning is still a placeholder; Spreadsheets opens on the desktop only, and
+  // this suite runs the server edition, where it says so.
+  await expect(page.getByText('Not built yet')).toHaveCount(1);
+  await expect(page.locator('.catcher--platinum')).toContainText('Not in this edition');
 
   // An unknown address inside the app lands here too, not on the old events list.
   await page.goto('/nowhere-at-all');

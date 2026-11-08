@@ -1479,6 +1479,29 @@ export const jaJP: Record<MessageKey, string> = {
   'room.opened': '{name}を開きました',
   'room.documents': '文書',
   'room.spreadsheets': 'スプレッドシート',
+  'sheets.library': 'ライブラリ',
+  'sheets.intro':
+    'Excelでは面倒な作業のためのスクリプトです。コピーするか保存して、ご自分のファイルで実行してください。Loppaがスクリプトを実行することはありません。',
+  'sheets.kind': 'PowerShellスクリプト',
+  'sheets.scriptNote':
+    '12個のコマンドをすべて含む1つのファイルです。CSVファイルを扱い、Excelもインターネットも不要です。元のファイルは読むだけで、結果は新しいフォルダーに新しいファイルとして書き出します。',
+  'sheets.copyScript': 'スクリプトをコピー',
+  'sheets.saveScript': '.ps1として保存',
+  'sheets.copyCommand': '例をコピー',
+  'sheets.copied': 'コピーしました',
+  'sheets.copyFailed': 'コピーできませんでした。テキストを選択して手動でコピーしてください。',
+  'sheets.search': 'コマンドを検索',
+  'sheets.noMatch': '一致するコマンドはありません。',
+  'sheets.commands': 'コマンド一覧',
+  'sheets.howTitle': '実行のしかた',
+  'sheets.howRun':
+    'ファイルを保存し、同じフォルダーでPowerShellを開いて、ご自分のファイル名で例を入力します。Macでは先にPowerShellをインストールしてください。',
+  'sheets.howBlocked':
+    'Windowsがファイルをブロックした場合：右クリックして［プロパティ］を開き、［ブロックの解除］にチェックを入れます。',
+  'sheets.howCsv':
+    'CSVファイルを読み込みます。.xlsxファイルは、先にExcelで［名前を付けて保存］からCSVにしてください。',
+  'sheets.inEnglish': '英語表示',
+  'sheets.desktopOnly': 'これはデスクトップアプリにあります。',
   'room.presentation': 'プレゼンテーションと計画',
   'room.notBuilt': 'まだ作られていません',
   'room.scan': 'スキャン',

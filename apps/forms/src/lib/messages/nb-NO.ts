@@ -1476,6 +1476,28 @@ export const nbNO: Record<MessageKey, string> = {
   'room.opened': '{name} er åpen',
   'room.documents': 'Dokumenter',
   'room.spreadsheets': 'Regneark',
+  'sheets.library': 'Bibliotek',
+  'sheets.intro':
+    'Skript for oppgaver som Excel gjør tungvinte. Kopier ett eller lagre det, og kjør det selv på dine egne filer. Loppa kjører aldri skriptet.',
+  'sheets.kind': 'PowerShell-skript',
+  'sheets.scriptNote':
+    'Én fil med alle tolv kommandoene. Den jobber med CSV-filer, trenger verken Excel eller internett og leser bare filene dine og skriver nye i en ny mappe.',
+  'sheets.copyScript': 'Kopier skriptet',
+  'sheets.saveScript': 'Lagre som .ps1',
+  'sheets.copyCommand': 'Kopier eksempelet',
+  'sheets.copied': 'Kopiert',
+  'sheets.copyFailed': 'Kunne ikke kopiere. Marker teksten og kopier den for hånd.',
+  'sheets.search': 'Søk i kommandoene',
+  'sheets.noMatch': 'Ingen kommando passer.',
+  'sheets.commands': 'Kommandoene',
+  'sheets.howTitle': 'Slik kjører du det',
+  'sheets.howRun':
+    'Lagre filen, åpne PowerShell i samme mappe, og skriv eksempelet med dine egne filnavn. På en Mac installerer du PowerShell først.',
+  'sheets.howBlocked':
+    'Hvis Windows blokkerer filen: høyreklikk på den, velg Egenskaper og huk av for Opphev blokkering.',
+  'sheets.howCsv': 'Den leser CSV-filer. For en .xlsx-fil bruker du Lagre som CSV i Excel først.',
+  'sheets.inEnglish': 'På engelsk',
+  'sheets.desktopOnly': 'Dette finnes i skrivebordsappen.',
   'room.presentation': 'Presentasjon og planlegging',
   'room.notBuilt': 'Ikke bygget ennå',
   'room.scan': 'Skanne',

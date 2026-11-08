@@ -1533,6 +1533,30 @@ export const deDE: Record<MessageKey, string> = {
   'room.opened': '{name} ist geöffnet',
   'room.documents': 'Dokumente',
   'room.spreadsheets': 'Tabellen',
+  'sheets.library': 'Bibliothek',
+  'sheets.intro':
+    'Skripte für Aufgaben, die Excel umständlich macht. Kopieren Sie eines oder speichern Sie es, und führen Sie es selbst mit Ihren eigenen Dateien aus. Loppa führt es nie aus.',
+  'sheets.kind': 'PowerShell-Skript',
+  'sheets.scriptNote':
+    'Eine Datei mit allen zwölf Befehlen. Sie arbeitet mit CSV-Dateien, braucht weder Excel noch Internet und liest Ihre Dateien nur und schreibt neue in einen neuen Ordner.',
+  'sheets.copyScript': 'Skript kopieren',
+  'sheets.saveScript': 'Als .ps1 speichern',
+  'sheets.copyCommand': 'Beispiel kopieren',
+  'sheets.copied': 'Kopiert',
+  'sheets.copyFailed':
+    'Kopieren war nicht möglich. Markieren Sie den Text und kopieren Sie ihn von Hand.',
+  'sheets.search': 'Befehle durchsuchen',
+  'sheets.noMatch': 'Kein Befehl passt.',
+  'sheets.commands': 'Die Befehle',
+  'sheets.howTitle': 'So führen Sie es aus',
+  'sheets.howRun':
+    'Speichern Sie die Datei, öffnen Sie PowerShell im selben Ordner und tippen Sie das Beispiel mit Ihren eigenen Dateinamen. Auf einem Mac installieren Sie zuerst PowerShell.',
+  'sheets.howBlocked':
+    'Wenn Windows die Datei blockiert: Rechtsklick, Eigenschaften, Haken bei Zulassen setzen.',
+  'sheets.howCsv':
+    'Sie liest CSV-Dateien. Für eine .xlsx-Datei verwenden Sie in Excel zuerst Speichern unter, CSV.',
+  'sheets.inEnglish': 'Auf Englisch',
+  'sheets.desktopOnly': 'Das gibt es in der Desktop-App.',
   'room.presentation': 'Präsentation & Planung',
   'room.notBuilt': 'Noch nicht gebaut',
   'room.scan': 'Scannen',

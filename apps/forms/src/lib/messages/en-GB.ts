@@ -1496,6 +1496,28 @@ export const enGB = {
   'room.opened': '{name} is open',
   'room.documents': 'Documents',
   'room.spreadsheets': 'Spreadsheets',
+  'sheets.library': 'Library',
+  'sheets.intro':
+    'Scripts for jobs Excel makes awkward. Copy one or save it, then run it yourself on your own files. Loppa never runs it.',
+  'sheets.kind': 'PowerShell script',
+  'sheets.scriptNote':
+    'One file with all twelve commands. It works on CSV files, needs no Excel and no internet, and only reads your files and writes new ones into a new folder.',
+  'sheets.copyScript': 'Copy the script',
+  'sheets.saveScript': 'Save as .ps1',
+  'sheets.copyCommand': 'Copy example',
+  'sheets.copied': 'Copied',
+  'sheets.copyFailed': 'Could not copy. Select the text and copy it by hand.',
+  'sheets.search': 'Search the commands',
+  'sheets.noMatch': 'No command matches that.',
+  'sheets.commands': 'The commands',
+  'sheets.howTitle': 'To run it',
+  'sheets.howRun':
+    'Save the file, open PowerShell in the same folder, and type the example with your own file names. On a Mac, install PowerShell first.',
+  'sheets.howBlocked':
+    'If Windows blocks the file: right-click it, choose Properties, and tick Unblock.',
+  'sheets.howCsv': 'It reads CSV files. For an .xlsx file, use Save As CSV in Excel first.',
+  'sheets.inEnglish': 'In English',
+  'sheets.desktopOnly': 'This is in the desktop app.',
   'room.presentation': 'Presentation & planning',
   'room.notBuilt': 'Not built yet',
   'room.scan': 'Scan',

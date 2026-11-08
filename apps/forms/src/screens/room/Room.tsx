@@ -255,9 +255,21 @@ export function Room() {
                   <Catcher name={t('room.documents')} />
                 </a>
               </li>
-              <li className="catcher catcher--platinum catcher--idle">
-                <Catcher name={t('room.spreadsheets')} note={t('room.notBuilt')} />
-              </li>
+              {/* Spreadsheets opens on the desktop, into its Library; elsewhere it says it is not in this edition. */}
+              {edition === 'desktop' ? (
+                <li>
+                  <Link className="catcher catcher--platinum catcher--link" to="/sheets">
+                    <Catcher name={t('room.spreadsheets')} />
+                  </Link>
+                </li>
+              ) : (
+                <li className="catcher catcher--platinum catcher--idle">
+                  <Catcher
+                    name={t('room.spreadsheets')}
+                    note={edition === 'server' ? t('room.centreNone') : t('room.notBuilt')}
+                  />
+                </li>
+              )}
               <li className="catcher catcher--bronze catcher--idle">
                 <Catcher name={t('room.presentation')} note={t('room.notBuilt')} />
               </li>

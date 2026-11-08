@@ -6,6 +6,9 @@ PowerShell 5.1 or PowerShell 7 (Windows, macOS, Linux; on a Mac install `pwsh` f
 
 For an `.xlsx`: Save As CSV first, or use Loppa's Convert. The script does not read `.xlsx`.
 
+In the Loppa desktop app, open Spreadsheets in the room: the Library shows this script, copies it or
+saves it as a `.ps1`, and copies an example line for each command.
+
 ```powershell
 .\Loppa-Sheets.ps1 compare -A old.csv -B new.csv -Key Id     # only in A, only in B, changed cells
 .\Loppa-Sheets.ps1 match   -A members.csv -B export.csv      # which column is which, by name
