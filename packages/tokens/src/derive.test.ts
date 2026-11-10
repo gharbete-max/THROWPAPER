@@ -218,3 +218,29 @@ describe('colour helpers', () => {
     expect(shadow(99)).toBe(shadow(3));
   });
 });
+
+/**
+ * The glass is throwindice's, on purpose: the two products are one family. throwindice has no
+ * build step and no shared package, so the recipe is copied, and this pins the copy. Change one
+ * side and this fails until the other is changed with it.
+ */
+describe('glass matches throwindice', () => {
+  it('uses the same tint, edge, highlight, blur and corners in both themes', () => {
+    for (const tokens of [base, toDark(base)]) {
+      const vars = toCssVariables(tokens);
+      expect(vars['--tp-glass']).toMatch(/\/ 0\.62\)$/);
+      expect(vars['--tp-glass-edge']).toMatch(/\/ 0\.12\)$/);
+      expect(vars['--tp-glass-hairline']).toBe('rgb(255 255 255 / 0.5)');
+      expect(vars['--tp-glass-blur']).toBe('saturate(1.8) blur(24px)');
+      expect(vars['--tp-glass-blur-float']).toBe('saturate(1.8) blur(30px)');
+      expect(vars['--tp-radius-glass']).toBe('22px');
+      expect(vars['--tp-radius-glass-float']).toBe('28px');
+    }
+  });
+
+  it('goes square with the rest of the radius family', () => {
+    const vars = toCssVariables({ ...base, radius: '0px' });
+    expect(vars['--tp-radius-glass']).toBe('0px');
+    expect(vars['--tp-radius-glass-float']).toBe('0px');
+  });
+});
