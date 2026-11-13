@@ -1468,6 +1468,7 @@ export const jaJP: Record<MessageKey, string> = {
   'tour.label': 'かんたんツアー',
   'tour.forms': 'まずはここから：フォームを作る、または入力します。',
   'tour.scan': '紙がありますか？スキャン、整理、またはフォームにできます。',
+  'tour.scanOnly': '紙がありますか？スキャンして整理できます。',
   'tour.sign': '署名が必要ですか？書類と署名する人を選びます。',
   'tour.next': '次へ',
   'tour.done': 'わかりました',

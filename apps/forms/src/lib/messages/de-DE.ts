@@ -1522,6 +1522,7 @@ export const deDE: Record<MessageKey, string> = {
   'tour.label': 'Eine kurze Tour',
   'tour.forms': 'Hier starten: ein Formular erstellen oder ausfüllen.',
   'tour.scan': 'Ein Papier zur Hand? Scannen, ordnen oder daraus ein Formular machen.',
+  'tour.scanOnly': 'Ein Papier zur Hand? Scannen und ordnen.',
   'tour.sign': 'Eine Unterschrift nötig? Papier und Unterzeichner wählen.',
   'tour.next': 'Weiter',
   'tour.done': 'Verstanden',

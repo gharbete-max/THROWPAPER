@@ -1398,6 +1398,7 @@ export const zhCN: Record<MessageKey, string> = {
   'tour.label': '快速导览',
   'tour.forms': '从这里开始：创建或填写表单。',
   'tour.scan': '有纸质文件？可扫描、整理，或转成表单。',
+  'tour.scanOnly': '有纸质文件？可扫描并整理。',
   'tour.sign': '需要签名？选择文件和签署人。',
   'tour.next': '下一步',
   'tour.done': '知道了',

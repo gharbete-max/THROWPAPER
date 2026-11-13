@@ -13,7 +13,7 @@ import { roomCssVariables, toCssVariables, toDark } from '@tp/tokens';
 import { useSession } from '../../lib/session.js';
 import { useBrand } from '../../lib/brand.js';
 import { useT } from '../../lib/i18n.js';
-import { useEdition } from '../../lib/edition.js';
+import { useEdition, useScanAndSignOnly } from '../../lib/edition.js';
 import { modelBridge } from '../../lib/model-bridge.js';
 import { scanWith } from '../../lib/documents-handoff.js';
 import { RecentDocuments } from './documents/RecentDocuments.js';
@@ -78,6 +78,7 @@ export function Room() {
   const { user, organisation, locale, setLocale, interfaceLocales, signOut } = useSession();
   const { tokens } = useBrand();
   const edition = useEdition();
+  const slim = useScanAndSignOnly();
   const reduced = useReducedMotion();
   const navigate = useNavigate();
   const open = useLocation().pathname === DOCUMENTS_PATH;
@@ -214,18 +215,27 @@ export function Room() {
             <Coach />
             <div className="room__opened">
               <Rosette ref={rosette} />
+              {!slim && (
+                <Part
+                  area="forms"
+                  icon="forms"
+                  to="/forms"
+                  label={t('nav.forms')}
+                  ref={firstPart}
+                  tour="forms"
+                />
+              )}
               <Part
-                area="forms"
-                icon="forms"
-                to="/forms"
-                label={t('nav.forms')}
-                ref={firstPart}
-                tour="forms"
+                area="scan"
+                icon="upload"
+                to="/scan"
+                label={t('room.scan')}
+                ref={slim ? firstPart : undefined}
+                tour="scan"
               />
-              <Part area="scan" icon="upload" to="/scan" label={t('room.scan')} tour="scan" />
               <Part area="sign" icon="signature" to="/signing" label={t('room.sign')} tour="sign" />
-              <Part area="people" icon="people" to="/people" label={t('nav.people')} />
-              {edition === 'desktop' && modelBridge() ? (
+              {!slim && <Part area="people" icon="people" to="/people" label={t('nav.people')} />}
+              {slim ? null : edition === 'desktop' && modelBridge() ? (
                 <Link className="room__centre" to="/summary">
                   <strong>{t('room.centre')}</strong>
                   <span>{t('room.centreOpen')}</span>

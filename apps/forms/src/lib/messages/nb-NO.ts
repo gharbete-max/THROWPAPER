@@ -1465,6 +1465,7 @@ export const nbNO: Record<MessageKey, string> = {
   'tour.label': 'En rask omvisning',
   'tour.forms': 'Start her: lag et skjema, eller fyll ut ett.',
   'tour.scan': 'Har du et papir? Skann det, ordne det eller lag et skjema av det.',
+  'tour.scanOnly': 'Har du et papir? Skann det og ordne det.',
   'tour.sign': 'Trenger du en signatur? Velg papiret og hvem som skal skrive under.',
   'tour.next': 'Neste',
   'tour.done': 'Skjønner',

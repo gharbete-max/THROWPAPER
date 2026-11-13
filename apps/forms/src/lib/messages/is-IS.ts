@@ -1478,6 +1478,7 @@ export const isIS: Record<MessageKey, string> = {
   'tour.label': 'Stutt kynning',
   'tour.forms': 'Byrjaðu hér: búðu til eyðublað eða fylltu út eitt.',
   'tour.scan': 'Með pappír? Skannaðu hann, raðaðu eða gerðu úr honum eyðublað.',
+  'tour.scanOnly': 'Með pappír? Skannaðu hann og raðaðu.',
   'tour.sign': 'Þarftu undirskrift? Veldu skjalið og hver skrifar undir.',
   'tour.next': 'Næsta',
   'tour.done': 'Skil',

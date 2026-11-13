@@ -1485,6 +1485,7 @@ export const enGB = {
   'tour.label': 'A quick tour',
   'tour.forms': 'Start here: make a form, or fill one in.',
   'tour.scan': 'Got a paper? Scan it, tidy it, or turn it into a form.',
+  'tour.scanOnly': 'Got a paper? Scan it and tidy it.',
   'tour.sign': 'Need a signature? Pick the paper and who signs.',
   'tour.next': 'Next',
   'tour.done': 'Got it',

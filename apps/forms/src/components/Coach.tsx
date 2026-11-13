@@ -126,7 +126,10 @@ export function Coach() {
   }, [step, end, spot]);
 
   if (step === null || !target) return null;
-  const last = step === STEPS.length - 1;
+  // Count only the steps this window has: the slim desktop has no Forms part to point at.
+  const present = STEPS.filter((name) => find(name));
+  const position = present.indexOf(STEPS[step]!);
+  const last = position === present.length - 1;
   return (
     <div
       ref={bubble}
@@ -140,14 +143,15 @@ export function Coach() {
       }}
     >
       <p className="coach__text" aria-live="polite">
-        {t(`tour.${STEPS[step]!}`)}
+        {/* Without a Forms part, Scan does not offer to turn a paper into a form. */}
+        {t(STEPS[step] === 'scan' && !find('forms') ? 'tour.scanOnly' : `tour.${STEPS[step]!}`)}
       </p>
       <div className="coach__row">
         <button type="button" className="button button--quiet small" onClick={end}>
           {t('tour.skip')}
         </button>
         <span className="coach__count small">
-          {step + 1} / {STEPS.length}
+          {position + 1} / {present.length}
         </span>
         <button
           ref={next}
