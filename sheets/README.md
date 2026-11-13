@@ -33,7 +33,7 @@ picked. Only the first sheet of a workbook is read.
 
 Both values are put in lower case, accents are removed (Å = A, é = e, ø = o), punctuation goes, and
 company words that say nothing about which company it is are ignored: AB, publ, Ltd, Limited, Inc,
-LLC, GmbH, ASA, Oyj, plc, Corp, Corporation. Then the **edit distance** (Levenshtein) is counted:
+LLC, GmbH, Oyj, plc, Corp, Corporation. Then the **edit distance** (Levenshtein) is counted:
 how many letters must be added, removed or changed to turn one into the other. The score is
 `100 × (1 − distance ÷ length of the longer)`, on the words as written and in alphabetical order,
 whichever is higher, so "Taylor, Jonathan" and "Jonathan Taylor" score 100.

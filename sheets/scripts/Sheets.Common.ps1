@@ -49,8 +49,8 @@ function Get-NewestFiles {
     $need = if ($Count -eq 1) { 'one spreadsheet (.xlsx or .csv)' } else { "$Count spreadsheets (.xlsx or .csv)" }
     throw "Put $need in this folder first: $Folder"
   }
-  # Oldest first: A, then B.
-  return @($files | Sort-Object LastWriteTime)
+  # Oldest first: A, then B. The comma keeps a single file an array (PowerShell unwraps one item).
+  return , @($files | Sort-Object LastWriteTime)
 }
 
 function Write-Picked {
@@ -573,8 +573,8 @@ function Get-EditDistance {
   return $prev[$B.Length]
 }
 
-# Company words that say nothing about which company it is.
-$script:NoiseWords = @('ab', 'publ', 'ltd', 'limited', 'inc', 'llc', 'gmbh', 'asa', 'oyj', 'plc', 'corp', 'corporation')
+# Company words that say nothing about which company it is. Not ASA: once accents go, it is Åsa.
+$script:NoiseWords = @('ab', 'publ', 'ltd', 'limited', 'inc', 'llc', 'gmbh', 'oyj', 'plc', 'corp', 'corporation')
 
 <#
   Text as it is compared: lower case, accents removed (Å = A, é = e), punctuation and company

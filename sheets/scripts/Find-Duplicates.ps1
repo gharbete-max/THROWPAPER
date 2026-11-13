@@ -53,7 +53,8 @@ Invoke-Safely {
     $groups = [ordered]@{}
     for ($i = 0; $i -lt $t.Rows.Count; $i++) {
       if (-not $lowest.ContainsKey($i)) { continue }
-      $root = & $find $i
+      # A text key: an ordered dictionary reads a number as a position, not a name.
+      $root = [string](& $find $i)
       if (-not $groups.Contains($root)) { $groups[$root] = New-Object 'System.Collections.Generic.List[int]' }
       $groups[$root].Add($i)
     }
