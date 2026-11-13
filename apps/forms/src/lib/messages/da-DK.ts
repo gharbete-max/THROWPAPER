@@ -1469,6 +1469,7 @@ export const daDK: Record<MessageKey, string> = {
   'tour.label': 'En hurtig rundvisning',
   'tour.forms': 'Start her: lav en formular, eller udfyld en.',
   'tour.scan': 'Har du et papir? Scan det, ordn det eller lav en formular af det.',
+  'tour.scanOnly': 'Har du et papir? Scan det og ordn det.',
   'tour.sign': 'Skal du bruge en underskrift? Vælg papiret og hvem der skriver under.',
   'tour.next': 'Næste',
   'tour.done': 'Forstået',

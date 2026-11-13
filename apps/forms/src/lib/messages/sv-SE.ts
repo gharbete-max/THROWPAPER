@@ -1470,6 +1470,7 @@ export const svSE: Record<MessageKey, string> = {
   'tour.label': 'En snabb rundtur',
   'tour.forms': 'Börja här: skapa ett formulär eller fyll i ett.',
   'tour.scan': 'Har du ett papper? Skanna det, ordna det eller gör ett formulär av det.',
+  'tour.scanOnly': 'Har du ett papper? Skanna det och ordna det.',
   'tour.sign': 'Behöver du en underskrift? Välj papperet och vem som ska skriva under.',
   'tour.next': 'Nästa',
   'tour.done': 'Uppfattat',

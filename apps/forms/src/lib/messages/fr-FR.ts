@@ -1508,6 +1508,7 @@ export const frFR: Record<MessageKey, string> = {
   'tour.label': 'Une visite rapide',
   'tour.forms': 'Commencez ici : créer un formulaire ou en remplir un.',
   'tour.scan': 'Un papier ? Numérisez-le, rangez-le ou faites-en un formulaire.',
+  'tour.scanOnly': 'Un papier ? Numérisez-le et rangez-le.',
   'tour.sign': 'Besoin d’une signature ? Choisissez le document et qui signe.',
   'tour.next': 'Suivant',
   'tour.done': 'Compris',

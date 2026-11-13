@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useT } from '../lib/i18n.js';
 import { useSession } from '../lib/session.js';
-import { useEdition } from '../lib/edition.js';
+import { useEdition, useScanAndSignOnly } from '../lib/edition.js';
 import { modelBridge } from '../lib/model-bridge.js';
 import { Icon, type IconName } from './Icon.js';
 
@@ -64,6 +64,7 @@ export function CommandPalette() {
   const navigate = useNavigate();
   const { user } = useSession();
   const edition = useEdition();
+  const slim = useScanAndSignOnly();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
@@ -72,6 +73,24 @@ export function CommandPalette() {
   const opener = useRef<Element | null>(null);
 
   const commands = useMemo<Command[]>(() => {
+    if (slim) {
+      return [
+        { id: 'scan', label: t('room.scan'), icon: 'upload', to: '/scan' },
+        { id: 'sign', label: t('room.sign'), icon: 'signature', to: '/signing' },
+        { id: 'outgoing', label: t('nav.outgoing'), icon: 'email', to: '/outgoing' },
+        // The AI program and pack, which Scan's page reader uses.
+        ...(modelBridge()
+          ? [
+              {
+                id: 'ai-setup',
+                label: t('addons.title'),
+                icon: 'settings',
+                to: '/ai-setup',
+              } as const,
+            ]
+          : []),
+      ];
+    }
     const list: Command[] = [
       { id: 'forms', label: t('nav.forms'), icon: 'forms', to: '/forms' },
       { id: 'scan', label: t('room.scan'), icon: 'upload', to: '/scan' },
@@ -95,7 +114,7 @@ export function CommandPalette() {
       list.push({ id: 'users', label: t('nav.users'), icon: 'people', to: '/users' });
     }
     return list;
-  }, [t, user?.role, edition]);
+  }, [t, user?.role, edition, slim]);
 
   const found = useMemo(
     () => commands.filter((command) => matches(query, command.label)),

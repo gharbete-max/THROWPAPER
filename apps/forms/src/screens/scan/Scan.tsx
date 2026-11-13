@@ -10,6 +10,7 @@ import { sendWith } from '../../lib/send-handoff.js';
 import { signingWith } from '../../lib/sign-handoff.js';
 import { sniffFile, type Sniffed } from '../../lib/sniff.js';
 import { topLines, withPdf } from '../../lib/suggest-name.js';
+import { useScanAndSignOnly } from '../../lib/edition.js';
 import { useSession } from '../../lib/session.js';
 import { useT } from '../../lib/i18n.js';
 import { useToast } from '../../lib/toast.js';
@@ -57,6 +58,7 @@ export function Scan() {
   const toast = useToast();
   const confirm = useConfirm();
   const navigate = useNavigate();
+  const slim = useScanAndSignOnly();
   const [files, setFiles] = useState<File[]>([]);
   const [sources, setSources] = useState<Source[]>([]);
   const [camera, setCamera] = useState(false);
@@ -172,11 +174,11 @@ export function Scan() {
     const hasFields = kind === 'pdf' && !!source && 'pdf' in source && source.pdf.fields.length > 0;
     setOpened({
       kind,
-      fill: only && hasFields ? () => navigate(...fillWith(only)) : null,
+      fill: only && hasFields && !slim ? () => navigate(...fillWith(only)) : null,
       choices:
         only && kind === 'pdf'
           ? [
-              { key: 'fill', run: () => navigate(...fillWith(only)) },
+              ...(slim ? [] : [{ key: 'fill' as const, run: () => navigate(...fillWith(only)) }]),
               { key: 'invoice', run: () => readAsInvoice(only) },
             ]
           : only && kind === 'photo'
@@ -355,9 +357,11 @@ export function Scan() {
               onDropped={setWordDropped}
             />
             <InvoiceScanEntry file={invoiceFile} />
-            <Link className="button button--quiet" to="/forms?new">
-              <Icon name="forms" /> {t('scan.toForm')}
-            </Link>
+            {!slim && (
+              <Link className="button button--quiet" to="/forms?new">
+                <Icon name="forms" /> {t('scan.toForm')}
+              </Link>
+            )}
           </div>
         </details>
       </div>
@@ -423,18 +427,20 @@ export function Scan() {
         >
           <Icon name="signature" /> {t('scan.sign')}
         </button>
-        <button
-          type="button"
-          className="button button--quiet"
-          disabled={busy}
-          onClick={() => void make(false, 'send')}
-        >
-          <Icon name="email" /> {t('scan.send')}
-        </button>
+        {!slim && (
+          <button
+            type="button"
+            className="button button--quiet"
+            disabled={busy}
+            onClick={() => void make(false, 'send')}
+          >
+            <Icon name="email" /> {t('scan.send')}
+          </button>
+        )}
         <Handoffs
           busy={busy}
-          onSummarise={modelBridge() ? () => void make(false, 'summarise') : null}
-          onFill={fillable ? () => navigate(...fillWith(fillable)) : null}
+          onSummarise={modelBridge() && !slim ? () => void make(false, 'summarise') : null}
+          onFill={fillable && !slim ? () => navigate(...fillWith(fillable)) : null}
         />
         <button type="button" className="button button--quiet" onClick={() => setStep('fix')}>
           {t('public.back')}

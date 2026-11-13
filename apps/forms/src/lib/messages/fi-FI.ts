@@ -1479,6 +1479,7 @@ export const fiFI: Record<MessageKey, string> = {
   'tour.label': 'Pikakierros',
   'tour.forms': 'Aloita tästä: tee lomake tai täytä sellainen.',
   'tour.scan': 'Onko sinulla paperi? Skannaa se, järjestä se tai tee siitä lomake.',
+  'tour.scanOnly': 'Onko sinulla paperi? Skannaa ja järjestä se.',
   'tour.sign': 'Tarvitsetko allekirjoituksen? Valitse paperi ja allekirjoittajat.',
   'tour.next': 'Seuraava',
   'tour.done': 'Selvä',

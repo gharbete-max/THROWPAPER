@@ -55,6 +55,18 @@ export function useEdition(): Edition | null {
 }
 
 /**
+ * The desktop is a scanner and a signer, and nothing else shows (owner, 2026-11-13). Forms, Send,
+ * the AI centre, People and the first product's screens stay in the code and their routes still
+ * answer; nothing links to them. `false` brings every one of them back.
+ */
+export const SCAN_AND_SIGN_ONLY = true;
+
+/** Whether this window shows only Scan and Sign: the desktop, while the switch above is on. */
+export function useScanAndSignOnly(): boolean {
+  return SCAN_AND_SIGN_ONLY && useEdition() === 'desktop';
+}
+
+/**
  * Whether signers' links can reach anybody else. On the desktop with its own Sign they cannot:
  * an invitation or a reminder by email would carry a link that opens only here.
  */

@@ -31,7 +31,7 @@ import { ToastProvider } from './lib/toast.js';
 import { Intro } from './components/Intro.js';
 import { startTour } from './components/Coach.js';
 import { useT } from './lib/i18n.js';
-import { OUTGOING_CHANGED, useEdition } from './lib/edition.js';
+import { OUTGOING_CHANGED, useEdition, useScanAndSignOnly } from './lib/edition.js';
 import { client } from './lib/api.js';
 import { modelBridge } from './lib/model-bridge.js';
 import { Login } from './screens/shell/Login.js';
@@ -348,6 +348,7 @@ function Shell() {
   const { tokens: brand } = useBrand();
   const location = useLocation();
   const edition = useEdition();
+  const slim = useScanAndSignOnly();
   const waiting = useWaitingCount(edition === 'desktop' && user !== null, location.pathname);
   const mainRef = useRef<HTMLElement>(null);
   const firstPath = useRef(location.pathname);
@@ -509,33 +510,47 @@ function Shell() {
 
             {/* The four parts of Documents, then the AI centre; the first product's screens fold below. */}
             <div className="sidebar__sections">
-              <NavSection to="/forms" icon="forms" part="forms" label={t('nav.forms')} />
+              {!slim && <NavSection to="/forms" icon="forms" part="forms" label={t('nav.forms')} />}
               <NavSection to="/scan" icon="upload" part="scan" label={t('room.scan')} />
               <NavSection to="/signing" icon="signature" part="sign" label={t('room.sign')} />
             </div>
 
-            {/* Nothing here is removed; these wait for the catchers they belong to. */}
-            <EarlierFeatures
-              label={t('nav.more')}
-              current={EARLIER.some((to) => location.pathname.startsWith(to))}
-            >
-              <NavSection to="/people" icon="people" label={t('nav.people')} />
-              {/* The desktop sends nothing by itself: its mail waits here for somebody to send it. */}
-              {edition === 'desktop' && (
+            {/* Signing invitations by email wait here; on the slim desktop it is the only extra. */}
+            {slim && waiting > 0 && (
+              <div className="sidebar__sections">
                 <NavSection to="/outgoing" icon="email" label={t('nav.outgoing')} count={waiting} />
-              )}
-              {edition === 'desktop' && modelBridge() && (
-                <NavSection to="/summary" icon="globe" label={t('room.centre')} />
-              )}
-              <NavSection to="/events" icon="events" label={t('nav.events')} />
-              <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
-              <NavSection to="/invoices" icon="file" label={t('nav.invoices')} />
-              {/* Support work, so it only appears for the people who do it. */}
-              {user.role === 'admin' && (
-                <NavSection to="/users" icon="people" label={t('nav.users')} />
-              )}
-              <NavSection to="/brand" icon="brand" label={t('nav.brand')} />
-            </EarlierFeatures>
+              </div>
+            )}
+
+            {/* Nothing here is removed; these wait for the catchers they belong to. */}
+            {!slim && (
+              <EarlierFeatures
+                label={t('nav.more')}
+                current={EARLIER.some((to) => location.pathname.startsWith(to))}
+              >
+                <NavSection to="/people" icon="people" label={t('nav.people')} />
+                {/* The desktop sends nothing by itself: its mail waits here for somebody to send it. */}
+                {edition === 'desktop' && (
+                  <NavSection
+                    to="/outgoing"
+                    icon="email"
+                    label={t('nav.outgoing')}
+                    count={waiting}
+                  />
+                )}
+                {edition === 'desktop' && modelBridge() && (
+                  <NavSection to="/summary" icon="globe" label={t('room.centre')} />
+                )}
+                <NavSection to="/events" icon="events" label={t('nav.events')} />
+                <NavSection to="/responses" icon="inbox" label={t('nav.inbox')} />
+                <NavSection to="/invoices" icon="file" label={t('nav.invoices')} />
+                {/* Support work, so it only appears for the people who do it. */}
+                {user.role === 'admin' && (
+                  <NavSection to="/users" icon="people" label={t('nav.users')} />
+                )}
+                <NavSection to="/brand" icon="brand" label={t('nav.brand')} />
+              </EarlierFeatures>
+            )}
           </nav>
 
           {/*

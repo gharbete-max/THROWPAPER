@@ -1489,6 +1489,7 @@ export const esES: Record<MessageKey, string> = {
   'tour.label': 'Un recorrido rápido',
   'tour.forms': 'Empieza aquí: crea un formulario o rellena uno.',
   'tour.scan': '¿Tienes un papel? Escanéalo, ordénalo o conviértelo en formulario.',
+  'tour.scanOnly': '¿Tienes un papel? Escanéalo y ordénalo.',
   'tour.sign': '¿Necesitas una firma? Elige el documento y quién firma.',
   'tour.next': 'Siguiente',
   'tour.done': 'Entendido',
