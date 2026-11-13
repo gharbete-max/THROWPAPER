@@ -40,6 +40,8 @@ packages/shared Types and Zod schemas incl. the CONTRACT; pure cores, one subpat
                 ever), `/summary` `/quoted` `/ai` (the AI centre's pure parts: manifests, tasks, checks,
                 quoting), `/payable` (supplier-invoice rules), `/api` (request schemas)
 packages/signing The signing model: levels, envelopes, the audit-trail state machine, hashing
+sheets          Loppa Sheets: six PowerShell tools (compare, match names, duplicates, combine, clean, split) on
+                the two newest spreadsheets beside them; no install, no network. Released as a zip on sheets-v*
 ```
 
 Descriptions are of what a package **contains**; change one in the PR that changes the package. Finer
