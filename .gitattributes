@@ -1,9 +1,9 @@
 * text=auto eol=lf
-# Windows PowerShell 5.1 and cmd.exe: Windows line endings; the .ps1 files also keep a UTF-8 BOM,
+# sheets/ only (a wider rule rewrites the pinned skill copies, scripts/skills.test.ts): Windows PowerShell
+# 5.1 and cmd.exe get Windows line endings; the .ps1 files also keep a UTF-8 BOM,
 # without which PowerShell 5.1 reads them as Windows-1252 (sheets/README.md).
-*.ps1 text eol=crlf
-*.cmd text eol=crlf
-*.xlsx binary
+sheets/**/*.ps1 text eol=crlf
+sheets/**/*.cmd text eol=crlf
 *.png binary
 *.jpg binary
 *.pdf binary
