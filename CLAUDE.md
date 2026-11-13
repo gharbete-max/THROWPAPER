@@ -19,7 +19,8 @@ whichever app you are working on. Do not paste specs into this file.
 apps/forms      The Documents catcher's screens (forms, scan, sign, send, invoices, the AI centre) and the
                 room (/room). Earlier events/door/ledger screens stay in place, out of the room — never
                 deleted unasked. `src/screens/` has one folder per part: room, scan, send, sign, forms,
-                ai, plus `earlier/` (the old events screens) and `shell/` (login)
+                ai, plus `sheets/` (the Spreadsheets catcher's Library, desktop only), `earlier/` (the
+                old events screens) and `shell/` (login)
 apps/api-forms  Forms' backend: forms, submissions and their PDFs, the PDF routes (`src/pdf/`,
                 `routes/pdf*.ts`; page work keeps nothing), send/campaign/mail, invoicing, phone scan, the
                 guided builder's saved conversations

@@ -114,8 +114,11 @@ const BUDGET_KB = {
    * 1275 -> 1290 (2026-10-28): the EASY slices E1-E6 (home, tour, form-creator tray and bubble, the
    * signing stepper, picture cards) and their strings in twelve languages measured 1274.7. The
    * doubling-detector still holds: the entry, the first thing a person loads, is unchanged at 6.6.
+   * 1290 -> 1310 (2026-11-08): Spreadsheets' Library: one lazily loaded screen that carries the
+   * pack's script (35 KB, about 10.8 gzipped) so it can be copied or saved with no network, and its
+   * words in twelve languages. Only the desktop's Spreadsheets catcher opens it; the entry is unchanged.
    */
-  total: 1290,
+  total: 1310,
 } as const;
 
 function gzippedKb(path: string): number {

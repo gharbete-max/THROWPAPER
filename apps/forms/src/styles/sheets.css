@@ -1,0 +1,56 @@
+/* Spreadsheets, the Library (ADR 0027): the pack's script and its commands, to copy or save. Loaded with its screen. */
+
+.sheets {
+  display: grid;
+  align-content: start;
+  gap: calc(var(--tp-spacing-unit) * 3);
+  inline-size: min(100% - calc(var(--tp-spacing-unit) * 4), 52rem);
+  min-block-size: 100dvh;
+  margin-inline: auto;
+  padding-block: calc(var(--tp-spacing-unit) * 4) calc(var(--tp-spacing-unit) * 8);
+}
+
+.sheets__back {
+  justify-self: start;
+}
+
+.sheets__head {
+  display: grid;
+  gap: var(--tp-spacing-unit);
+}
+
+.sheets .card {
+  margin-top: 0;
+}
+
+.sheets__list {
+  display: grid;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  margin: calc(var(--tp-spacing-unit) * 2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sheets__how {
+  margin: 0;
+  padding-inline-start: calc(var(--tp-spacing-unit) * 3);
+}
+
+.sheets__code {
+  margin: calc(var(--tp-spacing-unit) * 1.5) 0;
+  padding: var(--tp-spacing-unit) calc(var(--tp-spacing-unit) * 1.5);
+  overflow-x: auto;
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  border-radius: var(--tp-radius);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: var(--tp-text-ui);
+  white-space: pre;
+}
+
+.sheets__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+  margin-block: var(--tp-spacing-unit);
+}

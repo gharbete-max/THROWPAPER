@@ -1481,6 +1481,28 @@ export const svSE: Record<MessageKey, string> = {
   'room.opened': '{name} är öppet',
   'room.documents': 'Dokument',
   'room.spreadsheets': 'Kalkylark',
+  'sheets.library': 'Bibliotek',
+  'sheets.intro':
+    'Skript för jobb som Excel gör krångliga. Kopiera ett eller spara det och kör det själv på dina egna filer. Loppa kör aldrig skriptet.',
+  'sheets.kind': 'PowerShell-skript',
+  'sheets.scriptNote':
+    'En fil med alla tolv kommandon. Den arbetar med CSV-filer, behöver varken Excel eller internet och läser bara dina filer och skriver nya i en ny mapp.',
+  'sheets.copyScript': 'Kopiera skriptet',
+  'sheets.saveScript': 'Spara som .ps1',
+  'sheets.copyCommand': 'Kopiera exemplet',
+  'sheets.copied': 'Kopierat',
+  'sheets.copyFailed': 'Det gick inte att kopiera. Markera texten och kopiera den för hand.',
+  'sheets.search': 'Sök bland kommandona',
+  'sheets.noMatch': 'Inget kommando matchar.',
+  'sheets.commands': 'Kommandona',
+  'sheets.howTitle': 'Så kör du det',
+  'sheets.howRun':
+    'Spara filen, öppna PowerShell i samma mapp och skriv exemplet med dina egna filnamn. På en Mac installerar du PowerShell först.',
+  'sheets.howBlocked':
+    'Om Windows blockerar filen: högerklicka på den, välj Egenskaper och kryssa i Avblockera.',
+  'sheets.howCsv': 'Den läser CSV-filer. För en .xlsx-fil använder du Spara som CSV i Excel först.',
+  'sheets.inEnglish': 'På engelska',
+  'sheets.desktopOnly': 'Det här finns i skrivbordsappen.',
   'room.presentation': 'Presentation & planering',
   'room.notBuilt': 'Inte byggt än',
   'room.scan': 'Skanna',

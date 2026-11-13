@@ -1519,6 +1519,28 @@ export const frFR: Record<MessageKey, string> = {
   'room.opened': '{name} est ouvert',
   'room.documents': 'Documents',
   'room.spreadsheets': 'Tableurs',
+  'sheets.library': 'Bibliothèque',
+  'sheets.intro':
+    'Des scripts pour les tâches que Excel rend pénibles. Copiez-en un ou enregistrez-le, puis exécutez-le vous-même sur vos propres fichiers. Loppa ne l’exécute jamais.',
+  'sheets.kind': 'Script PowerShell',
+  'sheets.scriptNote':
+    'Un seul fichier avec les douze commandes. Il travaille sur des fichiers CSV, n’a besoin ni d’Excel ni d’internet, et ne fait que lire vos fichiers et en écrire de nouveaux dans un nouveau dossier.',
+  'sheets.copyScript': 'Copier le script',
+  'sheets.saveScript': 'Enregistrer en .ps1',
+  'sheets.copyCommand': 'Copier l’exemple',
+  'sheets.copied': 'Copié',
+  'sheets.copyFailed': 'Copie impossible. Sélectionnez le texte et copiez-le à la main.',
+  'sheets.search': 'Chercher dans les commandes',
+  'sheets.noMatch': 'Aucune commande ne correspond.',
+  'sheets.commands': 'Les commandes',
+  'sheets.howTitle': 'Pour l’exécuter',
+  'sheets.howRun':
+    'Enregistrez le fichier, ouvrez PowerShell dans le même dossier et tapez l’exemple avec vos propres noms de fichiers. Sur un Mac, installez d’abord PowerShell.',
+  'sheets.howBlocked': 'Si Windows bloque le fichier : clic droit, Propriétés, cochez Débloquer.',
+  'sheets.howCsv':
+    'Il lit des fichiers CSV. Pour un fichier .xlsx, utilisez d’abord Enregistrer sous, CSV, dans Excel.',
+  'sheets.inEnglish': 'En anglais',
+  'sheets.desktopOnly': 'Cela se trouve dans l’application de bureau.',
   'room.presentation': 'Présentation et planification',
   'room.notBuilt': 'Pas encore construit',
   'room.scan': 'Numériser',

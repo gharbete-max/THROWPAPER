@@ -1480,6 +1480,28 @@ export const daDK: Record<MessageKey, string> = {
   'room.opened': '{name} er åben',
   'room.documents': 'Dokumenter',
   'room.spreadsheets': 'Regneark',
+  'sheets.library': 'Bibliotek',
+  'sheets.intro':
+    'Scripts til opgaver, som Excel gør besværlige. Kopiér et eller gem det, og kør det selv på dine egne filer. Loppa kører aldrig scriptet.',
+  'sheets.kind': 'PowerShell-script',
+  'sheets.scriptNote':
+    'Én fil med alle tolv kommandoer. Den arbejder på CSV-filer, kræver hverken Excel eller internet og læser kun dine filer og skriver nye i en ny mappe.',
+  'sheets.copyScript': 'Kopiér scriptet',
+  'sheets.saveScript': 'Gem som .ps1',
+  'sheets.copyCommand': 'Kopiér eksemplet',
+  'sheets.copied': 'Kopieret',
+  'sheets.copyFailed': 'Det lykkedes ikke at kopiere. Markér teksten og kopiér den i hånden.',
+  'sheets.search': 'Søg i kommandoerne',
+  'sheets.noMatch': 'Ingen kommando passer.',
+  'sheets.commands': 'Kommandoerne',
+  'sheets.howTitle': 'Sådan kører du det',
+  'sheets.howRun':
+    'Gem filen, åbn PowerShell i samme mappe, og skriv eksemplet med dine egne filnavne. På en Mac installerer du PowerShell først.',
+  'sheets.howBlocked':
+    'Hvis Windows blokerer filen: højreklik på den, vælg Egenskaber, og sæt hak i Fjern blokering.',
+  'sheets.howCsv': 'Den læser CSV-filer. Til en .xlsx-fil bruger du Gem som CSV i Excel først.',
+  'sheets.inEnglish': 'På engelsk',
+  'sheets.desktopOnly': 'Det findes i skrivebordsappen.',
   'room.presentation': 'Præsentation og planlægning',
   'room.notBuilt': 'Ikke bygget endnu',
   'room.scan': 'Scanne',

@@ -1489,6 +1489,28 @@ export const isIS: Record<MessageKey, string> = {
   'room.opened': '{name} er opið',
   'room.documents': 'Skjöl',
   'room.spreadsheets': 'Töflureiknar',
+  'sheets.library': 'Safn',
+  'sheets.intro':
+    'Skriftur fyrir verk sem Excel gerir fyrirhafnarsöm. Afritaðu eina eða vistaðu hana og keyrðu hana á þínum eigin skrám. Loppa keyrir hana aldrei.',
+  'sheets.kind': 'PowerShell-skrifta',
+  'sheets.scriptNote':
+    'Ein skrá með öllum tólf skipununum. Hún vinnur með CSV-skrár, þarf hvorki Excel né internet og les aðeins skrárnar þínar og skrifar nýjar í nýja möppu.',
+  'sheets.copyScript': 'Afrita skriftuna',
+  'sheets.saveScript': 'Vista sem .ps1',
+  'sheets.copyCommand': 'Afrita dæmið',
+  'sheets.copied': 'Afritað',
+  'sheets.copyFailed': 'Ekki tókst að afrita. Veldu textann og afritaðu hann handvirkt.',
+  'sheets.search': 'Leita í skipunum',
+  'sheets.noMatch': 'Engin skipun passar.',
+  'sheets.commands': 'Skipanirnar',
+  'sheets.howTitle': 'Svona keyrirðu hana',
+  'sheets.howRun':
+    'Vistaðu skrána, opnaðu PowerShell í sömu möppu og skrifaðu dæmið með þínum eigin skráarnöfnum. Á Mac þarf fyrst að setja upp PowerShell.',
+  'sheets.howBlocked':
+    'Ef Windows lokar á skrána: hægrismelltu á hana, veldu Eiginleikar og hakaðu við Opna fyrir.',
+  'sheets.howCsv': 'Hún les CSV-skrár. Fyrir .xlsx-skrá notarðu fyrst Vista sem CSV í Excel.',
+  'sheets.inEnglish': 'Á ensku',
+  'sheets.desktopOnly': 'Þetta er í skjáborðsforritinu.',
   'room.presentation': 'Kynningar og skipulag',
   'room.notBuilt': 'Ekki smíðað enn',
   'room.scan': 'Skanna',
