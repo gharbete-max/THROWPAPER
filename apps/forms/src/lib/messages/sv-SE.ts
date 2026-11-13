@@ -918,6 +918,8 @@ export const svSE: Record<MessageKey, string> = {
   'signing.declarationKey': 'Försäkran',
   'signing.testMode': 'Testläge',
   'signing.testModeHint': 'Inget som signeras i testläge markeras som skarpt.',
+  'signing.timestampNote':
+    'När alla har signerat och datorn är uppkopplad ber Loppa DigiCert (timestamp.digicert.com) att tidsstämpla den signerade kopian. Bara ett fingeravtryck på 32 byte skickas, aldrig dokumentet.',
   'signing.send': 'Skicka för signering',
   'signing.sending': 'Skickar…',
   'signing.failed': 'Kunde inte skicka. Kontrollera filen och försök igen.',

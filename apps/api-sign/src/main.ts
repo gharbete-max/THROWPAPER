@@ -3,10 +3,16 @@ import { identityProvidersFromEnv } from './identity/providers.js';
 import { env, sealPems, signLinkSecret } from './env.js';
 import { connect } from './db/client.js';
 import { generateDevCertificate, loadSealer } from './sealing/certificate.js';
+import { rfc3161 } from './sealing/timestamp.js';
 
 const { db } = connect(env.SIGN_DATABASE_URL);
 const pems = sealPems();
-const sealer = await loadSealer(pems === 'ephemeral' ? await generateDevCertificate() : pems);
+const sealer = {
+  ...(await loadSealer(pems === 'ephemeral' ? await generateDevCertificate() : pems)),
+  ...(env.SIGN_TSA_URL
+    ? { timestamper: rfc3161({ name: env.SIGN_TSA_NAME, url: env.SIGN_TSA_URL }) }
+    : {}),
+};
 const app = await buildServer({
   db,
   linkSecret: signLinkSecret(),

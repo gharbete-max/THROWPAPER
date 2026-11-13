@@ -917,6 +917,8 @@ export const daDK: Record<MessageKey, string> = {
   'signing.declarationKey': 'Erklæring',
   'signing.testMode': 'Testtilstand',
   'signing.testModeHint': 'Intet underskrevet i testtilstand markeres som ægte.',
+  'signing.timestampNote':
+    'Når alle har underskrevet og computeren er online, beder Loppa DigiCert (timestamp.digicert.com) om at tidsstemple den underskrevne kopi. Kun et fingeraftryk på 32 byte sendes, aldrig dokumentet.',
   'signing.send': 'Send til underskrift',
   'signing.sending': 'Sender…',
   'signing.failed': 'Kunne ikke sende. Tjek filen, og prøv igen.',

@@ -1,4 +1,5 @@
 import { createHash, X509Certificate } from 'node:crypto';
+import type { Timestamper } from './timestamp.js';
 import * as asn1js from 'asn1js';
 import * as pkijs from 'pkijs';
 
@@ -27,6 +28,8 @@ export interface Sealer {
   fingerprint: string;
   /** The certificate's common name. */
   name: string;
+  /** Where an independent time comes from; without one, the seal states the computer's clock. */
+  timestamper?: Timestamper;
 }
 
 export interface PemPair {

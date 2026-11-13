@@ -940,6 +940,8 @@ export const ruRU: Record<MessageKey, string> = {
   'signing.declarationKey': 'Заявление',
   'signing.testMode': 'Тестовый режим',
   'signing.testModeHint': 'Ничто, подписанное в тестовом режиме, не отмечается как настоящее.',
+  'signing.timestampNote':
+    'Когда все подпишут и компьютер будет в сети, Loppa попросит DigiCert (timestamp.digicert.com) поставить метку времени на подписанную копию. Отправляется только отпечаток размером 32 байта, а не сам документ.',
   'signing.send': 'Отправить на подпись',
   'signing.sending': 'Отправка…',
   'signing.failed': 'Не удалось отправить. Проверьте файл и попробуйте снова.',

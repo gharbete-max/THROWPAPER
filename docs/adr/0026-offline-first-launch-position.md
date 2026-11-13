@@ -27,6 +27,8 @@ and only with the person's confirmation).
      the Send confirmation, with test mode on until switched off;
    - the phone-scan relay and Sign links on the local network, only while that screen is open
      (ADR 0016), shown with the address that is being offered;
+   - one RFC 3161 timestamp request per sealed document, carrying a 32-byte hash, to the service the
+     Sign screen names (ADR 0028, 2026-11-13);
    - nothing else: no telemetry, no update ping, no cloud AI, no fonts or scripts from elsewhere.
 3. **If a hosted edition is ever run**, the technical defaults are: an EU region; uploads and scans
    held only for the request (already true of the PDF routes); logs 30 days; backups 30 days;

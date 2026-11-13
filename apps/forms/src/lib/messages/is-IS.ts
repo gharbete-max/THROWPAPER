@@ -921,6 +921,8 @@ export const isIS: Record<MessageKey, string> = {
   'signing.declarationKey': 'Yfirlýsing',
   'signing.testMode': 'Prófunarhamur',
   'signing.testModeHint': 'Ekkert sem er undirritað í prófunarham er merkt sem raunverulegt.',
+  'signing.timestampNote':
+    'Þegar allir hafa undirritað og tölvan er nettengd biður Loppa DigiCert (timestamp.digicert.com) um að tímastimpla undirritaða afritið. Aðeins 32 bæta fingrafar er sent, aldrei skjalið.',
   'signing.send': 'Senda til undirritunar',
   'signing.sending': 'Sendir…',
   'signing.failed': 'Ekki tókst að senda. Athugaðu skrána og reyndu aftur.',

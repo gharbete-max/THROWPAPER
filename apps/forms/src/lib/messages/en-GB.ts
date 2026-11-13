@@ -936,6 +936,8 @@ export const enGB = {
   'signing.declarationKey': 'Declaration',
   'signing.testMode': 'Test mode',
   'signing.testModeHint': 'Nothing signed in test mode is marked as real.',
+  'signing.timestampNote':
+    'When everyone has signed and this computer is online, Loppa asks DigiCert (timestamp.digicert.com) to timestamp the signed copy. Only a 32-byte fingerprint is sent, never the document.',
   'signing.send': 'Send for signing',
   'signing.sending': 'Sending…',
   'signing.failed': 'Could not send. Check the file and try again.',

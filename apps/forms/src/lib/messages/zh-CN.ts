@@ -880,6 +880,8 @@ export const zhCN: Record<MessageKey, string> = {
   'signing.declarationKey': '声明',
   'signing.testMode': '测试模式',
   'signing.testModeHint': '测试模式下签署的内容不会被标记为正式。',
+  'signing.timestampNote':
+    '所有人签署完成且本机联网时，Loppa 会请 DigiCert（timestamp.digicert.com）为已签署的副本加盖时间戳。只发送一个 32 字节的指纹，绝不发送文档本身。',
   'signing.send': '发送签署',
   'signing.sending': '正在发送…',
   'signing.failed': '发送失败。请检查文件后重试。',
