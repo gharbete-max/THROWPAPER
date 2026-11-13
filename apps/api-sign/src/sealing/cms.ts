@@ -2,12 +2,14 @@ import { createHash } from 'node:crypto';
 import * as asn1js from 'asn1js';
 import * as pkijs from 'pkijs';
 import type { Sealer } from './certificate.js';
+import type { Timestamper } from './timestamp.js';
 
 const OID = {
   data: '1.2.840.113549.1.7.1',
   contentType: '1.2.840.113549.1.9.3',
   messageDigest: '1.2.840.113549.1.9.4',
   signingCertificateV2: '1.2.840.113549.1.9.16.2.47',
+  signatureTimeStampToken: '1.2.840.113549.1.9.16.2.14',
 } as const;
 
 /**
@@ -16,10 +18,17 @@ const OID = {
  * Signed attributes are content-type, message-digest and ESS signing-certificate-v2, which binds
  * the signature to *this* certificate so another with the same key cannot be substituted. There
  * is deliberately **no signing-time attribute**: PAdES puts the claimed time in the signature
- * dictionary's `/M` instead, and a baseline validator rejects both. A trustworthy time needs an
- * RFC 3161 timestamp from a QTSP, which is a later purchase (ADR 0009).
+ * dictionary's `/M` instead, and a baseline validator rejects both.
+ *
+ * With a `timestamper` the signature also carries an RFC 3161 token over its own value, as the
+ * unsigned signature-time-stamp attribute (PAdES B-T, ADR 0028): a time the computer's clock cannot
+ * fake. If none can be had, this throws `TimestampUnavailable` and the caller seals without.
  */
-export async function signDetached(content: Uint8Array, sealer: Sealer): Promise<Uint8Array> {
+export async function signDetached(
+  content: Uint8Array,
+  sealer: Sealer,
+  timestamper?: Timestamper,
+): Promise<Uint8Array> {
   const digest = createHash('sha256').update(content).digest();
   const certHash = createHash('sha256').update(sealer.certificateDer).digest();
 
@@ -80,6 +89,23 @@ export async function signDetached(content: Uint8Array, sealer: Sealer): Promise
   });
 
   await signedData.sign(sealer.key, 0, 'SHA-256');
+
+  if (timestamper) {
+    const signerInfo = signedData.signerInfos[0]!;
+    const imprint = createHash('sha256')
+      .update(new Uint8Array(signerInfo.signature.valueBlock.valueHexView))
+      .digest();
+    const token = await timestamper.stamp(new Uint8Array(imprint));
+    signerInfo.unsignedAttrs = new pkijs.SignedAndUnsignedAttributes({
+      type: 1,
+      attributes: [
+        new pkijs.Attribute({
+          type: OID.signatureTimeStampToken,
+          values: [asn1js.fromBER(toBuffer(token)).result],
+        }),
+      ],
+    });
+  }
 
   const info = new pkijs.ContentInfo({
     contentType: pkijs.ContentInfo.SIGNED_DATA,

@@ -924,6 +924,8 @@ export const fiFI: Record<MessageKey, string> = {
   'signing.declarationKey': 'Vakuutus',
   'signing.testMode': 'Testitila',
   'signing.testModeHint': 'Mitään testitilassa allekirjoitettua ei merkitä todelliseksi.',
+  'signing.timestampNote':
+    'Kun kaikki ovat allekirjoittaneet ja tietokone on verkossa, Loppa pyytää DigiCertiä (timestamp.digicert.com) aikaleimaamaan allekirjoitetun kopion. Vain 32 tavun sormenjälki lähetetään, ei koskaan asiakirjaa.',
   'signing.send': 'Lähetä allekirjoitettavaksi',
   'signing.sending': 'Lähetetään…',
   'signing.failed': 'Lähetys epäonnistui. Tarkista tiedosto ja yritä uudelleen.',

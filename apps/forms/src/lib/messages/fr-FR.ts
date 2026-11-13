@@ -943,6 +943,8 @@ export const frFR: Record<MessageKey, string> = {
   'signing.declarationKey': 'Déclaration',
   'signing.testMode': 'Mode test',
   'signing.testModeHint': "Rien de ce qui est signé en mode test n'est marqué comme réel.",
+  'signing.timestampNote':
+    "Quand tout le monde a signé et que cet ordinateur est en ligne, Loppa demande à DigiCert (timestamp.digicert.com) d'horodater la copie signée. Seule une empreinte de 32 octets est envoyée, jamais le document.",
   'signing.send': 'Envoyer à signer',
   'signing.sending': 'Envoi…',
   'signing.failed': 'Envoi impossible. Vérifiez le fichier et réessayez.',

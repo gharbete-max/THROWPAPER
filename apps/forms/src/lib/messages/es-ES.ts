@@ -933,6 +933,8 @@ export const esES: Record<MessageKey, string> = {
   'signing.declarationKey': 'Declaración',
   'signing.testMode': 'Modo de prueba',
   'signing.testModeHint': 'Nada de lo firmado en modo de prueba se marca como real.',
+  'signing.timestampNote':
+    'Cuando todos hayan firmado y este ordenador esté conectado, Loppa pide a DigiCert (timestamp.digicert.com) que ponga un sello de tiempo a la copia firmada. Solo se envía una huella de 32 bytes, nunca el documento.',
   'signing.send': 'Enviar para firmar',
   'signing.sending': 'Enviando…',
   'signing.failed': 'No se pudo enviar. Revisa el archivo e inténtalo de nuevo.',

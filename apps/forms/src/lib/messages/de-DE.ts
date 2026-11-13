@@ -946,6 +946,8 @@ export const deDE: Record<MessageKey, string> = {
   'signing.declarationKey': 'Erklärung',
   'signing.testMode': 'Testmodus',
   'signing.testModeHint': 'Nichts, was im Testmodus unterschrieben wird, gilt als echt markiert.',
+  'signing.timestampNote':
+    'Wenn alle unterschrieben haben und dieser Computer online ist, lässt Loppa die unterschriebene Kopie von DigiCert (timestamp.digicert.com) mit einem Zeitstempel versehen. Gesendet wird nur ein 32-Byte-Fingerabdruck, nie das Dokument.',
   'signing.send': 'Zur Unterschrift senden',
   'signing.sending': 'Wird gesendet…',
   'signing.failed': 'Senden fehlgeschlagen. Prüfen Sie die Datei und versuchen Sie es erneut.',

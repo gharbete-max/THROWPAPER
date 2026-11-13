@@ -918,6 +918,8 @@ export const nbNO: Record<MessageKey, string> = {
   'signing.declarationKey': 'Erklæring',
   'signing.testMode': 'Testmodus',
   'signing.testModeHint': 'Ingenting signert i testmodus merkes som ekte.',
+  'signing.timestampNote':
+    'Når alle har signert og datamaskinen er på nett, ber Loppa DigiCert (timestamp.digicert.com) om å tidsstemple den signerte kopien. Bare et fingeravtrykk på 32 byte sendes, aldri dokumentet.',
   'signing.send': 'Send til signering',
   'signing.sending': 'Sender…',
   'signing.failed': 'Kunne ikke sende. Sjekk filen og prøv igjen.',

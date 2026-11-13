@@ -921,6 +921,8 @@ export const jaJP: Record<MessageKey, string> = {
   'signing.declarationKey': '宣誓文',
   'signing.testMode': 'テストモード',
   'signing.testModeHint': 'テストモードで署名されたものは正式なものとして扱われません。',
+  'signing.timestampNote':
+    '全員が署名し、このコンピューターがオンラインのとき、LoppaはDigiCert（timestamp.digicert.com）に署名済みコピーのタイムスタンプを依頼します。送信されるのは32バイトの指紋だけで、文書は送信されません。',
   'signing.send': '署名に送る',
   'signing.sending': '送信中…',
   'signing.failed': '送信できませんでした。ファイルを確認して、もう一度お試しください。',

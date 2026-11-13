@@ -10,6 +10,7 @@ import { buildServer } from '../server.js';
 import { openLocalSignDatabase } from '../db/pglite.js';
 import { declarations, serviceTokens } from '../db/schema.js';
 import { DEMO_DECLARATION } from '../db/demo-declaration.js';
+import type { Timestamper } from '../sealing/timestamp.js';
 import { generateDevCertificate, loadSealer, usableCertificate } from '../sealing/certificate.js';
 
 /**
@@ -98,6 +99,8 @@ export async function startLocalSign(options: {
   webDir?: string;
   /** 47018 in the shell; 0 in tests for any free port. */
   port?: number;
+  /** An independent time for each seal (ADR 0028); without one, seals state the clock. */
+  timestamper?: Timestamper;
 }): Promise<LocalSign> {
   await mkdir(options.dataDir, { recursive: true });
   const secretsPath = join(options.dataDir, 'secrets.json');
@@ -125,7 +128,10 @@ export async function startLocalSign(options: {
       linkSecret: secrets.linkSecret,
       publicUrl: url,
       apiUrl: url,
-      sealer: await loadSealer({ keyPem: secrets.sealKeyPem, certPem: secrets.sealCertPem }),
+      sealer: {
+        ...(await loadSealer({ keyPem: secrets.sealKeyPem, certPem: secrets.sealCertPem })),
+        ...(options.timestamper ? { timestamper: options.timestamper } : {}),
+      },
       ...(options.webDir ? { serveAppFrom: options.webDir } : {}),
     });
     guardLoopbackHost(app, port);
@@ -165,3 +171,6 @@ export async function startLocalSign(options: {
     },
   };
 }
+
+// The desktop's timestamp service (ADR 0028), through the one subpath it may import.
+export { DEFAULT_TSA, rfc3161, type Timestamper } from '../sealing/timestamp.js';

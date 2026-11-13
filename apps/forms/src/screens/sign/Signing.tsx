@@ -856,6 +856,9 @@ function Compose({
           </p>
         )}
 
+        {/* ADR 0026's rule: the press that leads to a network call names the host and what goes. */}
+        {linksAreLocal && <p className="small muted">{t('signing.timestampNote')}</p>}
+
         {failed && (
           <p className="error" role="alert">
             {t('signing.failed')}

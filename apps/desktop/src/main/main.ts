@@ -40,6 +40,7 @@ import {
   type DesktopServer,
 } from '@tp/api-forms/desktop';
 import type { LocalSign } from '@tp/api-sign/local';
+import { DEFAULT_TSA, rfc3161 } from '@tp/api-sign/local';
 import { startForms, startSign } from './host.js';
 import {
   CHANNELS,
@@ -152,7 +153,9 @@ function unprotect(value: string): string {
 
 async function startServer(): Promise<DesktopServer> {
   const settings = await readSettings(workspacePaths(dataDir).settings);
-  if (settings.signing.mode === 'local') sign ??= await startSign(dataDir, { root: resources });
+  // Each seal asks DigiCert for an independent time over its hash; offline, it states the clock.
+  if (settings.signing.mode === 'local')
+    sign ??= await startSign(dataDir, { root: resources }, undefined, rfc3161(DEFAULT_TSA));
   return startForms(sign, {
     dataDir,
     webDir: join(resources, 'web'),

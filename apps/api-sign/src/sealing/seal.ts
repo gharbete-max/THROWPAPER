@@ -18,6 +18,7 @@ import { defaultTokens } from '@tp/tokens';
 import type { Envelope, EnvelopeEvent } from '@tp/signing';
 import type { Sealer } from './certificate.js';
 import { signDetached } from './cms.js';
+import { TimestampUnavailable, type Timestamper } from './timestamp.js';
 import { SEAL_LOCALES, sealMessages } from './messages.js';
 
 export interface SealInput {
@@ -42,7 +43,23 @@ export interface SealInput {
  */
 export async function sealEnvelope(input: SealInput, sealer: Sealer): Promise<Uint8Array> {
   if (input.envelope.status !== 'completed') throw new Error('Only a completed envelope is sealed');
+  // The audit page names its time source, so a failed timestamp means drawing it again: the page
+  // never claims a timestamp the seal does not carry (ADR 0028).
+  if (sealer.timestamper) {
+    try {
+      return await sealWith(input, sealer, sealer.timestamper);
+    } catch (error) {
+      if (!(error instanceof TimestampUnavailable)) throw error;
+    }
+  }
+  return sealWith(input, sealer, undefined);
+}
 
+async function sealWith(
+  input: SealInput,
+  sealer: Sealer,
+  timestamper: Timestamper | undefined,
+): Promise<Uint8Array> {
   const pdf = await PDFDocument.load(input.document, { updateMetadata: false });
   const fonts = {
     regular: await pdf.embedFont(StandardFonts.Helvetica),
@@ -68,10 +85,28 @@ export async function sealEnvelope(input: SealInput, sealer: Sealer): Promise<Ui
   }
   for (const locale of locales) {
     const t = createTranslator(SEAL_LOCALES, sealMessages, locale);
-    const pages = drawAuditPages(pdf, fonts, t, input, sealer);
+    const pages = drawAuditPages(pdf, fonts, t, input, sealer, timestamper);
     if (test)
       for (const page of pages) watermark(page, fonts.bold, safe(fonts.bold, t('seal.watermark')));
   }
+
+  // Every page, the document's and the audit's, carries the envelope and the sealed time.
+  const all = pdf.getPages();
+  all.forEach((page, index) => {
+    const line = first('seal.stamp', {
+      envelope: input.envelope.id,
+      time: utc(input.sealedAt.toISOString()),
+      page: index + 1,
+      pages: all.length,
+    });
+    page.drawText(safe(fonts.regular, line), {
+      x: 24,
+      y: 12,
+      size: 6.5,
+      font: fonts.regular,
+      color: MUTED,
+    });
+  });
 
   pdflibAddPlaceholder({
     pdfDoc: pdf,
@@ -81,22 +116,29 @@ export async function sealEnvelope(input: SealInput, sealer: Sealer): Promise<Ui
     location: '',
     signingTime: input.sealedAt,
     subFilter: SUBFILTER_ETSI_CADES_DETACHED,
-    signatureLength: 16_384,
+    // A timestamp token carries the service's certificates as well as its own signature.
+    signatureLength: timestamper ? 32_768 : 16_384,
     appName: 'Loppa Sign',
   });
   // Object streams would compress the signature dictionary out of reach of the byte-range search.
   const prepared = await pdf.save({ useObjectStreams: false });
-  const sealed = await new SignPdf().sign(Buffer.from(prepared), new CmsSigner(sealer));
+  const sealed = await new SignPdf().sign(
+    Buffer.from(prepared),
+    new CmsSigner(sealer, timestamper),
+  );
   return new Uint8Array(sealed);
 }
 
 class CmsSigner extends Signer {
-  constructor(private readonly sealer: Sealer) {
+  constructor(
+    private readonly sealer: Sealer,
+    private readonly timestamper: Timestamper | undefined,
+  ) {
     super();
   }
 
   override async sign(content: Buffer): Promise<Buffer> {
-    return Buffer.from(await signDetached(new Uint8Array(content), this.sealer));
+    return Buffer.from(await signDetached(new Uint8Array(content), this.sealer, this.timestamper));
   }
 }
 
@@ -169,6 +211,7 @@ function drawAuditPages(
   t: Translator,
   input: SealInput,
   sealer: Sealer,
+  timestamper: Timestamper | undefined,
 ): PDFPage[] {
   const width = A4.width - MARGIN * 2;
   const added: PDFPage[] = [];
@@ -207,6 +250,12 @@ function drawAuditPages(
     ],
     [t('seal.environment'), t(`seal.environment.${envelope.environment}`)],
     [t('seal.sealedAt'), `${utc(input.sealedAt.toISOString())} UTC`],
+    [
+      t('seal.timeSource'),
+      timestamper
+        ? t('seal.timeSource.tsa', { tsa: timestamper.name })
+        : t('seal.timeSource.clock'),
+    ],
     [t('seal.certificate'), sealer.fingerprint],
     [t('seal.trail'), input.trailSha256],
   ];

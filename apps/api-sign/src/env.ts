@@ -14,6 +14,9 @@ const Env = z.object({
   API_SIGN_PUBLIC_URL: z.string().url().default('http://localhost:4003'),
   /** The built signing page (`apps/sign/dist`) to serve from this origin; unset in development. */
   SIGN_SERVE_APP: z.string().optional(),
+  /** An RFC 3161 service for each seal's time (ADR 0028); unset, seals state the clock. */
+  SIGN_TSA_URL: z.string().url().optional(),
+  SIGN_TSA_NAME: z.string().default('the timestamp service'),
 });
 
 export const env = Env.parse(process.env);

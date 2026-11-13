@@ -4,7 +4,7 @@ import {
   type DesktopServer,
   type StartDesktopOptions,
 } from '@tp/api-forms/desktop';
-import { startLocalSign, type LocalSign } from '@tp/api-sign/local';
+import { startLocalSign, type LocalSign, type Timestamper } from '@tp/api-sign/local';
 
 /**
  * How the shell puts two products on one computer (ADR 0016), without Electron in it — so the
@@ -23,12 +23,14 @@ export function startSign(
   dataDir: string,
   resources: Resources,
   port?: number,
+  timestamper?: Timestamper,
 ): Promise<LocalSign> {
   return startLocalSign({
     dataDir: join(dataDir, 'sign'),
     migrationsFolder: join(resources.root, 'sign-drizzle'),
     webDir: join(resources.root, 'sign-web'),
     ...(port !== undefined ? { port } : {}),
+    ...(timestamper ? { timestamper } : {}),
   });
 }
 

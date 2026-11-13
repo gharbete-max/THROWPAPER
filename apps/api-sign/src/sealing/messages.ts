@@ -32,6 +32,23 @@ export const sealMessages: Catalogue = {
   'seal.environment.test': { 'en-GB': 'Test mode', 'sv-SE': 'Testläge' },
   'seal.environment.production': { 'en-GB': 'Production', 'sv-SE': 'Skarp' },
   'seal.sealedAt': { 'en-GB': 'Sealed at', 'sv-SE': 'Förseglad' },
+  'seal.timeSource': { 'en-GB': 'Time source', 'sv-SE': 'Tidskälla' },
+  'seal.timeSource.tsa': {
+    'en-GB':
+      'Independent RFC 3161 timestamp from {tsa}, embedded in the seal. A PDF reader that validates signatures shows it.',
+    'sv-SE':
+      'Oberoende RFC 3161-tidsstämpel från {tsa}, inbäddad i förseglingen. En PDF-läsare som validerar signaturer visar den.',
+  },
+  'seal.timeSource.clock': {
+    'en-GB':
+      "This computer's clock, not independently verified: no timestamp service could be reached.",
+    'sv-SE':
+      'Den här datorns klocka, inte oberoende verifierad: ingen tidsstämpeltjänst gick att nå.',
+  },
+  'seal.stamp': {
+    'en-GB': 'Loppa Sign · {envelope} · sealed {time} UTC · page {page} of {pages}',
+    'sv-SE': 'Loppa Sign · {envelope} · förseglad {time} UTC · sida {page} av {pages}',
+  },
   'seal.certificate': {
     'en-GB': 'Seal certificate SHA-256',
     'sv-SE': 'Förseglingscertifikatets SHA-256',
