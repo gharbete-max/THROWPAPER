@@ -21,23 +21,24 @@ jobs:
         include:
           - name: Windows PowerShell 5.1
             os: windows-latest
-            shell: cmd
             run: powershell -NoProfile -ExecutionPolicy Bypass -File sheets\tests\Test-Sheets.ps1
           - name: PowerShell 7 on Windows
             os: windows-latest
-            shell: cmd
             run: pwsh -NoProfile -ExecutionPolicy Bypass -File sheets\tests\Test-Sheets.ps1
           - name: PowerShell 7 on Linux
             os: ubuntu-latest
-            shell: bash
             run: pwsh -NoProfile -File sheets/tests/Test-Sheets.ps1
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
-      # cmd and bash pass the script's exit code straight through: 1 on any failed check.
-      - run: ${{ matrix.run }}
-        shell: ${{ matrix.shell }}
+      # A step's shell cannot come from the matrix; cmd and bash both pass the exit code through.
+      - if: runner.os == 'Windows'
+        run: ${{ matrix.run }}
+        shell: cmd
+      - if: runner.os != 'Windows'
+        run: ${{ matrix.run }}
+        shell: bash
 
   release:
     if: startsWith(github.ref, 'refs/tags/sheets-v')
