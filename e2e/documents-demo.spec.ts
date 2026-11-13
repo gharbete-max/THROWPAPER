@@ -166,8 +166,9 @@ test('scan, arrange, sign, fill, send and summarise, by clicking alone', async (
     });
   });
   await page.addInitScript(fakeBridge);
-  await page.goto('/room/documents');
-  await page.getByRole('link', { name: /Summary and translation/ }).click();
+  // The desktop shows only Scan and Sign (SCAN_AND_SIGN_ONLY): the centre is off the room, its
+  // screen still answers, and this is the way to it.
+  await page.goto('/summary');
   await page.getByRole('link', { name: 'Set up AI' }).click();
   await page.getByRole('button', { name: /Open a file( or an AI pack.*)? from disk/ }).click();
   await expect(page.getByText('Installed', { exact: true })).toBeVisible();
