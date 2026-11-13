@@ -1,4 +1,9 @@
 * text=auto eol=lf
+# Windows PowerShell 5.1 and cmd.exe: Windows line endings; the .ps1 files also keep a UTF-8 BOM,
+# without which PowerShell 5.1 reads them as Windows-1252 (sheets/README.md).
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.xlsx binary
 *.png binary
 *.jpg binary
 *.pdf binary
@@ -7,3 +12,5 @@ docs/brand/**/*.webp filter=lfs diff=lfs merge=lfs -text
 docs/brand/**/*.gif filter=lfs diff=lfs merge=lfs -text
 docs/brand/**/*.png filter=lfs diff=lfs merge=lfs -text
 docs/brand/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+# Test files for sheets/: their exact bytes are the test (encodings, line endings).
+sheets/tests/fixtures/** binary

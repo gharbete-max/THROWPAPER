@@ -1,0 +1,72 @@
+name: sheets
+
+# The PowerShell spreadsheet tools in sheets/ (README there). Tested on the Windows PowerShell 5.1
+# that every Windows computer has, and on PowerShell 7; released as a zip on a sheets-v* tag.
+on:
+  pull_request:
+    paths: ['sheets/**', '.github/workflows/sheets.yml']
+  push:
+    branches: [main]
+    paths: ['sheets/**', '.github/workflows/sheets.yml']
+    tags: ['sheets-v*']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows PowerShell 5.1
+            os: windows-latest
+            shell: cmd
+            run: powershell -NoProfile -ExecutionPolicy Bypass -File sheets\tests\Test-Sheets.ps1
+          - name: PowerShell 7 on Windows
+            os: windows-latest
+            shell: cmd
+            run: pwsh -NoProfile -ExecutionPolicy Bypass -File sheets\tests\Test-Sheets.ps1
+          - name: PowerShell 7 on Linux
+            os: ubuntu-latest
+            shell: bash
+            run: pwsh -NoProfile -File sheets/tests/Test-Sheets.ps1
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      # cmd and bash pass the script's exit code straight through: 1 on any failed check.
+      - run: ${{ matrix.run }}
+        shell: ${{ matrix.shell }}
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/sheets-v')
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Zip the tools, without their tests
+        run: |
+          mkdir -p dist
+          cp -r sheets "dist/Loppa Sheets"
+          rm -rf "dist/Loppa Sheets/tests"
+          cd dist
+          zip -r -X loppa-sheets.zip "Loppa Sheets"
+          sha256sum loppa-sheets.zip > loppa-sheets.zip.sha256
+          cat loppa-sheets.zip.sha256
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          hash=$(cut -d' ' -f1 dist/loppa-sheets.zip.sha256)
+          {
+            echo 'Six spreadsheet tools in PowerShell. Unzip, put two files beside the tools, double-click one. README.md in the zip explains each.'
+            echo
+            echo "SHA-256 of loppa-sheets.zip: \`$hash\`"
+            echo
+            echo 'Check it before unzipping, in PowerShell: `Get-FileHash .\loppa-sheets.zip -Algorithm SHA256`'
+          } > notes.md
+          gh release create "$GITHUB_REF_NAME" dist/loppa-sheets.zip dist/loppa-sheets.zip.sha256 \
+            --title "Loppa Sheets ${GITHUB_REF_NAME#sheets-v}" --notes-file notes.md
