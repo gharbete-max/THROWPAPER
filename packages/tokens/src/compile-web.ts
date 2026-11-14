@@ -64,6 +64,9 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   vars['--tp-radius-sm'] = px(radius * 0.5);
   vars['--tp-radius-lg'] = px(radius * 1.75);
   vars['--tp-radius-xl'] = px(radius * 2.5);
+  // Glass corners, shared with throwindice: 22px on a pane, 28px on what floats, at the default 10.
+  vars['--tp-radius-glass'] = px(radius * 2.2);
+  vars['--tp-radius-glass-float'] = px(radius * 2.8);
   // A pill is not a multiple of anything; it is "as round as it goes".
   vars['--tp-radius-pill'] = '999px';
 
@@ -120,7 +123,18 @@ export function toCssVariables(tokens: TokenSet): Record<string, string> {
   vars['--tp-glass'] = glass.tint;
   vars['--tp-glass-edge'] = glass.edge;
   vars['--tp-glass-hairline'] = glass.hairline;
-  vars['--tp-glass-blur'] = 'blur(20px) saturate(1.7)';
+  /*
+   * The same recipe as throwindice, so the two products read as one family: a pane blurs 24px, a
+   * thing that floats over everything (palette, toast, dialog) 30px, both saturated 1.8. The scrim
+   * is the dimmed, blurred page behind a dialog.
+   */
+  vars['--tp-glass-blur'] = 'saturate(1.8) blur(24px)';
+  vars['--tp-glass-blur-float'] = 'saturate(1.8) blur(30px)';
+  vars['--tp-glass-edge-width'] = '0.5px';
+  vars['--tp-glass-shadow'] = '0 10px 30px rgb(0 0 0 / 0.06)';
+  vars['--tp-glass-shadow-float'] = '0 24px 60px rgb(0 0 0 / 0.16)';
+  vars['--tp-glass-scrim'] = 'rgb(10 10 14 / 0.28)';
+  vars['--tp-glass-scrim-blur'] = 'blur(14px)';
 
   /*
    * The focus ring, derived rather than picked. See `focusRing`: this is a locked guarantee, and

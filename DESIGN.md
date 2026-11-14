@@ -314,16 +314,22 @@ customer replacing the palette.
 
 Two soft layers at low opacity, never one hard drop shadow.
 
-**Glass** is for surfaces with page behind them, and only those: the session row, the command
-palette, toasts, the site header. Not cards, not form fields, not the public form. It is an
-_approximation_ of Apple's Liquid Glass — a translucent tint, `blur(20px) saturate(1.7)`, a
-specular hairline along the top edge, and a shadow. It must degrade: `prefers-reduced-transparency`
-removes it entirely, and `@supports not (backdrop-filter)` fills solid.
+**Glass** is shared with throwindice, so the two products read as one family; `derive.test.ts`
+pins the recipe. It goes everywhere in Loppa's own interface that throwindice puts it: the session
+row, the site header, cards, dialogs, the command palette, toasts and the language list. Never on a
+published form, which belongs to the organisation and keeps flat cards. It is an _approximation_ of
+Apple's Liquid Glass: the page's background at 62%, `saturate(1.8) blur(24px)` (30px on what floats
+over everything), a 0.5px edge of the ink at 12%, a white highlight along the top at 50%, and a long
+soft shadow (`0 10px 30px` on a card, `0 24px 60px` on what floats). Corners are `--tp-radius-glass`
+(22px) on a pane and `--tp-radius-glass-float` (28px) on a floating one. Behind a dialog the page is
+dimmed and blurred 14px. It must degrade: `prefers-reduced-transparency` removes it entirely, and
+`@supports not (backdrop-filter)` fills solid.
 
 ## Shapes
 
 One radius set from `radius` (10px): `sm` 5 · `md` 10 · `lg` 17.5 · `xl` 25 · `pill` 999. Cards
-take `lg`, controls `md`, badges `pill`. Set `radius: 0` and the whole product goes square together.
+in Loppa's own interface take the glass corner (22px), a published form's cards `lg`; controls
+`md`, badges `pill`. Set `radius: 0` and the whole product goes square together.
 
 Borders are `1px` of `border` on every boundary. Inputs and buttons are `44px` tall.
 
@@ -367,7 +373,8 @@ Borders are `1px` of `border` on every boundary. Inputs and buttons are `44px` t
 - Don't hard-code a colour, size or font. The one exception is the QR code's black.
 - Don't author a dark palette. It is derived. The room's grey is the owner's one exception.
 - Don't use `accent` as text. Use `accent-ink`.
-- Don't put glass on anything without page behind it.
+- Don't put glass on a published form, or on anything without page behind it.
+- Don't change the glass recipe in one product only. throwindice carries the same values.
 - Don't animate anything that must be readable without JavaScript, and never gate content on a
   class that JavaScript adds.
 - Don't add gradients as decoration. The only two in the product are on `body`, and they exist to

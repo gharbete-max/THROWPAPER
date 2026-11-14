@@ -2695,14 +2695,12 @@ p {
  * A surface on a dark page is lighter than the page, so the border that separated them on light
  * has less work to do and a heavy one reads as a cage. The shadow does the separating instead.
  */
-:root[data-theme='dark'] .card,
-:root[data-theme='dark'] .topline {
+:root[data-theme='dark'] .card {
   border-color: color-mix(in srgb, var(--tp-colour-border) 55%, transparent);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .card,
-  :root:not([data-theme='light']) .topline {
+  :root:not([data-theme='light']) .card {
     border-color: color-mix(in srgb, var(--tp-colour-border) 55%, transparent);
   }
 }
@@ -4141,10 +4139,19 @@ body:has(.app) > #root {
  *
  * ## Where it goes, and where it does not
  *
- * Only on surfaces with page behind them: the session row, the command palette, toasts, dialogs,
- * the site header. Glass over nothing is a tinted rectangle pretending. It is deliberately **not**
- * on cards, form fields or the public form, where blur behind text costs legibility and buys an
- * effect nobody filling in a registration wants.
+ * The recipe is throwindice's, copied so the two products read as one family (`derive.test.ts`
+ * pins it): the page's background at 62%, `saturate(1.8)` with a 24px blur (30px on what floats
+ * over everything), a half-pixel edge of the ink, a white highlight along the top, and a long soft
+ * shadow. Corners are 22px on a pane and 28px on a floating one, from the brand's own radius.
+ *
+ * ## Where it goes
+ *
+ * Everywhere in Loppa's own interface that throwindice puts it: the session row, the site header,
+ * cards, dialogs, the command palette, toasts and the language list. Each of them has page behind
+ * it, and the faint washes on `body` (end of this file) give the blur something to find.
+ *
+ * Never on a published form. That page belongs to the organisation, renders outside `.system`,
+ * and keeps its flat cards: blur behind questions somebody is filling in buys them nothing.
  *
  * The four things that make a pane read as glass, all native:
  *   1. a translucent tint, so the page shows through;
@@ -4153,14 +4160,30 @@ body:has(.app) > #root {
  *   4. a shadow, because glass floats.
  * ========================================================================== */
 .topline,
-.palette,
-.toast,
-.site__bar {
+.site__bar,
+.system .card {
   background: var(--tp-glass);
   /* Safari has needed the prefix since this effect existed and still does. */
   -webkit-backdrop-filter: var(--tp-glass-blur);
   backdrop-filter: var(--tp-glass-blur);
   border-color: var(--tp-glass-edge);
+}
+
+.palette,
+.toast,
+.system .confirm,
+.system .dialog,
+.system .langpicker__list {
+  background: var(--tp-glass);
+  -webkit-backdrop-filter: var(--tp-glass-blur-float);
+  backdrop-filter: var(--tp-glass-blur-float);
+  border: var(--tp-glass-edge-width) solid var(--tp-glass-edge);
+  border-radius: var(--tp-radius-glass-float);
+}
+
+/* The language list is a small menu: a full 28px corner on a list of names would read as a pill. */
+.system .langpicker__list {
+  border-radius: var(--tp-radius-glass);
 }
 
 /*
@@ -4171,15 +4194,59 @@ body:has(.app) > #root {
  */
 .palette,
 .toast,
-.site__bar {
+.system .confirm,
+.system .dialog,
+.system .langpicker__list {
   box-shadow:
     inset 0 1px 0 var(--tp-glass-hairline),
-    var(--tp-shadow-overlay);
+    var(--tp-glass-shadow-float);
+}
+
+.site__bar {
+  box-shadow: inset 0 1px 0 var(--tp-glass-hairline);
+}
+
+/* A card sits on the page rather than over it: the short shadow, and the pane's corner. */
+.system .card {
+  border-width: var(--tp-glass-edge-width);
+  border-radius: var(--tp-radius-glass);
+  box-shadow:
+    inset 0 1px 0 var(--tp-glass-hairline),
+    var(--tp-glass-shadow);
+}
+
+/* The dark-mode border rule above is more specific than this one; on glass the ink's edge wins. */
+:root .system .card {
+  border-color: var(--tp-glass-edge);
+}
+
+/* The edge still warms on approach, as it did on a solid card. */
+:root .system .card:hover {
+  border-color: color-mix(in srgb, var(--tp-colour-primary) 30%, var(--tp-glass-edge));
 }
 
 /* The session row is a strip rather than a pane: it gets the hairline and no cast shadow. */
 .topline {
   box-shadow: inset 0 1px 0 var(--tp-glass-hairline);
+}
+
+/* A closed disclosure card is only its summary line (styles/app.css): no pane until it opens. */
+:root .system .card--disclosure:not([open]) {
+  border-color: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/*
+ * What is behind a dialog: the page, dimmed and blurred, as throwindice's menu scrim.
+ */
+.palette__backdrop,
+.system .confirm::backdrop,
+.system .dialog::backdrop {
+  background: var(--tp-glass-scrim);
+  -webkit-backdrop-filter: var(--tp-glass-scrim-blur);
+  backdrop-filter: var(--tp-glass-scrim-blur);
 }
 
 /*
@@ -4192,7 +4259,7 @@ body:has(.app) > #root {
   position: sticky;
   inset-block-start: 0;
   z-index: 20;
-  border: var(--tp-border-width) solid var(--tp-glass-edge);
+  border: var(--tp-glass-edge-width) solid var(--tp-glass-edge);
   border-block-start: 0;
   border-inline: 0;
 }
@@ -4202,27 +4269,29 @@ body:has(.app) > #root {
  *
  * `prefers-reduced-transparency` is set by people who find layered translucency hard to read, and
  * by anyone whose system is conserving power. The effect is removed rather than softened: the
- * point of the setting is opacity, and half-transparent is still transparent.
+ * point of the setting is opacity, and half-transparent is still transparent. The shape stays.
  */
 @media (prefers-reduced-transparency: reduce) {
   .topline,
+  .site__bar,
   .palette,
   .toast,
-  .site__bar {
+  .system .card,
+  .system .confirm,
+  .system .dialog,
+  .system .langpicker__list {
     background: var(--tp-colour-background);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     border-color: var(--tp-colour-border);
   }
 
-  .palette,
-  .toast,
-  .site__bar {
-    box-shadow: var(--tp-shadow-overlay);
-  }
-
-  .topline {
-    box-shadow: none;
+  .palette__backdrop,
+  .system .confirm::backdrop,
+  .system .dialog::backdrop {
+    background: rgb(0 0 0 / 0.45);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }
 
@@ -4235,9 +4304,13 @@ body:has(.app) > #root {
  */
 @supports not (backdrop-filter: blur(1px)) {
   .topline,
+  .site__bar,
   .palette,
   .toast,
-  .site__bar {
+  .system .card,
+  .system .confirm,
+  .system .dialog,
+  .system .langpicker__list {
     background: var(--tp-colour-background);
   }
 }
@@ -4535,7 +4608,9 @@ body:has(> #root .shell--narrow) {
 
 .system .card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--tp-shadow-raised);
+  box-shadow:
+    inset 0 1px 0 var(--tp-glass-hairline),
+    var(--tp-glass-shadow-float);
 }
 
 /*
