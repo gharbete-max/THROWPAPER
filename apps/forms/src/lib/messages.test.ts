@@ -199,6 +199,8 @@ describe('twelve languages, each its own', () => {
     // File kinds named as the programs name them.
     'docs.k.pdf',
     'docs.k.word',
+    'sheets.formatCsv',
+    'sheets.formatXlsx',
   ];
   /** Words each language uses as English does: cognates and loanwords, each one looked at. */
   const SAME_WORD: Readonly<Record<string, readonly MessageKey[]>> = {

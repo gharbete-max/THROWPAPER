@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router';
 import script from '../../../../../packs/spreadsheets/Loppa-Sheets.ps1?raw';
 import { Icon } from '../../components/Icon.js';
 import { saveBlob } from '../../lib/email-handoff.js';
@@ -7,6 +6,7 @@ import { useEdition } from '../../lib/edition.js';
 import { useT } from '../../lib/i18n.js';
 import { useSession } from '../../lib/session.js';
 import '../../styles/sheets.css';
+import { PartNav } from './PartNav.js';
 import { COMMANDS, matches, pick, SCRIPT_NAME } from './library.js';
 
 /**
@@ -53,10 +53,7 @@ export function Library() {
 
   return (
     <main className="sheets" id="main">
-      <Link className="button button--bare small sheets__back" to="/room">
-        <Icon name="arrow-left" className="icon--lead" />
-        {t('room.back')}
-      </Link>
+      <PartNav current="library" />
       <header className="sheets__head">
         <h1>
           {t('room.spreadsheets')}: {t('sheets.library')}

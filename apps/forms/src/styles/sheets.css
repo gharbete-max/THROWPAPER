@@ -10,8 +10,49 @@
   padding-block: calc(var(--tp-spacing-unit) * 4) calc(var(--tp-spacing-unit) * 8);
 }
 
-.sheets__back {
-  justify-self: start;
+.sheets__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-spacing-unit);
+}
+
+.sheets__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--tp-spacing-unit) * 2);
+  margin-block: var(--tp-spacing-unit);
+}
+
+.sheets__facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: calc(var(--tp-spacing-unit) * 0.5) calc(var(--tp-spacing-unit) * 2);
+  margin: var(--tp-spacing-unit) 0;
+}
+
+.sheets__facts dd {
+  margin: 0;
+}
+
+.sheets__preview {
+  overflow-x: auto;
+}
+
+.sheets__preview table {
+  border-collapse: collapse;
+  font-size: var(--tp-text-ui);
+}
+
+.sheets__preview :is(th, td) {
+  padding: calc(var(--tp-spacing-unit) * 0.5) var(--tp-spacing-unit);
+  border: var(--tp-border-width) solid var(--tp-colour-border);
+  text-align: start;
+  white-space: nowrap;
+}
+
+.sheets__error {
+  color: var(--tp-colour-danger);
 }
 
 .sheets__head {

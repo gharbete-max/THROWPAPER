@@ -117,6 +117,9 @@ const Room = lazy(() => import('./screens/room/Room.js').then((m) => ({ default:
 const Library = lazy(() =>
   import('./screens/sheets/Library.js').then((m) => ({ default: m.Library })),
 );
+const Convert = lazy(() =>
+  import('./screens/sheets/Convert.js').then((m) => ({ default: m.Convert })),
+);
 const UserWorkspace = lazy(() =>
   import('./screens/earlier/UserWorkspace.js').then((m) => ({ default: m.UserWorkspace })),
 );
@@ -386,10 +389,10 @@ function Shell() {
 
   /* Spreadsheets is its own catcher: its Library is a bare page with a way back to the room, not a
      part of Documents' rail (ADR 0027). */
-  if (location.pathname === '/sheets') {
+  if (location.pathname === '/sheets' || location.pathname === '/sheets/convert') {
     return (
       <Suspense fallback={<Loading />}>
-        <Library />
+        {location.pathname === '/sheets' ? <Library /> : <Convert />}
       </Suspense>
     );
   }
