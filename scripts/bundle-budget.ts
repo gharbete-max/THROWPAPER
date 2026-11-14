@@ -117,8 +117,10 @@ const BUDGET_KB = {
    * 1290 -> 1310 (2026-11-08): Spreadsheets' Library: one lazily loaded screen that carries the
    * pack's script (35 KB, about 10.8 gzipped) so it can be copied or saved with no network, and its
    * words in twelve languages. Only the desktop's Spreadsheets catcher opens it; the entry is unchanged.
+   * 1310 -> 1330 (2026-11-14): Spreadsheets' Convert: one lazily loaded screen, the CSV reader and
+   * writer, and its 32 strings in twelve languages measured 1312.8 (10.5 above the Library's 1302.3).
    */
-  total: 1310,
+  total: 1330,
 } as const;
 
 function gzippedKb(path: string): number {
