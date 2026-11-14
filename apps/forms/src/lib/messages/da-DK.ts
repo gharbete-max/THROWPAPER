@@ -1505,7 +1505,7 @@ export const daDK: Record<MessageKey, string> = {
   'sheets.convert': 'Konvertér',
   'sheets.convertIntro':
     'Gør en CSV-fil klar, så Excel åbner den rigtigt: skilletegnet, bogstaverne å æ ø og decimaltegnet. Din fil ændres ikke; en ny gemmes.',
-  'sheets.pick': 'Vælg en CSV-fil',
+  'sheets.pick': 'Vælg en CSV- eller Excel-fil',
   'sheets.drop': 'eller slip den her',
   'sheets.found': 'Hvad der blev fundet i filen',
   'sheets.sepLabel': 'Skilletegn',
@@ -1537,6 +1537,12 @@ export const daDK: Record<MessageKey, string> = {
   'sheets.errBig': 'Filen er over 20 MB.',
   'sheets.errEmpty': 'Filen er tom.',
   'sheets.errRead': 'Filen kunne ikke læses.',
+  'sheets.errXlsx':
+    'Excel-filen kunne ikke læses. Den kan være beskyttet med adgangskode eller beskadiget.',
+  'sheets.sheetLabel': 'Ark',
+  'sheets.formatLabel': 'Filtype',
+  'sheets.formatCsv': 'CSV (.csv)',
+  'sheets.formatXlsx': 'Excel (.xlsx)',
   'room.presentation': 'Præsentation og planlægning',
   'room.notBuilt': 'Ikke bygget endnu',
   'room.scan': 'Scanne',

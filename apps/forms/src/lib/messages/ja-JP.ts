@@ -1505,7 +1505,7 @@ export const jaJP: Record<MessageKey, string> = {
   'sheets.convert': '変換',
   'sheets.convertIntro':
     'ExcelでCSVファイルを正しく開けるように整えます：区切り文字、å ä ö などの文字、小数点。元のファイルは変更せず、新しいファイルを保存します。',
-  'sheets.pick': 'CSVファイルを選ぶ',
+  'sheets.pick': 'CSVまたはExcelファイルを選ぶ',
   'sheets.drop': 'またはここにドロップ',
   'sheets.found': 'ファイルで見つかったもの',
   'sheets.sepLabel': '区切り文字',
@@ -1537,6 +1537,12 @@ export const jaJP: Record<MessageKey, string> = {
   'sheets.errBig': 'ファイルが20 MBを超えています。',
   'sheets.errEmpty': 'ファイルが空です。',
   'sheets.errRead': 'ファイルを読み込めませんでした。',
+  'sheets.errXlsx':
+    'Excelファイルを読み込めませんでした。パスワードで保護されているか、壊れている可能性があります。',
+  'sheets.sheetLabel': 'シート',
+  'sheets.formatLabel': 'ファイルの種類',
+  'sheets.formatCsv': 'CSV (.csv)',
+  'sheets.formatXlsx': 'Excel (.xlsx)',
   'room.presentation': 'プレゼンテーションと計画',
   'room.notBuilt': 'まだ作られていません',
   'room.scan': 'スキャン',

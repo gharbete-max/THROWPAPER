@@ -1514,7 +1514,7 @@ export const isIS: Record<MessageKey, string> = {
   'sheets.convert': 'Umbreyta',
   'sheets.convertIntro':
     'Gerðu CSV-skrá tilbúna svo Excel opni hana rétt: skiltáknið, stafina á é ö og tugabrotamerkið. Skránni þinni er ekki breytt; ný er vistuð.',
-  'sheets.pick': 'Veldu CSV-skrá',
+  'sheets.pick': 'Veldu CSV- eða Excel-skrá',
   'sheets.drop': 'eða slepptu henni hér',
   'sheets.found': 'Hvað fannst í skránni',
   'sheets.sepLabel': 'Skiltákn',
@@ -1546,6 +1546,12 @@ export const isIS: Record<MessageKey, string> = {
   'sheets.errBig': 'Skráin er stærri en 20 MB.',
   'sheets.errEmpty': 'Skráin er tóm.',
   'sheets.errRead': 'Ekki tókst að lesa skrána.',
+  'sheets.errXlsx':
+    'Ekki tókst að lesa Excel-skrána. Hún gæti verið varin með lykilorði eða skemmd.',
+  'sheets.sheetLabel': 'Blað',
+  'sheets.formatLabel': 'Skráargerð',
+  'sheets.formatCsv': 'CSV (.csv)',
+  'sheets.formatXlsx': 'Excel (.xlsx)',
   'room.presentation': 'Kynningar og skipulag',
   'room.notBuilt': 'Ekki smíðað enn',
   'room.scan': 'Skanna',

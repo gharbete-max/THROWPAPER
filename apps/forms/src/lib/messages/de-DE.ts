@@ -1560,7 +1560,7 @@ export const deDE: Record<MessageKey, string> = {
   'sheets.convert': 'Umwandeln',
   'sheets.convertIntro':
     'Eine CSV-Datei so aufbereiten, dass Excel sie richtig öffnet: Trennzeichen, Buchstaben wie ä ö ü und Dezimalzeichen. Ihre Datei wird nicht verändert; eine neue wird gespeichert.',
-  'sheets.pick': 'CSV-Datei auswählen',
+  'sheets.pick': 'CSV- oder Excel-Datei auswählen',
   'sheets.drop': 'oder hier ablegen',
   'sheets.found': 'Was in der Datei gefunden wurde',
   'sheets.sepLabel': 'Trennzeichen',
@@ -1592,6 +1592,12 @@ export const deDE: Record<MessageKey, string> = {
   'sheets.errBig': 'Die Datei ist größer als 20 MB.',
   'sheets.errEmpty': 'Die Datei ist leer.',
   'sheets.errRead': 'Die Datei konnte nicht gelesen werden.',
+  'sheets.errXlsx':
+    'Die Excel-Datei konnte nicht gelesen werden. Sie ist eventuell passwortgeschützt oder beschädigt.',
+  'sheets.sheetLabel': 'Blatt',
+  'sheets.formatLabel': 'Dateityp',
+  'sheets.formatCsv': 'CSV (.csv)',
+  'sheets.formatXlsx': 'Excel (.xlsx)',
   'room.presentation': 'Präsentation & Planung',
   'room.notBuilt': 'Noch nicht gebaut',
   'room.scan': 'Scannen',

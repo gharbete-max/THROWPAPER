@@ -84,6 +84,37 @@ test('the choices can be changed: keep the numbers, semicolons, Windows-1252', a
   expect(bytes.equals(swedish)).toBe(true);
 });
 
+test('an Excel workbook is read sheet by sheet and saved as CSV or as a new workbook', async ({
+  page,
+}) => {
+  await asDesktop(page);
+  await signInAs(page, sql, 'admin@example.com', 'en-GB');
+  await page.goto('/sheets/convert');
+  await page.getByTestId('sheets-file').setInputFiles('fixtures/xlsx/people.xlsx');
+
+  const found = page.getByRole('region', { name: /What was found in the file/ });
+  await expect(found.getByRole('cell', { name: 'Åsa Öberg' })).toBeVisible();
+  await expect(found.getByRole('cell', { name: '2024-03-05' })).toBeVisible();
+  await found.getByLabel('Sheet').selectOption({ label: 'Second' });
+  await expect(found.getByRole('columnheader', { name: 'y' })).toBeVisible();
+  await found.getByLabel('Sheet').selectOption({ label: 'People' });
+
+  const out = page.getByRole('region', { name: 'Save as' });
+  const csv = page.waitForEvent('download');
+  await out.getByRole('button', { name: 'Save the converted file' }).click();
+  const csvName = (await csv).suggestedFilename();
+  expect(csvName).toBe('people-converted.csv');
+
+  await out.getByLabel('File type').selectOption('xlsx');
+  const xlsx = page.waitForEvent('download');
+  await out.getByRole('button', { name: 'Save the converted file' }).click();
+  const saved = await xlsx;
+  expect(saved.suggestedFilename()).toBe('people-converted.xlsx');
+  const bytes = await readFile((await saved.path())!);
+  expect(bytes.subarray(0, 2).toString()).toBe('PK');
+  expect(bytes.includes(Buffer.from('00123'))).toBe(true);
+});
+
 test('an empty file is refused plainly, and the server edition has nothing to convert with', async ({
   page,
 }) => {

@@ -1544,7 +1544,7 @@ export const frFR: Record<MessageKey, string> = {
   'sheets.convert': 'Convertir',
   'sheets.convertIntro':
     'Préparer un fichier CSV pour qu’Excel l’ouvre correctement : le séparateur, les lettres é è à et la virgule décimale. Votre fichier n’est pas modifié ; un nouveau est enregistré.',
-  'sheets.pick': 'Choisir un fichier CSV',
+  'sheets.pick': 'Choisir un fichier CSV ou Excel',
   'sheets.drop': 'ou le déposer ici',
   'sheets.found': 'Ce qui a été trouvé dans le fichier',
   'sheets.sepLabel': 'Séparateur',
@@ -1577,6 +1577,12 @@ export const frFR: Record<MessageKey, string> = {
   'sheets.errBig': 'Ce fichier dépasse 20 Mo.',
   'sheets.errEmpty': 'Ce fichier est vide.',
   'sheets.errRead': 'Ce fichier n’a pas pu être lu.',
+  'sheets.errXlsx':
+    'Ce fichier Excel n’a pas pu être lu. Il est peut-être protégé par un mot de passe ou endommagé.',
+  'sheets.sheetLabel': 'Feuille',
+  'sheets.formatLabel': 'Type de fichier',
+  'sheets.formatCsv': 'CSV (.csv)',
+  'sheets.formatXlsx': 'Excel (.xlsx)',
   'room.presentation': 'Présentation et planification',
   'room.notBuilt': 'Pas encore construit',
   'room.scan': 'Numériser',

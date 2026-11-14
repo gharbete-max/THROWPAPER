@@ -1521,7 +1521,7 @@ export const enGB = {
   'sheets.convert': 'Convert',
   'sheets.convertIntro':
     'Fix a CSV file so Excel opens it right: the separator, the letters å ä ö and the decimal mark. Your file is not changed; a new one is saved.',
-  'sheets.pick': 'Choose a CSV file',
+  'sheets.pick': 'Choose a CSV or Excel file',
   'sheets.drop': 'or drop it here',
   'sheets.found': 'What was found in the file',
   'sheets.sepLabel': 'Separator',
@@ -1553,6 +1553,12 @@ export const enGB = {
   'sheets.errBig': 'That file is over 20 MB.',
   'sheets.errEmpty': 'That file is empty.',
   'sheets.errRead': 'That file could not be read.',
+  'sheets.errXlsx':
+    'That Excel file could not be read. It may be protected by a password or damaged.',
+  'sheets.sheetLabel': 'Sheet',
+  'sheets.formatLabel': 'File type',
+  'sheets.formatCsv': 'CSV (.csv)',
+  'sheets.formatXlsx': 'Excel (.xlsx)',
   'room.presentation': 'Presentation & planning',
   'room.notBuilt': 'Not built yet',
   'room.scan': 'Scan',

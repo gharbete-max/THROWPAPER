@@ -6,7 +6,9 @@ import '../../styles/sheets.css';
 import { PartNav } from './PartNav.js';
 import {
   analyse,
+  changeDecimal,
   convert,
+  detectDecimal,
   ENCODINGS,
   SEPARATORS,
   type DecimalMark,
@@ -14,8 +16,11 @@ import {
   type OutEncoding,
   type Separator,
 } from './csv.js';
+import { openWorkbook, writeXlsx, XlsxError, type Workbook } from './xlsx.js';
 
 const MAX_BYTES = 20 * 1024 * 1024;
+const XLSX_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+type ErrorKey = 'sheets.errBig' | 'sheets.errEmpty' | 'sheets.errRead' | 'sheets.errXlsx';
 const PREVIEW_ROWS = 8;
 const PREVIEW_COLUMNS = 8;
 
@@ -51,19 +56,26 @@ export function Convert() {
   const [outSeparator, setOutSeparator] = useState<Separator>(local.separator);
   const [outDecimal, setOutDecimal] = useState<DecimalMark | 'keep'>('keep');
   const [outEncoding, setOutEncoding] = useState<OutEncoding>('utf-8-bom');
-  const [error, setError] = useState<'sheets.errBig' | 'sheets.errEmpty' | 'sheets.errRead' | null>(
-    null,
-  );
+  const [error, setError] = useState<ErrorKey | null>(null);
+  const [book, setBook] = useState<Workbook | null>(null);
+  const [sheet, setSheet] = useState(0);
+  const [sheetRows, setSheetRows] = useState<string[][]>([]);
+  const [outFormat, setOutFormat] = useState<'csv' | 'xlsx'>('csv');
   const [result, setResult] = useState<{
     name: string;
     changed: number;
     unencodable: number;
   } | null>(null);
 
+  const isXlsx = book !== null;
   const analysis = useMemo(
-    () => (file ? analyse(file.bytes, encoding, separator) : null),
-    [file, encoding, separator],
+    () => (file && !isXlsx ? analyse(file.bytes, encoding, separator) : null),
+    [file, isXlsx, encoding, separator],
   );
+  const rows = isXlsx ? sheetRows : (analysis?.rows ?? []);
+  const decimal: DecimalMark | null = isXlsx
+    ? detectDecimal(sheetRows)
+    : (analysis?.decimal ?? null);
 
   async function open(chosen: File | undefined) {
     if (!chosen) return;
@@ -72,11 +84,25 @@ export function Convert() {
     try {
       const bytes = new Uint8Array(await chosen.arrayBuffer());
       if (bytes.length === 0) return fail('sheets.errEmpty');
-      const found = analyse(bytes);
+      let opened: Workbook | null = null;
+      let found: { decimal: DecimalMark | null };
+      if (/\.xlsx$/i.test(chosen.name)) {
+        try {
+          opened = await openWorkbook(bytes);
+        } catch (e) {
+          return fail(e instanceof XlsxError ? 'sheets.errXlsx' : 'sheets.errRead');
+        }
+        const first = await opened.read(0);
+        setSheetRows(first);
+        found = { decimal: detectDecimal(first) };
+      } else found = analyse(bytes);
       setError(null);
+      setBook(opened);
+      setSheet(0);
       setFile({ name: chosen.name, bytes });
       setEncoding(null);
       setSeparator(null);
+      setOutFormat('csv');
       // Offered, never forced: turn the numbers into this computer's style when they are not in it.
       setOutDecimal(
         found.decimal !== null && found.decimal !== local.decimal ? local.decimal : 'keep',
@@ -86,20 +112,41 @@ export function Convert() {
     }
   }
 
-  function fail(key: 'sheets.errBig' | 'sheets.errEmpty' | 'sheets.errRead') {
+  async function chooseSheet(index: number) {
+    if (!book) return;
+    try {
+      setSheetRows(await book.read(index));
+      setSheet(index);
+    } catch {
+      fail('sheets.errXlsx');
+    }
+  }
+
+  function fail(key: ErrorKey) {
     setFile(null);
+    setBook(null);
     setError(key);
   }
 
   function save() {
-    if (!file || !analysis) return;
-    const out = convert(analysis.rows, {
+    if (!file) return;
+    const base = file.name.replace(/\.[^.]*$/, '');
+    if (outFormat === 'xlsx') {
+      // Real numbers need a dot, whatever the file used: the workbook shows them in the computer's own style.
+      const done = decimal === ',' ? changeDecimal(rows, ',', '.') : { rows, changed: 0 };
+      const name = `${base}-converted.xlsx`;
+      const sheetName = book?.sheets[sheet]?.name;
+      saveBlob(new Blob([writeXlsx(done.rows, sheetName) as BlobPart], { type: XLSX_TYPE }), name);
+      setResult({ name, changed: done.changed, unencodable: 0 });
+      return;
+    }
+    const out = convert(rows, {
       separator: outSeparator,
-      from: analysis.decimal,
+      from: decimal,
       to: outDecimal,
       encoding: outEncoding,
     });
-    const name = `${file.name.replace(/\.[^.]*$/, '')}-converted.csv`;
+    const name = `${base}-converted.csv`;
     saveBlob(new Blob([out.bytes as BlobPart], { type: 'text/csv' }), name);
     setResult({ name, changed: out.changed, unencodable: out.unencodable });
   }
@@ -115,11 +162,11 @@ export function Convert() {
     '\t': t('sheets.sepTab'),
     '|': t('sheets.sepBar'),
   };
-  const columns = analysis ? Math.max(0, ...analysis.rows.map((row) => row.length)) : 0;
+  const columns = Math.max(0, ...rows.map((row) => row.length));
   const decimalName =
-    analysis?.decimal === ','
+    decimal === ','
       ? t('sheets.decComma')
-      : analysis?.decimal === '.'
+      : decimal === '.'
         ? t('sheets.decDot')
         : t('sheets.decNone');
 
@@ -149,7 +196,7 @@ export function Convert() {
               {t('sheets.pick')}
               <input
                 type="file"
-                accept=".csv,.tsv,.txt,text/csv,text/plain"
+                accept=".csv,.tsv,.txt,.xlsx,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 hidden
                 data-testid="sheets-file"
                 onChange={(event) => {
@@ -166,43 +213,62 @@ export function Convert() {
             )}
           </section>
 
-          {file && analysis && (
+          {file && (analysis || book) && (
             <>
               <section className="card" aria-labelledby="sheets-found">
                 <h2 id="sheets-found">
                   {t('sheets.found')}: {file.name}
                 </h2>
                 <div className="sheets__fields">
-                  <label className="field">
-                    <span className="small muted">{t('sheets.sepLabel')}</span>
-                    <select
-                      value={analysis.separator}
-                      onChange={(event) => setSeparator(event.target.value as Separator)}
-                    >
-                      {SEPARATORS.map((s) => (
-                        <option key={s} value={s}>
-                          {separatorName[s]}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label className="field">
-                    <span className="small muted">{t('sheets.encLabel')}</span>
-                    <select
-                      value={analysis.decoded.encoding}
-                      onChange={(event) => setEncoding(event.target.value as Encoding)}
-                    >
-                      {ENCODINGS.map((e) => (
-                        <option key={e} value={e}>
-                          {ENCODING_NAMES[e]}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+                  {book && book.sheets.length > 1 && (
+                    <label className="field">
+                      <span className="small muted">{t('sheets.sheetLabel')}</span>
+                      <select
+                        value={sheet}
+                        onChange={(event) => void chooseSheet(Number(event.target.value))}
+                      >
+                        {book.sheets.map((s, i) => (
+                          <option key={s.path} value={i}>
+                            {s.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  )}
+                  {analysis && (
+                    <>
+                      <label className="field">
+                        <span className="small muted">{t('sheets.sepLabel')}</span>
+                        <select
+                          value={analysis.separator}
+                          onChange={(event) => setSeparator(event.target.value as Separator)}
+                        >
+                          {SEPARATORS.map((s) => (
+                            <option key={s} value={s}>
+                              {separatorName[s]}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <label className="field">
+                        <span className="small muted">{t('sheets.encLabel')}</span>
+                        <select
+                          value={analysis.decoded.encoding}
+                          onChange={(event) => setEncoding(event.target.value as Encoding)}
+                        >
+                          {ENCODINGS.map((e) => (
+                            <option key={e} value={e}>
+                              {ENCODING_NAMES[e]}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    </>
+                  )}
                 </div>
                 <dl className="sheets__facts">
                   <dt>{t('sheets.rows')}</dt>
-                  <dd>{analysis.rows.length}</dd>
+                  <dd>{rows.length}</dd>
                   <dt>{t('sheets.columns')}</dt>
                   <dd>{columns}</dd>
                   <dt>{t('sheets.decLabel')}</dt>
@@ -212,7 +278,7 @@ export function Convert() {
                 <div className="sheets__preview" tabIndex={0}>
                   <table>
                     <tbody>
-                      {analysis.rows.slice(0, PREVIEW_ROWS).map((row, r) => (
+                      {rows.slice(0, PREVIEW_ROWS).map((row, r) => (
                         <tr key={r}>
                           {row.slice(0, PREVIEW_COLUMNS).map((cell, c) =>
                             r === 0 ? (
@@ -235,42 +301,57 @@ export function Convert() {
                 <p className="muted small">{t('sheets.outHint')}</p>
                 <div className="sheets__fields">
                   <label className="field">
-                    <span className="small muted">{t('sheets.sepLabel')}</span>
+                    <span className="small muted">{t('sheets.formatLabel')}</span>
                     <select
-                      value={outSeparator}
-                      onChange={(event) => setOutSeparator(event.target.value as Separator)}
+                      value={outFormat}
+                      data-testid="sheets-format"
+                      onChange={(event) => setOutFormat(event.target.value as 'csv' | 'xlsx')}
                     >
-                      {SEPARATORS.map((s) => (
-                        <option key={s} value={s}>
-                          {separatorName[s]}
-                        </option>
-                      ))}
+                      <option value="csv">{t('sheets.formatCsv')}</option>
+                      <option value="xlsx">{t('sheets.formatXlsx')}</option>
                     </select>
                   </label>
-                  <label className="field">
-                    <span className="small muted">{t('sheets.decLabel')}</span>
-                    <select
-                      value={outDecimal}
-                      onChange={(event) =>
-                        setOutDecimal(event.target.value as DecimalMark | 'keep')
-                      }
-                    >
-                      <option value="keep">{t('sheets.keepAsIs')}</option>
-                      <option value=",">{t('sheets.decComma')}</option>
-                      <option value=".">{t('sheets.decDot')}</option>
-                    </select>
-                  </label>
-                  <label className="field">
-                    <span className="small muted">{t('sheets.encLabel')}</span>
-                    <select
-                      value={outEncoding}
-                      onChange={(event) => setOutEncoding(event.target.value as OutEncoding)}
-                    >
-                      <option value="utf-8-bom">{t('sheets.outEncBom')}</option>
-                      <option value="utf-8">{t('sheets.outEncPlain')}</option>
-                      <option value="windows-1252">{t('sheets.outEnc1252')}</option>
-                    </select>
-                  </label>
+                  {outFormat === 'csv' && (
+                    <>
+                      <label className="field">
+                        <span className="small muted">{t('sheets.sepLabel')}</span>
+                        <select
+                          value={outSeparator}
+                          onChange={(event) => setOutSeparator(event.target.value as Separator)}
+                        >
+                          {SEPARATORS.map((s) => (
+                            <option key={s} value={s}>
+                              {separatorName[s]}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <label className="field">
+                        <span className="small muted">{t('sheets.decLabel')}</span>
+                        <select
+                          value={outDecimal}
+                          onChange={(event) =>
+                            setOutDecimal(event.target.value as DecimalMark | 'keep')
+                          }
+                        >
+                          <option value="keep">{t('sheets.keepAsIs')}</option>
+                          <option value=",">{t('sheets.decComma')}</option>
+                          <option value=".">{t('sheets.decDot')}</option>
+                        </select>
+                      </label>
+                      <label className="field">
+                        <span className="small muted">{t('sheets.encLabel')}</span>
+                        <select
+                          value={outEncoding}
+                          onChange={(event) => setOutEncoding(event.target.value as OutEncoding)}
+                        >
+                          <option value="utf-8-bom">{t('sheets.outEncBom')}</option>
+                          <option value="utf-8">{t('sheets.outEncPlain')}</option>
+                          <option value="windows-1252">{t('sheets.outEnc1252')}</option>
+                        </select>
+                      </label>
+                    </>
+                  )}
                 </div>
                 <p className="small muted">{t('sheets.leftAlone')}</p>
                 <div className="sheets__actions">
